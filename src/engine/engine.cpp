@@ -7,8 +7,9 @@ GraphicEngine::GraphicEngine(std::string const &logFilename
     , wnd(nullptr)
     , viewportWidth(0)
     , viewportHeight(0)
-    , vertexShader(0)
-    , fragmentShader(0)
+    , vertexShaderId(0)
+    , fragmentShaderId(0)
+    , programId(0)
 {
     init(logFilename, vertexShaderFilename, fragmentShaderFilename);
 }
@@ -32,6 +33,7 @@ GraphicEngine::init(std::string const &logFilename
         initGLFW();
         initGLEW();
         initShaders(vertexShaderFilename, fragmentShaderFilename);
+        linkProgram();
     }
     catch (std::runtime_error const &ex)
     {
@@ -45,8 +47,8 @@ void
 GraphicEngine::initShaders(std::string const &vertexShaderFilename
         , std::string const &fragmentShaderFilename)
 {
-    vertexShader = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
-    fragmentShader = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
+    vertexShaderId = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
+    fragmentShaderId = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
 }
 
 GLuint
@@ -100,8 +102,39 @@ GraphicEngine::compileShader(GLuint shaderId, std::string const &shaderText)
         throw std::runtime_error("Fault to compile shader");
     }
 
-    glDeleteShader(shaderId);
     log << "Shader compiled" << std::endl; 
+}
+
+void
+GraphicEngine::linkProgram()
+{ 
+    programId = glCreateProgram();
+    glAttachShader(programId, vertexShaderId);
+    glAttachShader(programId, fragmentShaderId);
+    glLinkProgram(programId);
+
+
+    GLint result = GL_FALSE;
+    GLint infoLogLength = 0;
+    glGetProgramiv(programId, GL_LINK_STATUS, &result);
+    glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+    if (infoLogLength > 0)
+    {
+        std::vector< char > errorMessage(infoLogLength + 1);
+        glGetProgramInfoLog(programId, infoLogLength, nullptr, &errorMessage[0]); 
+        log << &errorMessage[0] << std::endl;
+    }
+
+    if (GL_FALSE == result)
+    {
+        log << "Shader program linking error" << std::endl;
+        throw std::runtime_error("Fault to link shader program");
+    }
+
+    glDeleteShader(vertexShaderId);
+    glDeleteShader(fragmentShaderId);
+    log << "Shader program linked" << std::endl;
 }
 
 void

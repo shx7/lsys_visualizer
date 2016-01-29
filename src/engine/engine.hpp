@@ -44,6 +44,7 @@ class GraphicEngine
                 , std::string const &fragmentShaderFilename);
         GLuint loadShader(std::string const &filename, GLenum shaderType);
         void compileShader(GLuint shaderId, std::string const &shaderText);
+        void linkProgram();
 
     private:
         bool isGLFWInitialized;
@@ -53,7 +54,7 @@ class GraphicEngine
         std::list< GraphicObjectPtr > graphicObjects;
         int viewportWidth, viewportHeight;
 
-        GLuint vertexShader, fragmentShader;
+        GLuint vertexShaderId, fragmentShaderId, programId;
 };
 
 #endif
