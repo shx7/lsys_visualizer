@@ -34,13 +34,14 @@ GraphicEngine::init(std::string const &logFilename
         initGLEW();
         initShaders(vertexShaderFilename, fragmentShaderFilename);
         linkProgram();
+
+        log << "Graphic engine initialized" << std::endl;
     }
     catch (std::runtime_error const &ex)
     {
         std::cerr << ex.what() << std::endl;
-    }
-
-    log << "Graphic engine initialized" << std::endl;
+        log << ex.what() << std::endl;
+    } 
 }
 
 void
@@ -64,8 +65,8 @@ GraphicEngine::loadShader(std::string const &filename, GLenum shaderType)
 
     log << "Load shader from " << filename << std::endl; 
     std::string tmp;
-    std::string shaderText;
-    while (!std::getline(inputStream, tmp))
+    std::string shaderText("");
+    while (std::getline(inputStream, tmp))
     {
         shaderText += tmp;
         shaderText.append("\n");
@@ -89,16 +90,14 @@ GraphicEngine::compileShader(GLuint shaderId, std::string const &shaderText)
     glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (infoLogLength > 0)
-    {
-        std::vector< char > errorMessage(infoLogLength + 1);
-        glGetShaderInfoLog(shaderId, infoLogLength, nullptr, &errorMessage[0]); 
-        log << &errorMessage[0] << std::endl;
-    }
-
     if (GL_FALSE == result)
     {
         log << "Shader compilation error" << std::endl;
+
+        std::vector< char > errorMessage(infoLogLength + 1);
+        glGetShaderInfoLog(shaderId, infoLogLength, nullptr, &errorMessage[0]); 
+        log << "Shader compilation message: "
+            << &errorMessage[0] << std::endl;
         throw std::runtime_error("Fault to compile shader");
     }
 
@@ -119,16 +118,13 @@ GraphicEngine::linkProgram()
     glGetProgramiv(programId, GL_LINK_STATUS, &result);
     glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (infoLogLength > 0)
-    {
+    if (GL_FALSE == result)
+    { 
         std::vector< char > errorMessage(infoLogLength + 1);
         glGetProgramInfoLog(programId, infoLogLength, nullptr, &errorMessage[0]); 
-        log << &errorMessage[0] << std::endl;
-    }
+        log << "Shader program linking error message: "
+            << &errorMessage[0] << std::endl;
 
-    if (GL_FALSE == result)
-    {
-        log << "Shader program linking error" << std::endl;
         throw std::runtime_error("Fault to link shader program");
     }
 

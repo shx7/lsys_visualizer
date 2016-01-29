@@ -3,7 +3,9 @@
 
 int main()
 {
-    GraphicEngine engine("logfile", "vertex_shader.vert", "fragment_shader.frag");
+    std::string vertexShaderFilename("vertex_shader.vert");
+    std::string fragmentShaderFilename("fragment_shader.frag");
+    GraphicEngine engine("logfile", vertexShaderFilename, fragmentShaderFilename);
     std::cout << "LSystem" << std::endl;
     return 0;
 }
