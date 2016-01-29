@@ -7,11 +7,14 @@ GraphicEngine::init(std::string const &logFilename)
     {
         initLog(logFilename);
         initGLFW();
+        initGLEW();
     }
     catch (std::runtime_error const &ex)
     {
         std::cerr << ex.what() << std::endl;
     }
+
+    log << "Graphic engine initialized" << std::endl;
 }
 
 void
@@ -44,6 +47,16 @@ GraphicEngine::initGLFW()
     glfwSetWindowPos(wnd, 100, 100);
     glfwMakeContextCurrent(wnd);
     glViewport(0, 0, viewportWidth, viewportHeight);
+}
+
+void
+GraphicEngine::initGLEW()
+{
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        throw std::runtime_error("Failed to init GLEW");
+    }
 }
 
 void

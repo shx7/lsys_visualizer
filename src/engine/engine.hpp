@@ -27,8 +27,9 @@ class GraphicEngine
 
         void processInput();
 
-        void initGLFW();
         void initLog(std::string const &filename);
+        void initGLFW();
+        void initGLEW();
 
     private:
         std::fstream log;
