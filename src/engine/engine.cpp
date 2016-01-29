@@ -1,0 +1,67 @@
+#include "engine.hpp"
+
+void
+GraphicEngine::init(std::string const &logFilename)
+{
+    try
+    {
+        initLog(logFilename);
+        initGLFW();
+    }
+    catch (std::runtime_error const &ex)
+    {
+        std::cerr << ex.what() << std::endl;
+    }
+}
+
+void
+GraphicEngine::initLog(std::string const &filename)
+{
+    log.open(filename);
+
+    if (!log.is_open())
+    {
+        throw std::runtime_error("Failed to open logfile");
+    }
+}
+
+void
+GraphicEngine::initGLFW()
+{
+    if (!glfwInit())
+    {
+        throw std::runtime_error("Failed to init GLFW");
+    }
+
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    wnd = glfwCreateWindow(640, 480, "LSystems", nullptr, nullptr);
+    if (!wnd)
+    {
+        glfwTerminate();
+        throw std::runtime_error("Failed to create GLFW window");
+    }
+
+    glfwSetWindowPos(wnd, 100, 100);
+    glfwMakeContextCurrent(wnd);
+    glViewport(0, 0, viewportWidth, viewportHeight);
+}
+
+void
+GraphicEngine::start()
+{
+}
+
+void
+GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
+{
+}
+
+void
+GraphicEngine::processInput()
+{
+}
+
+void
+GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
+{
+}
