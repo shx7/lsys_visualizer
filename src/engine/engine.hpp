@@ -40,6 +40,8 @@ class GraphicEngine
         void initGLFW();
         void initGLEW();
 
+        void initShaders(std::string const &vertexShaderFilename
+                , std::string const &fragmentShaderFilename);
         GLuint loadShader(std::string const &filename, GLenum shaderType);
         void compileShader(GLuint shaderId, std::string const &shaderText);
 

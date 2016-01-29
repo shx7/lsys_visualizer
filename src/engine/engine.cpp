@@ -31,6 +31,7 @@ GraphicEngine::init(std::string const &logFilename
         initLog(logFilename);
         initGLFW();
         initGLEW();
+        initShaders(vertexShaderFilename, fragmentShaderFilename);
     }
     catch (std::runtime_error const &ex)
     {
@@ -38,6 +39,14 @@ GraphicEngine::init(std::string const &logFilename
     }
 
     log << "Graphic engine initialized" << std::endl;
+}
+
+void
+GraphicEngine::initShaders(std::string const &vertexShaderFilename
+        , std::string const &fragmentShaderFilename)
+{
+    vertexShader = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
+    fragmentShader = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
 }
 
 GLuint
@@ -91,6 +100,7 @@ GraphicEngine::compileShader(GLuint shaderId, std::string const &shaderText)
         throw std::runtime_error("Fault to compile shader");
     }
 
+    glDeleteShader(shaderId);
     log << "Shader compiled" << std::endl; 
 }
 
