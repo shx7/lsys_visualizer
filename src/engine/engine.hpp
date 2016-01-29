@@ -18,6 +18,8 @@ class GraphicEngine
     public:
         GraphicEngine(std::string const &logFilename);
 
+        ~GraphicEngine();
+
         void init(std::string const &logFilename);
 
         void start();
@@ -34,6 +36,7 @@ class GraphicEngine
         void initGLEW();
 
     private:
+        bool isGLFWInitialized;
         std::fstream log;
         GLFWwindow* wnd;
 

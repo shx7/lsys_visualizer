@@ -1,11 +1,20 @@
 #include "engine.hpp"
 
 GraphicEngine::GraphicEngine(std::string const &logFilename)
-    : wnd(nullptr)
+    : isGLFWInitialized(false)
+    , wnd(nullptr)
     , viewportWidth(0)
     , viewportHeight(0)
 {
     init(logFilename);
+}
+
+GraphicEngine::~GraphicEngine()
+{
+    if (isGLFWInitialized)
+    {
+        glfwTerminate();
+    }
 }
 
 void
@@ -55,6 +64,8 @@ GraphicEngine::initGLFW()
     glfwSetWindowPos(wnd, 100, 100);
     glfwMakeContextCurrent(wnd);
     glViewport(0, 0, viewportWidth, viewportHeight);
+
+    isGLFWInitialized = true;
 }
 
 void
