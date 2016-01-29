@@ -8,5 +8,8 @@ EXE_NAME=visualizer.elf
 all:
 	$(CC) $(OBJS) $(CFLAGS) $(LIBS) -o $(EXE_NAME)
 
+run: $(EXE_NAME)
+	./$(EXE_NAME)
+
 clean:
 	rm *
