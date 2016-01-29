@@ -17,9 +17,7 @@ typedef std::shared_ptr< GraphicObject > GraphicObjectPtr;
 class GraphicEngine
 { 
     public:
-        GraphicEngine(std::string const &logFilename
-                , std::string const &vertexShaderFilename
-                , std::string const &fragmentShaderFilename);
+        GraphicEngine();
 
         ~GraphicEngine();
 

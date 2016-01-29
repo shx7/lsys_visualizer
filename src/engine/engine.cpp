@@ -1,8 +1,6 @@
 #include "engine.hpp"
 
-GraphicEngine::GraphicEngine(std::string const &logFilename
-            , std::string const &vertexShaderFilename
-            , std::string const &fragmentShaderFilename) 
+GraphicEngine::GraphicEngine()
     : isGLFWInitialized(false)
     , wnd(nullptr)
     , viewportWidth(0)
@@ -11,7 +9,6 @@ GraphicEngine::GraphicEngine(std::string const &logFilename
     , fragmentShaderId(0)
     , programId(0)
 {
-    init(logFilename, vertexShaderFilename, fragmentShaderFilename);
 }
 
 GraphicEngine::~GraphicEngine()
@@ -180,6 +177,17 @@ GraphicEngine::initGLEW()
 void
 GraphicEngine::start()
 {
+    glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
+    while (!glfwWindowShouldClose(wnd)
+            && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
+    { 
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glfwSwapBuffers(wnd);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
 }
 
 void
