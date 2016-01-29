@@ -39,8 +39,7 @@ class GraphicEngine
         void initGLFW();
         void initGLEW();
 
-        void loadVertexShader(std::string const &filename);
-        void loadFragmentShader(std::string const &filename);
+        GLuint loadShader(std::string const &filename, GLenum shaderType);
 
     private:
         bool isGLFWInitialized;
@@ -49,6 +48,8 @@ class GraphicEngine
 
         std::list< GraphicObjectPtr > graphicObjects;
         int viewportWidth, viewportHeight;
+
+        GLuint vertexShader, fragmentShader;
 };
 
 #endif

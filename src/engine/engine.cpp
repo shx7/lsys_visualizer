@@ -7,6 +7,8 @@ GraphicEngine::GraphicEngine(std::string const &logFilename
     , wnd(nullptr)
     , viewportWidth(0)
     , viewportHeight(0)
+    , vertexShader(0)
+    , fragmentShader(0)
 {
     init(logFilename, vertexShaderFilename, fragmentShaderFilename);
 }
@@ -38,13 +40,8 @@ GraphicEngine::init(std::string const &logFilename
     log << "Graphic engine initialized" << std::endl;
 }
 
-void
-GraphicEngine::loadVertexShader(std::string const &filename)
-{
-}
-
-void
-GraphicEngine::loadFragmentShader(std::string const &filename)
+GLuint
+GraphicEngine::loadShader(std::string const &filename, GLenum shaderType)
 {
 }
 

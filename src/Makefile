@@ -6,6 +6,7 @@ SIMULATOR_DIR=simulator
 
 all: engine simulator
 	$(MAKE) -C .. collect_objs
+	$(MAKE) -C .. link_objs
 
 simulator:
 	$(MAKE) -C $(SIMULATOR_DIR)
