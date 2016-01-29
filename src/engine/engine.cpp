@@ -1,5 +1,13 @@
 #include "engine.hpp"
 
+GraphicEngine::GraphicEngine(std::string const &logFilename)
+    : wnd(nullptr)
+    , viewportWidth(0)
+    , viewportHeight(0)
+{
+    init(logFilename);
+}
+
 void
 GraphicEngine::init(std::string const &logFilename)
 {
@@ -20,7 +28,7 @@ GraphicEngine::init(std::string const &logFilename)
 void
 GraphicEngine::initLog(std::string const &filename)
 {
-    log.open(filename);
+    log.open(filename, std::ios_base::out);
 
     if (!log.is_open())
     {

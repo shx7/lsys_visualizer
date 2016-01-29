@@ -16,6 +16,8 @@ typedef std::shared_ptr< GraphicObject > GraphicObjectPtr;
 class GraphicEngine
 { 
     public:
+        GraphicEngine(std::string const &logFilename);
+
         void init(std::string const &logFilename);
 
         void start();
