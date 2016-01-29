@@ -1,12 +1,14 @@
 #include "engine.hpp"
 
-GraphicEngine::GraphicEngine(std::string const &logFilename)
+GraphicEngine::GraphicEngine(std::string const &logFilename
+            , std::string const &vertexShaderFilename
+            , std::string const &fragmentShaderFilename) 
     : isGLFWInitialized(false)
     , wnd(nullptr)
     , viewportWidth(0)
     , viewportHeight(0)
 {
-    init(logFilename);
+    init(logFilename, vertexShaderFilename, fragmentShaderFilename);
 }
 
 GraphicEngine::~GraphicEngine()
@@ -18,7 +20,9 @@ GraphicEngine::~GraphicEngine()
 }
 
 void
-GraphicEngine::init(std::string const &logFilename)
+GraphicEngine::init(std::string const &logFilename
+        , std::string const &vertexShaderFilename
+        , std::string const &fragmentShaderFilename)
 {
     try
     {
@@ -32,6 +36,16 @@ GraphicEngine::init(std::string const &logFilename)
     }
 
     log << "Graphic engine initialized" << std::endl;
+}
+
+void
+GraphicEngine::loadVertexShader(std::string const &filename)
+{
+}
+
+void
+GraphicEngine::loadFragmentShader(std::string const &filename)
+{
 }
 
 void

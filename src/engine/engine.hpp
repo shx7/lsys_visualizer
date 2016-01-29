@@ -16,11 +16,15 @@ typedef std::shared_ptr< GraphicObject > GraphicObjectPtr;
 class GraphicEngine
 { 
     public:
-        GraphicEngine(std::string const &logFilename);
+        GraphicEngine(std::string const &logFilename
+                , std::string const &vertexShaderFilename
+                , std::string const &fragmentShaderFilename);
 
         ~GraphicEngine();
 
-        void init(std::string const &logFilename);
+        void init(std::string const &logFilename
+                , std::string const &vertexShaderFilename
+                , std::string const &fragmentShaderFilename);
 
         void start();
 
@@ -34,6 +38,9 @@ class GraphicEngine
         void initLog(std::string const &filename);
         void initGLFW();
         void initGLEW();
+
+        void loadVertexShader(std::string const &filename);
+        void loadFragmentShader(std::string const &filename);
 
     private:
         bool isGLFWInitialized;
