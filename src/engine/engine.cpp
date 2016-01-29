@@ -43,6 +43,55 @@ GraphicEngine::init(std::string const &logFilename
 GLuint
 GraphicEngine::loadShader(std::string const &filename, GLenum shaderType)
 {
+    GLuint result = glCreateShader(shaderType);
+
+    std::ifstream inputStream(filename, std::ios_base::in);
+    if (!inputStream.is_open())
+    {
+        throw std::runtime_error("Failed to open file " + filename);
+    }
+
+    log << "Load shader from " << filename << std::endl; 
+    std::string tmp;
+    std::string shaderText;
+    while (!std::getline(inputStream, tmp))
+    {
+        shaderText += tmp;
+        shaderText.append("\n");
+    }
+
+    compileShader(result, shaderText);
+
+    return result;
+}
+
+void
+GraphicEngine::compileShader(GLuint shaderId, std::string const &shaderText)
+{
+    log << "Compile shader" << std::endl;
+    char const *shaderTextPtr = shaderText.c_str();
+    glShaderSource(shaderId, 1, &shaderTextPtr, nullptr);
+    glCompileShader(shaderId);
+
+    GLint result = GL_FALSE;
+    GLint infoLogLength = 0;
+    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+    if (infoLogLength > 0)
+    {
+        std::vector< char > errorMessage(infoLogLength + 1);
+        glGetShaderInfoLog(shaderId, infoLogLength, nullptr, &errorMessage[0]); 
+        log << &errorMessage[0] << std::endl;
+    }
+
+    if (GL_FALSE == result)
+    {
+        log << "Shader compilation error" << std::endl;
+        throw std::runtime_error("Fault to compile shader");
+    }
+
+    log << "Shader compiled" << std::endl; 
 }
 
 void

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <list>
+#include <vector>
 #include <memory>
 
 #include "graphic_object.hpp"
@@ -40,6 +41,7 @@ class GraphicEngine
         void initGLEW();
 
         GLuint loadShader(std::string const &filename, GLenum shaderType);
+        void compileShader(GLuint shaderId, std::string const &shaderText);
 
     private:
         bool isGLFWInitialized;
