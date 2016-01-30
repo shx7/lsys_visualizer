@@ -3,8 +3,8 @@
 GraphicEngine::GraphicEngine()
     : isGLFWInitialized(false)
     , wnd(nullptr)
-    , viewportWidth(0)
-    , viewportHeight(0)
+    , viewportWidth(640)
+    , viewportHeight(480)
     , vertexShaderId(0)
     , fragmentShaderId(0)
     , programId(0)
@@ -173,7 +173,8 @@ GraphicEngine::initGLFW()
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    wnd = glfwCreateWindow(640, 480, "LSystems", nullptr, nullptr);
+    wnd = glfwCreateWindow(viewportWidth, viewportHeight,
+            "LSystems", nullptr, nullptr);
     if (!wnd)
     {
         glfwTerminate();
@@ -253,18 +254,18 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             3,
             GL_FLOAT,
             GL_FALSE,
-            5 * sizeof(GL_FLOAT),
+            6 * sizeof(GL_FLOAT),
             0
             );
 
     glEnableVertexAttribArray(colorId);
     glVertexAttribPointer(
             colorId,
-            2,
+            3,
             GL_FLOAT,
             GL_FALSE,
-            5 * sizeof(GL_FLOAT),
-            (void *)(2 * sizeof(GL_FLOAT))
+            6 * sizeof(GL_FLOAT),
+            (void *)(3 * sizeof(GL_FLOAT))
             );
     glBindVertexArray(0);
 
