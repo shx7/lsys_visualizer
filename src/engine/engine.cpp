@@ -8,6 +8,8 @@ GraphicEngine::GraphicEngine()
     , vertexShaderId(0)
     , fragmentShaderId(0)
     , programId(0)
+    , positionId(-1)
+    , colorId(-1)
 {
 }
 
@@ -131,6 +133,7 @@ GraphicEngine::linkProgram()
 
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
+    glUseProgram(programId);
     log << "Shader program linked" << std::endl;
 }
 
@@ -207,4 +210,40 @@ GraphicEngine::processInput()
 void
 GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
 {
+    std::size_t objectVertexCount = ptr.getVertexCount();
+    std::unique_ptr< GLfloat[] > objectRawVertices =
+            new GLfloat[objectVertexCount];
+
+    GLuint objectVBO = 0;
+    glGenBuffers(1, &objectVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, objectVBO);
+    glBufferData(GL_ARRAY_BUFFER, objectVertexCount,
+            objectRawVertices, GL_STATIC_DRAW);
+
+    GLuint objectVAO = 0;
+    glGenVertexArrays(1, &objectVAO);
+    glBindVertexArray(objectVAO);
+
+    glEnableVertexAttribArray(positionId);
+    glVertexAttribPointer(
+            positionId,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            5 * sizeof(GL_FLOAT),
+            0
+            );
+
+    glEnableVertexAttribArray(colorId);
+    glVertexAttribPointer(
+            colorId,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            5 * sizeof(GL_FLOAT),
+            (void *)(2 * sizeof(GL_FLOAT))
+            );
+
+    glBindVertexArray(0);
+    glBindBuffer(0);
 }

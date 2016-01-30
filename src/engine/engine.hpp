@@ -53,6 +53,7 @@ class GraphicEngine
         int viewportWidth, viewportHeight;
 
         GLuint vertexShaderId, fragmentShaderId, programId;
+        GLint positionId, colorId;
 };
 
 #endif
