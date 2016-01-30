@@ -1,14 +1,14 @@
 #include "engine.hpp"
 
-GraphicEngine::GraphicEngine(std::string const &logFilename
-            , std::string const &vertexShaderFilename
-            , std::string const &fragmentShaderFilename) 
+GraphicEngine::GraphicEngine()
     : isGLFWInitialized(false)
     , wnd(nullptr)
     , viewportWidth(0)
     , viewportHeight(0)
+    , vertexShaderId(0)
+    , fragmentShaderId(0)
+    , programId(0)
 {
-    init(logFilename, vertexShaderFilename, fragmentShaderFilename);
 }
 
 GraphicEngine::~GraphicEngine()
@@ -29,23 +29,105 @@ GraphicEngine::init(std::string const &logFilename
         initLog(logFilename);
         initGLFW();
         initGLEW();
+        initShaders(vertexShaderFilename, fragmentShaderFilename);
+        linkProgram();
+
+        log << "Graphic engine initialized" << std::endl;
     }
     catch (std::runtime_error const &ex)
     {
         std::cerr << ex.what() << std::endl;
+        log << ex.what() << std::endl;
+    } 
+}
+
+void
+GraphicEngine::initShaders(std::string const &vertexShaderFilename
+        , std::string const &fragmentShaderFilename)
+{
+    vertexShaderId = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
+    fragmentShaderId = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
+}
+
+GLuint
+GraphicEngine::loadShader(std::string const &filename, GLenum shaderType)
+{
+    GLuint result = glCreateShader(shaderType);
+
+    std::ifstream inputStream(filename, std::ios_base::in);
+    if (!inputStream.is_open())
+    {
+        throw std::runtime_error("Failed to open file " + filename);
     }
 
-    log << "Graphic engine initialized" << std::endl;
+    log << "Load shader from " << filename << std::endl; 
+    std::string tmp;
+    std::string shaderText("");
+    while (std::getline(inputStream, tmp))
+    {
+        shaderText += tmp;
+        shaderText.append("\n");
+    }
+
+    compileShader(result, shaderText);
+
+    return result;
 }
 
 void
-GraphicEngine::loadVertexShader(std::string const &filename)
+GraphicEngine::compileShader(GLuint shaderId, std::string const &shaderText)
 {
+    log << "Compile shader" << std::endl;
+    char const *shaderTextPtr = shaderText.c_str();
+    glShaderSource(shaderId, 1, &shaderTextPtr, nullptr);
+    glCompileShader(shaderId);
+
+    GLint result = GL_FALSE;
+    GLint infoLogLength = 0;
+    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+    if (GL_FALSE == result)
+    {
+        log << "Shader compilation error" << std::endl;
+
+        std::vector< char > errorMessage(infoLogLength + 1);
+        glGetShaderInfoLog(shaderId, infoLogLength, nullptr, &errorMessage[0]); 
+        log << "Shader compilation message: "
+            << &errorMessage[0] << std::endl;
+        throw std::runtime_error("Fault to compile shader");
+    }
+
+    log << "Shader compiled" << std::endl; 
 }
 
 void
-GraphicEngine::loadFragmentShader(std::string const &filename)
-{
+GraphicEngine::linkProgram()
+{ 
+    programId = glCreateProgram();
+    glAttachShader(programId, vertexShaderId);
+    glAttachShader(programId, fragmentShaderId);
+    glLinkProgram(programId);
+
+
+    GLint result = GL_FALSE;
+    GLint infoLogLength = 0;
+    glGetProgramiv(programId, GL_LINK_STATUS, &result);
+    glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+    if (GL_FALSE == result)
+    { 
+        std::vector< char > errorMessage(infoLogLength + 1);
+        glGetProgramInfoLog(programId, infoLogLength, nullptr, &errorMessage[0]); 
+        log << "Shader program linking error message: "
+            << &errorMessage[0] << std::endl;
+
+        throw std::runtime_error("Fault to link shader program");
+    }
+
+    glDeleteShader(vertexShaderId);
+    glDeleteShader(fragmentShaderId);
+    log << "Shader program linked" << std::endl;
 }
 
 void
@@ -95,6 +177,17 @@ GraphicEngine::initGLEW()
 void
 GraphicEngine::start()
 {
+    glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
+    while (!glfwWindowShouldClose(wnd)
+            && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
+    { 
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glfwSwapBuffers(wnd);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
 }
 
 void
