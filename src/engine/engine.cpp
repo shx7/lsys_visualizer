@@ -216,6 +216,8 @@ GraphicEngine::start()
 void
 GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
 {
+    glBindVertexArray(ptr->getVAOIdentifier());
+    glBindVertexArray(0);
 }
 
 void
@@ -258,6 +260,8 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             5 * sizeof(GL_FLOAT),
             (void *)(2 * sizeof(GL_FLOAT))
             );
-
     glBindVertexArray(0);
+
+    ptr->setVAOIdentifier(objectVAO);
+    graphicObjects.push_back(ptr);
 }

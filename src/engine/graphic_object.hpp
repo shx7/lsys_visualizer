@@ -18,11 +18,15 @@ class GraphicObject
         glm::vec3 position;
         std::vector< GLfloat > vertices;
         GLenum drawMode;
+        GLuint vaoIndex;
+        bool isVAOIndexSet;
 
     public:
         GraphicObject()
             : position(0, 0, 0)
             , drawMode(GL_LINES)
+            , vaoIndex(0)
+            , isVAOIndexSet(false)
         {
         }
 
@@ -44,6 +48,21 @@ class GraphicObject
         GLfloat const *getRawPointer()
         {
             return &vertices[0];
+        }
+
+        void setVAOIdentifier(GLuint vaoId)
+        {
+            isVAOIndexSet = true;
+            vaoIndex = vaoId;
+        }
+
+        GLuint getVAOIdentifier()
+        {
+            if (!isVAOIndexSet)
+            {
+                throw std::runtime_error("VAO index not set for GraphicObject");
+            }
+            return vaoIndex;
         }
 };
 
