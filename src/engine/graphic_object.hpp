@@ -45,7 +45,7 @@ class GraphicObject
             return vertices.size();
         }
 
-        GLfloat const *getRawPointer()
+        GLfloat const *getRawPointer() const
         {
             return &vertices[0];
         }
@@ -63,6 +63,16 @@ class GraphicObject
                 throw std::runtime_error("VAO index not set for GraphicObject");
             }
             return vaoIndex;
+        }
+
+        GLenum getDrawMode() const
+        {
+            return drawMode;
+        }
+
+        void setDrawMode(GLenum mode)
+        {
+            drawMode = mode;
         }
 };
 

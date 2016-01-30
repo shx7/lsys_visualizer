@@ -206,6 +206,11 @@ GraphicEngine::start()
     { 
         glClear(GL_COLOR_BUFFER_BIT);
 
+        for (GraphicObjectPtr ptr : graphicObjects)
+        {
+            drawObject(ptr);
+        }
+
         glfwSwapBuffers(wnd);
         glfwPollEvents();
     }
@@ -217,6 +222,7 @@ void
 GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
 {
     glBindVertexArray(ptr->getVAOIdentifier());
+    glDrawArrays(ptr->getDrawMode(), 0, ptr->getVertexCount());
     glBindVertexArray(0);
 }
 
