@@ -40,6 +40,11 @@ class GraphicObject
         {
             return vertices.size();
         }
+
+        GLfloat const *getRawPointer()
+        {
+            return &vertices[0];
+        }
 };
 
 #endif

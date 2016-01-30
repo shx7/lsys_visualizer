@@ -68,6 +68,7 @@ GraphicEngine::getGLAttribute(std::string const &attributeName)
     {
         throw std::runtime_error("GL attribute not found: " + attributeName);
     }
+    return result;
 }
 
 GLuint
@@ -226,14 +227,13 @@ void
 GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
 {
     std::size_t objectVertexCount = ptr->getVertexCount();
-/*    std::unique_ptr< GLfloat[] > objectRawVertices(
-            new GLfloat[objectVertexCount]);*/
+    GLfloat const *objectRawVertices = ptr->getRawPointer();
 
     GLuint objectVBO = 0;
     glGenBuffers(1, &objectVBO);
     glBindBuffer(GL_ARRAY_BUFFER, objectVBO);
-    /*glBufferData(GL_ARRAY_BUFFER, objectVertexCount,
-            objectRawVertices, GL_STATIC_DRAW);*/
+    glBufferData(GL_ARRAY_BUFFER, objectVertexCount,
+            objectRawVertices, GL_STATIC_DRAW);
 
     GLuint objectVAO = 0;
     glGenVertexArrays(1, &objectVAO);
