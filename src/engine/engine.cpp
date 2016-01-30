@@ -36,7 +36,6 @@ GraphicEngine::init(std::string const &logFilename
         initGLFW();
         initGLEW();
         initShaders(vertexShaderFilename, fragmentShaderFilename);
-        linkProgram();
 
         log << "Graphic engine initialized" << std::endl;
     }
@@ -53,6 +52,22 @@ GraphicEngine::initShaders(std::string const &vertexShaderFilename
 {
     vertexShaderId = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
     fragmentShaderId = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
+    linkProgram();
+
+    positionId = getGLAttribute("position");
+    colorId = getGLAttribute("color");
+}
+
+GLint
+GraphicEngine::getGLAttribute(std::string const &attributeName)
+{
+    GLint result = -1;
+
+    result = glGetAttribLocation(programId, attributeName.c_str());
+    if (result < 0)
+    {
+        throw std::runtime_error("GL attribute not found: " + attributeName);
+    }
 }
 
 GLuint
@@ -210,15 +225,15 @@ GraphicEngine::processInput()
 void
 GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
 {
-    std::size_t objectVertexCount = ptr.getVertexCount();
-    std::unique_ptr< GLfloat[] > objectRawVertices =
-            new GLfloat[objectVertexCount];
+    std::size_t objectVertexCount = ptr->getVertexCount();
+/*    std::unique_ptr< GLfloat[] > objectRawVertices(
+            new GLfloat[objectVertexCount]);*/
 
     GLuint objectVBO = 0;
     glGenBuffers(1, &objectVBO);
     glBindBuffer(GL_ARRAY_BUFFER, objectVBO);
-    glBufferData(GL_ARRAY_BUFFER, objectVertexCount,
-            objectRawVertices, GL_STATIC_DRAW);
+    /*glBufferData(GL_ARRAY_BUFFER, objectVertexCount,
+            objectRawVertices, GL_STATIC_DRAW);*/
 
     GLuint objectVAO = 0;
     glGenVertexArrays(1, &objectVAO);
@@ -245,5 +260,4 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             );
 
     glBindVertexArray(0);
-    glBindBuffer(0);
 }

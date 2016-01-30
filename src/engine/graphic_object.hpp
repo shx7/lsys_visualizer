@@ -5,9 +5,9 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
-#include <list>
+#include <vector>
 
-class Vertex
+struct Vertex
 {
     glm::vec3 position;
     glm::vec3 color;
@@ -16,7 +16,7 @@ class Vertex
 class GraphicObject
 {
         glm::vec3 position;
-        std::list< Vertex > vertices;
+        std::vector< GLfloat > vertices;
         GLenum drawMode;
 
     public:
@@ -28,7 +28,17 @@ class GraphicObject
 
         void addVertex(Vertex const &vertex)
         {
-            vertices.push_back(vertex);
+            vertices.push_back(vertex.position.x);
+            vertices.push_back(vertex.position.y);
+            vertices.push_back(vertex.position.z);
+            vertices.push_back(vertex.color.r);
+            vertices.push_back(vertex.color.g);
+            vertices.push_back(vertex.color.b);
+        }
+
+        std::size_t getVertexCount() const
+        {
+            return vertices.size();
         }
 };
 
