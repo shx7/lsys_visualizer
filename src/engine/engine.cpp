@@ -15,6 +15,10 @@ GraphicEngine::~GraphicEngine()
 {
     if (isGLFWInitialized)
     {
+        if (wnd != nullptr)
+        {
+            glfwDestroyWindow(wnd);
+        }
         glfwTerminate();
     }
 }
