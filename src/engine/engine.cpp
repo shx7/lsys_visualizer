@@ -39,11 +39,12 @@ GraphicEngine::init(std::string const &logFilename
 
         log << "Graphic engine initialized" << std::endl;
     }
+    // TODO: fix error with log init
     catch (std::runtime_error const &ex)
     {
         std::cerr << ex.what() << std::endl;
         log << ex.what() << std::endl;
-    } 
+    }
 }
 
 void
@@ -129,8 +130,7 @@ GraphicEngine::linkProgram()
     programId = glCreateProgram();
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
-    glLinkProgram(programId);
-
+    glLinkProgram(programId); 
 
     GLint result = GL_FALSE;
     GLint infoLogLength = 0;

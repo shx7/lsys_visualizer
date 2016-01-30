@@ -3,8 +3,8 @@
 
 int main()
 {
-    std::string vertexShaderFilename("vertex_shader.vert");
-    std::string fragmentShaderFilename("fragment_shader.frag");
+    std::string vertexShaderFilename("../src/shaders/vertex_shader.vert");
+    std::string fragmentShaderFilename("../src/shaders/fragment_shader.frag");
     GraphicEngine engine;
     engine.init("logfile", vertexShaderFilename, fragmentShaderFilename);
 
