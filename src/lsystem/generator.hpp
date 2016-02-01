@@ -4,11 +4,15 @@
 #include "graphic_object.hpp"
 
 #include <memory>
+
+#include <tuple>
 #include <unordered_map>
 
 namespace lsystem
 {
-    typedef std::pair< glm::vec3, GLfloat > DrawState;
+    typedef GLfloat Angle;
+    typedef GLfloat DeltaAngle;
+    typedef std::tuple< glm::vec3, Angle, DeltaAngle > DrawState;
     typedef void (* DrawCommandFunction)(DrawState &, GraphicObjectPtr);
 
     class VertexGenerator
