@@ -3,8 +3,9 @@ CFLAGS=-std=c++11 -Wall -Wextra
 
 SRC=main.cpp
 ENGINE_DIR=../engine
+LSYSTEM_DIR=../lsystem
 
-CINCLUDE_FLAGS=-I$(ENGINE_DIR)
+CINCLUDE_FLAGS=-I$(ENGINE_DIR) -I$(LSYSTEM_DIR)
 
 all: main
 

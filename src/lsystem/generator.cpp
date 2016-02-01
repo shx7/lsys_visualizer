@@ -6,7 +6,14 @@ VertexGenerator(GLfloat width, GLfloat height)
     : width(width)
     , height(height)
 {
+    drawState = std::make_tuple(glm::vec3(0.0, 0.0, 0.0), 0.0f, 0.0f);
     initDrawCommands();
+}
+
+void
+VertexGenerator::setDrawState(DrawState const &state)
+{
+    drawState = state;
 }
 
 void
@@ -14,22 +21,22 @@ VertexGenerator::initDrawCommands()
 {
     drawCommands['F'] = [&] (DrawState &state, GraphicObjectPtr ptr)
     {
-        glm::vec3 currentPosition = std::get< 0 >(state);
+        glm::vec3& currentPosition = std::get< 0 >(state);
         GLfloat currentAngle = std::get< 1 >(state);
 
         ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0)); 
-        currentPosition.x += 1 * cos(currentAngle);
-        currentPosition.y += 1 * sin(currentAngle); 
+        currentPosition.x += 0.1 * cos(currentAngle);
+        currentPosition.y += 0.1 * sin(currentAngle); 
         ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0));
     };
 
     drawCommands['f'] = [&] (DrawState &state, GraphicObjectPtr)
     {
-        glm::vec3 currentPosition = std::get< 0 >(state);
+        glm::vec3& currentPosition = std::get< 0 >(state);
         GLfloat currentAngle = std::get< 1 >(state);
 
-        currentPosition.x += 1 * cos(currentAngle);
-        currentPosition.y += 1 * sin(currentAngle);
+        currentPosition.x += 0.1 * cos(currentAngle);
+        currentPosition.y += 0.1 * sin(currentAngle);
     };
 
     drawCommands['+'] = [&] (DrawState &state, GraphicObjectPtr)
@@ -66,12 +73,12 @@ GraphicObjectPtr
 VertexGenerator::generateGraphicObject()
 {
     GraphicObjectPtr result(new GraphicObject());
-    DrawState drawState = std::make_tuple(glm::vec3(0.0, 0.0, 0.0), 0.0f, 1.0f);
 
     for (char ch : cmdString)
     {
         drawCommands[ch](drawState, result);
     }
+    result->setDrawMode(GL_LINES);
 
     return result;
 }

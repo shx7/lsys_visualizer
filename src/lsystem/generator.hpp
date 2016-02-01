@@ -18,11 +18,13 @@ namespace lsystem
     class VertexGenerator
     {
         public:
-            VertexGenerator(GLfloat width, GLfloat height);
+            VertexGenerator(GLfloat width = 0, GLfloat height = 0);
 
             void initDrawCommands();
 
             void setImageRectangle(GLfloat width, GLfloat height);
+
+            void setDrawState(DrawState const &state);
 
             void setCommandsString(std::string const &commands);
 
@@ -32,6 +34,7 @@ namespace lsystem
             GLfloat width, height;
             std::unordered_map< char, DrawCommandFunction > drawCommands;
             std::string cmdString;
+            DrawState drawState;
     };
 }
 
