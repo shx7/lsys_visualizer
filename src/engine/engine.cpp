@@ -201,6 +201,7 @@ GraphicEngine::initGLEW()
 void
 GraphicEngine::start()
 {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
     while (!glfwWindowShouldClose(wnd)
             && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -223,7 +224,7 @@ void
 GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
 {
     glBindVertexArray(ptr->getVAOIdentifier());
-    glDrawArrays(ptr->getDrawMode(), 0, ptr->getVertexCount());
+    glDrawArrays(ptr->getDrawMode(), 0, ptr->getVertexCount() / 6);
     glBindVertexArray(0);
 }
 
@@ -241,7 +242,7 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
     GLuint objectVBO = 0;
     glGenBuffers(1, &objectVBO);
     glBindBuffer(GL_ARRAY_BUFFER, objectVBO);
-    glBufferData(GL_ARRAY_BUFFER, objectVertexCount,
+    glBufferData(GL_ARRAY_BUFFER, objectVertexCount * sizeof(GLfloat),
             objectRawVertices, GL_STATIC_DRAW);
 
     GLuint objectVAO = 0;
@@ -254,7 +255,7 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             3,
             GL_FLOAT,
             GL_FALSE,
-            6 * sizeof(GL_FLOAT),
+            6 * sizeof(GLfloat),
             0
             );
 
@@ -264,8 +265,8 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             3,
             GL_FLOAT,
             GL_FALSE,
-            6 * sizeof(GL_FLOAT),
-            (void *)(3 * sizeof(GL_FLOAT))
+            6 * sizeof(GLfloat),
+            (void *)(3 * sizeof(GLfloat))
             );
     glBindVertexArray(0);
 

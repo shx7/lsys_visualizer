@@ -57,7 +57,7 @@ class GraphicObject
 
         GLfloat const *getRawPointer() const
         {
-            return &vertices[0];
+            return vertices.data();
         }
 
         void setVAOIdentifier(GLuint vaoId)
