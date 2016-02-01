@@ -7,20 +7,20 @@
 #include <iostream>
 #include <fstream>
 #include <list>
-#include <memory>
+#include <vector>
 
 #include "graphic_object.hpp"
-
-typedef std::shared_ptr< GraphicObject > GraphicObjectPtr;
 
 class GraphicEngine
 { 
     public:
-        GraphicEngine(std::string const &logFilename);
+        GraphicEngine();
 
         ~GraphicEngine();
 
-        void init(std::string const &logFilename);
+        void init(std::string const &logFilename
+                , std::string const &vertexShaderFilename
+                , std::string const &fragmentShaderFilename);
 
         void start();
 
@@ -35,6 +35,14 @@ class GraphicEngine
         void initGLFW();
         void initGLEW();
 
+        void initShaders(std::string const &vertexShaderFilename
+                , std::string const &fragmentShaderFilename);
+        GLuint loadShader(std::string const &filename, GLenum shaderType);
+        void compileShader(GLuint shaderId, std::string const &shaderText);
+        void linkProgram();
+
+        GLint getGLAttribute(std::string const &attributeName);
+
     private:
         bool isGLFWInitialized;
         std::fstream log;
@@ -42,6 +50,9 @@ class GraphicEngine
 
         std::list< GraphicObjectPtr > graphicObjects;
         int viewportWidth, viewportHeight;
+
+        GLuint vertexShaderId, fragmentShaderId, programId;
+        GLint positionId, colorId;
 };
 
 #endif
