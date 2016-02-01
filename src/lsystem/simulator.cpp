@@ -71,9 +71,11 @@ Simulator::simulate()
 {
     for (std::size_t i = 0; i < stepCount; i++)
     { 
-        std::string const &tmp = mapString(productions);
-        processedString = tmp;
+        processedString = mapString(productions);
     }
+    std::cout << "Simulation finished" << std::endl;
+    processedString = mapString(commands);
+    std::cout << "Result string: " << processedString << std::endl;
 }
 
 std::string

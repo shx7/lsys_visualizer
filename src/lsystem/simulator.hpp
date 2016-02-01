@@ -1,6 +1,7 @@
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
 
+#include <iostream>
 #include <unordered_map>
 
 #include "generator.hpp"
