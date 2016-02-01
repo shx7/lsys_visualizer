@@ -8,11 +8,8 @@
 #include <fstream>
 #include <list>
 #include <vector>
-#include <memory>
 
 #include "graphic_object.hpp"
-
-typedef std::shared_ptr< GraphicObject > GraphicObjectPtr;
 
 class GraphicEngine
 { 

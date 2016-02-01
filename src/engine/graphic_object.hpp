@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 #include <vector>
+#include <memory>
 
 struct Vertex
 {
@@ -84,6 +85,8 @@ class GraphicObject
         {
             drawMode = mode;
         }
-};
+}; 
+
+typedef std::shared_ptr< GraphicObject > GraphicObjectPtr;
 
 #endif
