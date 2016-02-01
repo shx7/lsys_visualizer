@@ -25,8 +25,8 @@ VertexGenerator::initDrawCommands()
         GLfloat currentAngle = std::get< 1 >(state);
 
         ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0)); 
-        currentPosition.x += 0.1 * cos(currentAngle);
-        currentPosition.y += 0.1 * sin(currentAngle); 
+        currentPosition.x += 0.01 * cos(currentAngle);
+        currentPosition.y += 0.01 * sin(currentAngle); 
         ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0));
     };
 
@@ -35,8 +35,8 @@ VertexGenerator::initDrawCommands()
         glm::vec3& currentPosition = std::get< 0 >(state);
         GLfloat currentAngle = std::get< 1 >(state);
 
-        currentPosition.x += 0.1 * cos(currentAngle);
-        currentPosition.y += 0.1 * sin(currentAngle);
+        currentPosition.x += 0.01 * cos(currentAngle);
+        currentPosition.y += 0.01 * sin(currentAngle);
     };
 
     drawCommands['+'] = [&] (DrawState &state, GraphicObjectPtr)
@@ -44,7 +44,7 @@ VertexGenerator::initDrawCommands()
         GLfloat &currentAngle = std::get< 1 >(state);
         GLfloat deltaAngle = std::get< 2 >(state);
 
-        currentAngle += deltaAngle;
+        currentAngle -= deltaAngle;
     };
 
     drawCommands['-'] = [&] (DrawState &state, GraphicObjectPtr)
@@ -52,7 +52,7 @@ VertexGenerator::initDrawCommands()
         GLfloat &currentAngle = std::get< 1 >(state);
         GLfloat deltaAngle = std::get< 2 >(state);
 
-        currentAngle -= deltaAngle;
+        currentAngle += deltaAngle;
     };
 }
 

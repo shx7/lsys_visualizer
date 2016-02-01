@@ -100,8 +100,8 @@ Simulator::mapString(CharacterTransitionMap const &map)
         }
         else
         {
-            std::string error_msg = "Unknown command \'"
-                + producing_character;
+            std::string error_msg = "Unknown command \'";
+            error_msg += producing_character;
             error_msg += "\'";
             throw std::runtime_error(error_msg);
         }
