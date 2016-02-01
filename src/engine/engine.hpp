@@ -44,6 +44,8 @@ class GraphicEngine
         void compileShader(GLuint shaderId, std::string const &shaderText);
         void linkProgram();
 
+        GLint getGLAttribute(std::string const &attributeName);
+
     private:
         bool isGLFWInitialized;
         std::fstream log;
@@ -53,6 +55,7 @@ class GraphicEngine
         int viewportWidth, viewportHeight;
 
         GLuint vertexShaderId, fragmentShaderId, programId;
+        GLint positionId, colorId;
 };
 
 #endif

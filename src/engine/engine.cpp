@@ -3,11 +3,13 @@
 GraphicEngine::GraphicEngine()
     : isGLFWInitialized(false)
     , wnd(nullptr)
-    , viewportWidth(0)
-    , viewportHeight(0)
+    , viewportWidth(640)
+    , viewportHeight(480)
     , vertexShaderId(0)
     , fragmentShaderId(0)
     , programId(0)
+    , positionId(-1)
+    , colorId(-1)
 {
 }
 
@@ -34,15 +36,15 @@ GraphicEngine::init(std::string const &logFilename
         initGLFW();
         initGLEW();
         initShaders(vertexShaderFilename, fragmentShaderFilename);
-        linkProgram();
 
         log << "Graphic engine initialized" << std::endl;
     }
+    // TODO: fix error with log init
     catch (std::runtime_error const &ex)
     {
         std::cerr << ex.what() << std::endl;
         log << ex.what() << std::endl;
-    } 
+    }
 }
 
 void
@@ -51,6 +53,23 @@ GraphicEngine::initShaders(std::string const &vertexShaderFilename
 {
     vertexShaderId = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
     fragmentShaderId = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
+    linkProgram();
+
+    positionId = getGLAttribute("position");
+    colorId = getGLAttribute("color");
+}
+
+GLint
+GraphicEngine::getGLAttribute(std::string const &attributeName)
+{
+    GLint result = -1;
+
+    result = glGetAttribLocation(programId, attributeName.c_str());
+    if (result < 0)
+    {
+        throw std::runtime_error("GL attribute not found: " + attributeName);
+    }
+    return result;
 }
 
 GLuint
@@ -111,8 +130,7 @@ GraphicEngine::linkProgram()
     programId = glCreateProgram();
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
-    glLinkProgram(programId);
-
+    glLinkProgram(programId); 
 
     GLint result = GL_FALSE;
     GLint infoLogLength = 0;
@@ -131,6 +149,7 @@ GraphicEngine::linkProgram()
 
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
+    glUseProgram(programId);
     log << "Shader program linked" << std::endl;
 }
 
@@ -154,7 +173,8 @@ GraphicEngine::initGLFW()
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    wnd = glfwCreateWindow(640, 480, "LSystems", nullptr, nullptr);
+    wnd = glfwCreateWindow(viewportWidth, viewportHeight,
+            "LSystems", nullptr, nullptr);
     if (!wnd)
     {
         glfwTerminate();
@@ -181,11 +201,17 @@ GraphicEngine::initGLEW()
 void
 GraphicEngine::start()
 {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
     while (!glfwWindowShouldClose(wnd)
             && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     { 
         glClear(GL_COLOR_BUFFER_BIT);
+
+        for (GraphicObjectPtr ptr : graphicObjects)
+        {
+            drawObject(ptr);
+        }
 
         glfwSwapBuffers(wnd);
         glfwPollEvents();
@@ -197,6 +223,9 @@ GraphicEngine::start()
 void
 GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
 {
+    glBindVertexArray(ptr->getVAOIdentifier());
+    glDrawArrays(ptr->getDrawMode(), 0, ptr->getVertexCount() / 6);
+    glBindVertexArray(0);
 }
 
 void
@@ -207,4 +236,40 @@ GraphicEngine::processInput()
 void
 GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
 {
+    std::size_t objectVertexCount = ptr->getVertexCount();
+    GLfloat const *objectRawVertices = ptr->getRawPointer();
+
+    GLuint objectVBO = 0;
+    glGenBuffers(1, &objectVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, objectVBO);
+    glBufferData(GL_ARRAY_BUFFER, objectVertexCount * sizeof(GLfloat),
+            objectRawVertices, GL_STATIC_DRAW);
+
+    GLuint objectVAO = 0;
+    glGenVertexArrays(1, &objectVAO);
+    glBindVertexArray(objectVAO);
+
+    glEnableVertexAttribArray(positionId);
+    glVertexAttribPointer(
+            positionId,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            6 * sizeof(GLfloat),
+            0
+            );
+
+    glEnableVertexAttribArray(colorId);
+    glVertexAttribPointer(
+            colorId,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            6 * sizeof(GLfloat),
+            (void *)(3 * sizeof(GLfloat))
+            );
+    glBindVertexArray(0);
+
+    ptr->setVAOIdentifier(objectVAO);
+    graphicObjects.push_back(ptr);
 }
