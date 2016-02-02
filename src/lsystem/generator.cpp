@@ -44,6 +44,14 @@ VertexGenerator::updateRawImageCorners()
     }
 }
 
+glm::vec2
+VertexGenerator::getScreenSize()
+{
+    GLint windowOptions[4];
+    glGetIntegerv(GL_VIEWPORT, &windowOptions[0]);
+    return glm::vec2(windowOptions[2], windowOptions[3]);
+}
+
 void
 VertexGenerator::addVertex(glm::vec3 vertex)
 {

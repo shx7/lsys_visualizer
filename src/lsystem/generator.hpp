@@ -2,6 +2,7 @@
 #define LSYSTEM_VERTEX_GENERATOR
 
 #include "graphic_object.hpp"
+#include "GL/gl.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -39,6 +40,8 @@ namespace lsystem
             void scaleRawImage();
 
             void addVertex(glm::vec3 vertexCoord);
+
+            glm::vec2 getScreenSize();
 
         private:
             GLfloat width, height;
