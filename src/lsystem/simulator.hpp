@@ -1,7 +1,9 @@
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
 
+#include <iostream>
 #include <unordered_map>
+#include <tuple>
 
 #include "generator.hpp"
 
@@ -26,7 +28,9 @@ namespace lsystem
 
             void setStepCount(std::size_t stepCount);
 
-            void setAngle(GLfloat angle);
+            void setStartAngle(GLfloat angle);
+           
+            void setDeltaAngle(GLfloat angle);
 
             void setStartPoint(glm::vec3 startPoint);
 
@@ -42,7 +46,8 @@ namespace lsystem
             CharacterTransitionMap productions;
             CharacterTransitionMap commands;
             std::size_t stepCount;
-            GLfloat angle;
+            GLfloat startAngle;
+            GLfloat deltaAngle;
             glm::vec3 startPoint;
     };
 }

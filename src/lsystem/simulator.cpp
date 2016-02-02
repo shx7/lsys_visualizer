@@ -4,7 +4,8 @@ using namespace lsystem;
 
 Simulator::Simulator()
     : stepCount(0)
-    , angle(0.0f)
+    , startAngle(0.0f)
+    , deltaAngle(0.0f)
     , startPoint(0.0, 0.0, 0.0)
 {
 }
@@ -46,9 +47,15 @@ Simulator::setStepCount(std::size_t stepCount)
 }
 
 void
-Simulator::setAngle(GLfloat angle)
+Simulator::setStartAngle(GLfloat angle)
 {
-    this->angle = angle;
+    startAngle = angle;
+}
+
+void
+Simulator::setDeltaAngle(GLfloat angle)
+{
+    deltaAngle = angle;
 }
 
 void
@@ -63,6 +70,7 @@ Simulator::getGraphicObject()
     VertexGenerator generator;
     simulate(); 
     generator.setCommandsString(processedString);
+    generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
     return generator.generateGraphicObject();
 }
 
@@ -71,9 +79,9 @@ Simulator::simulate()
 {
     for (std::size_t i = 0; i < stepCount; i++)
     { 
-        std::string const &tmp = mapString(productions);
-        processedString = tmp;
+        processedString = mapString(productions);
     }
+    processedString = mapString(commands);
 }
 
 std::string
@@ -90,8 +98,8 @@ Simulator::mapString(CharacterTransitionMap const &map)
         }
         else
         {
-            std::string error_msg = "Unknown command \'"
-                + producing_character;
+            std::string error_msg = "Unknown command \'";
+            error_msg += producing_character;
             error_msg += "\'";
             throw std::runtime_error(error_msg);
         }
