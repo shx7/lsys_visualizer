@@ -81,9 +81,7 @@ Simulator::simulate()
     { 
         processedString = mapString(productions);
     }
-    std::cout << "Simulation finished" << std::endl;
     processedString = mapString(commands);
-    std::cout << "Result string: " << processedString << std::endl;
 }
 
 std::string
