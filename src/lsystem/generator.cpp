@@ -20,7 +20,7 @@ VertexGenerator::setDrawState(DrawState const &state)
 void
 VertexGenerator::updateRawImageCorners()
 {
-    vec3 &currentPosition = std::get< 0 >(drawState);
+    glm::vec3 &currentPosition = std::get< 0 >(drawState);
 
     if (currentPosition.x < imageLeftCorner.x
             || currentPosition.y < imageLeftCorner.y)
@@ -36,6 +36,30 @@ VertexGenerator::updateRawImageCorners()
 }
 
 void
+VertexGenerator::addVertex(glm::vec3 vertex)
+{
+    vertices.push_back(glm::vec4(vertex, 1));
+}
+
+void
+VertexGenerator::scaleRawImage()
+{
+    GLfloat rawImageWidth = imageRightCorner.x - imageLeftCorner.x;
+    GLfloat rawImageHeight = imageRightCorner.y - imageLeftCorner.y;
+
+    GLfloat scaleXCoefficient = width / rawImageWidth;
+    GLfloat scaleYCoefficient = height / rawImageHeight;
+
+    glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f),
+            glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
+
+    for (glm::vec4 &vertex : vertices)
+    {
+        vertex = scaleMatrix * vertex;
+    }
+}
+
+void
 VertexGenerator::initDrawCommands()
 {
 
@@ -45,14 +69,11 @@ VertexGenerator::initDrawCommands()
         GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
         ptr->addVertex(currentPosition, glm::vec3(0.0, 1.0, 0.0)); 
-
         currentPosition.x += 0.01 * cos(currentAngle);
         currentPosition.y += 0.01 * sin(currentAngle); 
-
         ptr->addVertex(currentPosition, glm::vec3(0.0, 1.0, 0.0));
 
-        glm::vec2 &imageLeftCorner = generator.imageLeftCorner;
-        updateRawImageCorners();
+        generator.updateRawImageCorners();
     };
 
     drawCommands['f'] = [&] (VertexGenerator &generator, GraphicObjectPtr)

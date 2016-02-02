@@ -2,6 +2,8 @@
 #define LSYSTEM_VERTEX_GENERATOR
 
 #include "graphic_object.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #include <memory>
 
@@ -34,12 +36,17 @@ namespace lsystem
         private:
             void updateRawImageCorners();
 
+            void scaleRawImage();
+
+            void addVertex(glm::vec3 vertexCoord);
+
         private:
             GLfloat width, height;
             std::unordered_map< char, DrawCommandFunction > drawCommands;
             std::string cmdString;
             DrawState drawState;
             glm::vec2 imageLeftCorner, imageRightCorner;
+            std::vector< glm::vec4 > vertices;
     };
 }
 
