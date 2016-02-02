@@ -28,12 +28,12 @@ int main()
 
     // Test for LSystem generator
     lsystem::Simulator simulator;
-    simulator.setAxiom("F");
+    simulator.setAxiom("F-F-F-F");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
-    simulator.setDeltaAngle(3.14159 / 3);
-    simulator.setStartAngle(3.14159 / 2);
+    simulator.setDeltaAngle(3.14159 / 2.0);
+    simulator.setStartAngle(0);
 
-    simulator.addProduction('F', "FF-F+++fff-F");
+    simulator.addProduction('F', "FF-F-F-F-F-F+F");
     simulator.addProduction('+', "+");
     simulator.addProduction('-', "-");
     simulator.addProduction('f', "f");
@@ -43,7 +43,7 @@ int main()
     simulator.addCommand('-', "-");
     simulator.addCommand('f', "f");
 
-    simulator.setStepCount(5);
+    simulator.setStepCount(3);
     engine.addGraphicObject(simulator.getGraphicObject());
 
 

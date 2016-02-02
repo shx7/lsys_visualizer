@@ -21,7 +21,7 @@ namespace lsystem
         typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
-            VertexGenerator(GLfloat width = 0, GLfloat height = 0);
+            VertexGenerator(GLfloat width = 0.1f, GLfloat height = 0.1f);
 
             void initDrawCommands();
 

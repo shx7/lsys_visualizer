@@ -1,4 +1,5 @@
 #include "generator.hpp"
+#include <iostream>
 using namespace lsystem;
 
 VertexGenerator::
@@ -22,16 +23,24 @@ VertexGenerator::updateRawImageCorners()
 {
     glm::vec3 &currentPosition = std::get< 0 >(drawState);
 
-    if (currentPosition.x < imageLeftCorner.x
-            || currentPosition.y < imageLeftCorner.y)
+    if (currentPosition.x < imageLeftCorner.x)
     {
-        imageLeftCorner = glm::vec2(currentPosition);
+        imageLeftCorner.x = currentPosition.x;
     }
 
-    if (currentPosition.x > imageRightCorner.x
-            || currentPosition.y > imageRightCorner.y)
+    if (currentPosition.y < imageLeftCorner.y)
     {
-        imageRightCorner = glm::vec2(currentPosition);
+        imageLeftCorner.y = currentPosition.y;
+    }
+
+    if (currentPosition.x > imageRightCorner.x)
+    {
+        imageRightCorner.x = currentPosition.x;
+    }
+
+    if (currentPosition.y > imageRightCorner.y)
+    {
+        imageRightCorner.y = currentPosition.y;
     }
 }
 
@@ -53,10 +62,10 @@ VertexGenerator::scaleRawImage()
     glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f),
             glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
 
-    for (glm::vec4 &vertex : vertices)
+    /*for (glm::vec4 &vertex : vertices)
     {
         vertex = scaleMatrix * vertex;
-    }
+    }*/
 }
 
 void
