@@ -25,10 +25,10 @@ VertexGenerator::initDrawCommands()
         glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
         GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
-        ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0)); 
+        ptr->addVertex(currentPosition, glm::vec3(0.0, 1.0, 0.0)); 
         currentPosition.x += 0.01 * cos(currentAngle);
         currentPosition.y += 0.01 * sin(currentAngle); 
-        ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0));
+        ptr->addVertex(currentPosition, glm::vec3(0.0, 1.0, 0.0));
     };
 
     drawCommands['f'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
