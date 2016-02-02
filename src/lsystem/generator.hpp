@@ -32,6 +32,9 @@ namespace lsystem
             GraphicObjectPtr generateGraphicObject();
 
         private:
+            void updateRawImageCorners();
+
+        private:
             GLfloat width, height;
             std::unordered_map< char, DrawCommandFunction > drawCommands;
             std::string cmdString;
