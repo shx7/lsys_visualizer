@@ -22,7 +22,7 @@ namespace lsystem
         typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
-            VertexGenerator(GLfloat width = 0.1f, GLfloat height = 0.1f);
+            VertexGenerator(GLfloat width = 320, GLfloat height = 240);
 
             void initDrawCommands();
 
@@ -35,13 +35,17 @@ namespace lsystem
             GraphicObjectPtr generateGraphicObject();
 
         private:
-            void updateRawImageCorners();
+            void updateImageCorners();
 
-            void scaleRawImage();
+            void scaleImage();
+
+            void centerImage();
 
             void addVertex(glm::vec3 vertexCoord);
 
             glm::vec2 getScreenSize();
+
+            glm::vec2 getImageSize();
 
         private:
             GLfloat width, height;

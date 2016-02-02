@@ -15,11 +15,11 @@ void
 VertexGenerator::setDrawState(DrawState const &state)
 {
     drawState = state;
-    updateRawImageCorners();
+    updateImageCorners();
 }
 
 void
-VertexGenerator::updateRawImageCorners()
+VertexGenerator::updateImageCorners()
 {
     glm::vec3 &currentPosition = std::get< 0 >(drawState);
 
@@ -44,36 +44,55 @@ VertexGenerator::updateRawImageCorners()
     }
 }
 
-glm::vec2
-VertexGenerator::getScreenSize()
-{
-    GLint windowOptions[4];
-    glGetIntegerv(GL_VIEWPORT, &windowOptions[0]);
-    return glm::vec2(windowOptions[2], windowOptions[3]);
-}
-
 void
 VertexGenerator::addVertex(glm::vec3 vertex)
 {
     vertices.push_back(glm::vec4(vertex, 1));
 }
 
-void
-VertexGenerator::scaleRawImage()
+glm::vec2
+VertexGenerator::getImageSize()
 {
-    GLfloat rawImageWidth = imageRightCorner.x - imageLeftCorner.x;
-    GLfloat rawImageHeight = imageRightCorner.y - imageLeftCorner.y;
+    glm::vec2 const &screenSize = getScreenSize();
+    GLfloat screenWidth = screenSize.x;
+    GLfloat screenHeight = screenSize.y;
 
-    GLfloat scaleXCoefficient = width / rawImageWidth;
-    GLfloat scaleYCoefficient = height / rawImageHeight;
+    GLfloat rawImageWidth =
+        screenWidth * (imageRightCorner.x - imageLeftCorner.x) / 2.0f;
+    GLfloat rawImageHeight =
+        screenHeight * (imageRightCorner.y - imageLeftCorner.y) / 2.0f;
+
+    return glm::vec2(rawImageWidth, rawImageHeight);
+}
+
+void
+VertexGenerator::scaleImage()
+{
+    glm::vec2 imageSize = getImageSize();
+
+    GLfloat scaleXCoefficient = width / imageSize.x;
+    GLfloat scaleYCoefficient = height / imageSize.y;
 
     glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f),
             glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
 
-    /*for (glm::vec4 &vertex : vertices)
+    for (glm::vec4 &vertex : vertices)
     {
         vertex = scaleMatrix * vertex;
-    }*/
+    }
+}
+
+void
+VertexGenerator::centerImage()
+{
+}
+
+glm::vec2
+VertexGenerator::getScreenSize()
+{
+    GLint windowOptions[4];
+    glGetIntegerv(GL_VIEWPORT, &windowOptions[0]);
+    return glm::vec2(windowOptions[2], windowOptions[3]);
 }
 
 void
@@ -90,7 +109,7 @@ VertexGenerator::initDrawCommands()
         currentPosition.y += 0.01 * sin(currentAngle); 
         generator.addVertex(currentPosition); 
 
-        generator.updateRawImageCorners();
+        generator.updateImageCorners();
     };
 
     drawCommands['f'] = [&] (VertexGenerator &generator)
@@ -141,7 +160,7 @@ VertexGenerator::generateGraphicObject()
     {
         drawCommands[ch](*this);
     }
-    scaleRawImage();
+    scaleImage();
 
     for (glm::vec4 vertex : vertices)
     {
