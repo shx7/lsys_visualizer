@@ -19,10 +19,11 @@ VertexGenerator::setDrawState(DrawState const &state)
 void
 VertexGenerator::initDrawCommands()
 {
-    drawCommands['F'] = [&] (DrawState &state, GraphicObjectPtr ptr)
+
+    drawCommands['F'] = [&] (VertexGenerator &generator, GraphicObjectPtr ptr)
     {
-        glm::vec3& currentPosition = std::get< 0 >(state);
-        GLfloat currentAngle = std::get< 1 >(state);
+        glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
+        GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
         ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0)); 
         currentPosition.x += 0.1 * cos(currentAngle);
@@ -30,27 +31,27 @@ VertexGenerator::initDrawCommands()
         ptr->addVertex(glm::vec3(currentPosition), glm::vec3(0.0, 1.0, 0.0));
     };
 
-    drawCommands['f'] = [&] (DrawState &state, GraphicObjectPtr)
+    drawCommands['f'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
     {
-        glm::vec3& currentPosition = std::get< 0 >(state);
-        GLfloat currentAngle = std::get< 1 >(state);
+        glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
+        GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
         currentPosition.x += 0.1 * cos(currentAngle);
         currentPosition.y += 0.1 * sin(currentAngle);
     };
 
-    drawCommands['+'] = [&] (DrawState &state, GraphicObjectPtr)
+    drawCommands['+'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
     {
-        GLfloat &currentAngle = std::get< 1 >(state);
-        GLfloat deltaAngle = std::get< 2 >(state);
+        GLfloat &currentAngle = std::get< 1 >(generator.drawState);
+        GLfloat deltaAngle = std::get< 2 >(generator.drawState);
 
         currentAngle += deltaAngle;
     };
 
-    drawCommands['-'] = [&] (DrawState &state, GraphicObjectPtr)
+    drawCommands['-'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
     {
-        GLfloat &currentAngle = std::get< 1 >(state);
-        GLfloat deltaAngle = std::get< 2 >(state);
+        GLfloat &currentAngle = std::get< 1 >(generator.drawState);
+        GLfloat deltaAngle = std::get< 2 >(generator.drawState);
 
         currentAngle -= deltaAngle;
     };
@@ -76,7 +77,7 @@ VertexGenerator::generateGraphicObject()
 
     for (char ch : cmdString)
     {
-        drawCommands[ch](drawState, result);
+        drawCommands[ch](*this, result);
     }
     result->setDrawMode(GL_LINES);
 

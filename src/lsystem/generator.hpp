@@ -13,10 +13,11 @@ namespace lsystem
     typedef GLfloat Angle;
     typedef GLfloat DeltaAngle;
     typedef std::tuple< glm::vec3, Angle, DeltaAngle > DrawState;
-    typedef void (* DrawCommandFunction)(DrawState &, GraphicObjectPtr);
 
     class VertexGenerator
     {
+        typedef void (*DrawCommandFunction)(VertexGenerator &, GraphicObjectPtr);
+
         public:
             VertexGenerator(GLfloat width = 0, GLfloat height = 0);
 
@@ -35,6 +36,7 @@ namespace lsystem
             std::unordered_map< char, DrawCommandFunction > drawCommands;
             std::string cmdString;
             DrawState drawState;
+            glm::vec2 imageLeftCorner, imageRightCorner;
     };
 }
 
