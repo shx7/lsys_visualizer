@@ -18,7 +18,7 @@ namespace lsystem
 
     class VertexGenerator
     {
-        typedef void (*DrawCommandFunction)(VertexGenerator &, GraphicObjectPtr);
+        typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
             VertexGenerator(GLfloat width = 0, GLfloat height = 0);

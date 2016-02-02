@@ -63,20 +63,20 @@ void
 VertexGenerator::initDrawCommands()
 {
 
-    drawCommands['F'] = [&] (VertexGenerator &generator, GraphicObjectPtr ptr)
+    drawCommands['F'] = [&] (VertexGenerator &generator)
     {
         glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
         GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
-        ptr->addVertex(currentPosition, glm::vec3(0.0, 1.0, 0.0)); 
+        generator.addVertex(currentPosition); 
         currentPosition.x += 0.01 * cos(currentAngle);
         currentPosition.y += 0.01 * sin(currentAngle); 
-        ptr->addVertex(currentPosition, glm::vec3(0.0, 1.0, 0.0));
+        generator.addVertex(currentPosition); 
 
         generator.updateRawImageCorners();
     };
 
-    drawCommands['f'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
+    drawCommands['f'] = [&] (VertexGenerator &generator)
     {
         glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
         GLfloat currentAngle = std::get< 1 >(generator.drawState);
@@ -85,7 +85,7 @@ VertexGenerator::initDrawCommands()
         currentPosition.y += 0.01 * sin(currentAngle);
     };
 
-    drawCommands['+'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
+    drawCommands['+'] = [&] (VertexGenerator &generator)
     {
         GLfloat &currentAngle = std::get< 1 >(generator.drawState);
         GLfloat deltaAngle = std::get< 2 >(generator.drawState);
@@ -93,7 +93,7 @@ VertexGenerator::initDrawCommands()
         currentAngle -= deltaAngle;
     };
 
-    drawCommands['-'] = [&] (VertexGenerator &generator, GraphicObjectPtr)
+    drawCommands['-'] = [&] (VertexGenerator &generator)
     {
         GLfloat &currentAngle = std::get< 1 >(generator.drawState);
         GLfloat deltaAngle = std::get< 2 >(generator.drawState);
@@ -122,7 +122,13 @@ VertexGenerator::generateGraphicObject()
 
     for (char ch : cmdString)
     {
-        drawCommands[ch](*this, result);
+        drawCommands[ch](*this);
+    }
+    scaleRawImage();
+
+    for (glm::vec4 vertex : vertices)
+    {
+        result->addVertex(glm::vec3(vertex), glm::vec3(0.0, 1.0, 0.0));
     }
     result->setDrawMode(GL_LINES);
 
