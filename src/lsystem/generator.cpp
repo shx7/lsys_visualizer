@@ -142,6 +142,16 @@ VertexGenerator::initDrawCommands()
 
         currentAngle += deltaAngle;
     };
+
+    drawCommands['['] = [&] (VertexGenerator &generator)
+    {
+        generator.saveDrawState();
+    };
+
+    drawCommands[']'] = [&] (VertexGenerator &generator)
+    {
+        generator.restoreDrawState();
+    };
 }
 
 void
