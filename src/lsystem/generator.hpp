@@ -9,6 +9,7 @@
 #include <memory>
 
 #include <tuple>
+#include <vector>
 #include <unordered_map>
 
 namespace lsystem
@@ -45,6 +46,10 @@ namespace lsystem
 
             glm::mat4 getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight);
 
+            void saveDrawState();
+
+            void restoreDrawState();
+
         private:
             GLfloat width, height;
             std::unordered_map< char, DrawCommandFunction > drawCommands;
@@ -52,6 +57,7 @@ namespace lsystem
             DrawState drawState;
             glm::vec2 imageLeftCorner, imageRightCorner;
             std::vector< glm::vec4 > vertices;
+            std::vector< DrawState > drawStateStack;
     };
 }
 

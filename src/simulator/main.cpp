@@ -2,6 +2,7 @@
 #include "engine.hpp"
 #include "generator.hpp"
 #include "simulator.hpp"
+#include "glm/gtc/constants.hpp"
 
 int main()
 {
@@ -30,7 +31,7 @@ int main()
     lsystem::Simulator simulator;
     simulator.setAxiom("F-F-F-F");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
-    simulator.setDeltaAngle(3.14159 / 2.0);
+    simulator.setDeltaAngle(glm::half_pi< GLfloat > ());
     simulator.setStartAngle(0);
 
     simulator.addProduction('F', "FF-F-F-F-F-F+F");

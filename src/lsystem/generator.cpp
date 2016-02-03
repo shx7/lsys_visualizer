@@ -1,5 +1,4 @@
 #include "generator.hpp"
-#include <iostream>
 using namespace lsystem;
 
 VertexGenerator::
@@ -87,7 +86,7 @@ void
 VertexGenerator::scaleImage()
 { 
     glm::mat4 const &transformMatrix
-        = getTransformMatrix(width * 0.7, height * 0.7);
+        = getTransformMatrix(300, 300);
     for (glm::vec4 &vertex : vertices)
     {
         vertex = transformMatrix * vertex;
@@ -112,8 +111,8 @@ VertexGenerator::initDrawCommands()
         GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
         generator.addVertex(currentPosition); 
-        currentPosition.x += 0.01 * cos(currentAngle);
-        currentPosition.y += 0.01 * sin(currentAngle); 
+        currentPosition.x += 1 * cos(currentAngle);
+        currentPosition.y += 1 * sin(currentAngle); 
         generator.addVertex(currentPosition); 
 
         generator.updateImageCorners();
@@ -124,8 +123,8 @@ VertexGenerator::initDrawCommands()
         glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
         GLfloat currentAngle = std::get< 1 >(generator.drawState);
 
-        currentPosition.x += 0.01 * cos(currentAngle);
-        currentPosition.y += 0.01 * sin(currentAngle);
+        currentPosition.x += 1 * cos(currentAngle);
+        currentPosition.y += 1 * sin(currentAngle);
     };
 
     drawCommands['+'] = [&] (VertexGenerator &generator)
@@ -176,4 +175,22 @@ VertexGenerator::generateGraphicObject()
     result->setDrawMode(GL_LINES);
 
     return result;
+}
+
+void
+VertexGenerator::saveDrawState()
+{
+    drawStateStack.push_back(drawState);
+}
+
+void
+VertexGenerator::restoreDrawState()
+{
+    if (drawStateStack.empty())
+    {
+        throw std::runtime_error("Production rules error. State stack is empty.");
+    }
+
+    drawState = drawStateStack.back();
+    drawStateStack.pop_back();
 }
