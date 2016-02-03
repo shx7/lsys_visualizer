@@ -85,8 +85,7 @@ VertexGenerator::getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight)
 void
 VertexGenerator::scaleImage()
 { 
-    glm::mat4 const &transformMatrix
-        = getTransformMatrix(300, 300);
+    glm::mat4 const &transformMatrix = getTransformMatrix(width, height);
     for (glm::vec4 &vertex : vertices)
     {
         vertex = transformMatrix * vertex;

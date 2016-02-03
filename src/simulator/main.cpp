@@ -28,7 +28,7 @@ int main()
     engine.addGraphicObject(obj1);*/
 
     // Test for LSystem generator
-    lsystem::Simulator simulator;
+    /*lsystem::Simulator simulator;
     simulator.setAxiom("F-F-F-F");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setDeltaAngle(glm::half_pi< GLfloat > ());
@@ -45,7 +45,28 @@ int main()
     simulator.addCommand('f', "f");
 
     simulator.setStepCount(3);
-    engine.addGraphicObject(simulator.getGraphicObject());
+    engine.addGraphicObject(simulator.getGraphicObject());*/
+
+    lsystem::Simulator simulator;
+    simulator.setAxiom("F");
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.addProduction('F', "F[+F]F[-FF]F");
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
+    simulator.addProduction('[', "[");
+    simulator.addProduction(']', "]");
+
+    simulator.addCommand('F', "F");
+    simulator.addCommand('+', "+");
+    simulator.addCommand('-', "-");
+    simulator.addCommand('[', "[");
+    simulator.addCommand(']', "]");
+
+    simulator.setStepCount(4);
+    engine.addGraphicObject(simulator.getGraphicObject(400, 400));
 
 
     std::cout << "LSystem" << std::endl;
