@@ -50,41 +50,48 @@ VertexGenerator::addVertex(glm::vec3 vertex)
     vertices.push_back(glm::vec4(vertex, 1));
 }
 
-glm::vec2
-VertexGenerator::getImageSize()
-{
+glm::mat4
+VertexGenerator::getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight)
+{ 
     glm::vec2 const &screenSize = getScreenSize();
     GLfloat screenWidth = screenSize.x;
     GLfloat screenHeight = screenSize.y;
 
-    GLfloat rawImageWidth =
-        screenWidth * (imageRightCorner.x - imageLeftCorner.x) / 2.0f;
-    GLfloat rawImageHeight =
-        screenHeight * (imageRightCorner.y - imageLeftCorner.y) / 2.0f;
+    GLfloat currentImageWidth = imageRightCorner.x - imageLeftCorner.x;
+    GLfloat currentImageHeight = imageRightCorner.y - imageLeftCorner.y;
 
-    return glm::vec2(rawImageWidth, rawImageHeight);
+    GLfloat scaleXCoefficient
+        = (2.0f * imageWidth / screenWidth) / currentImageWidth;
+    GLfloat scaleYCoefficient
+        = (2.0f * imageHeight / screenHeight) / currentImageHeight; 
+    glm::mat4 scaleMatrix = glm::scale(
+              glm::mat4(1.0)
+            , glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
+
+    // Apply scale transform to image corners to preserve consistent state
+    imageLeftCorner = glm::vec2(scaleMatrix * glm::vec4(imageLeftCorner, 0, 1));
+    imageRightCorner = glm::vec2(scaleMatrix * glm::vec4(imageRightCorner, 0, 1));
+
+    GLfloat translationX
+        = 2.0f * (-imageWidth / 2.0f) / screenWidth - imageLeftCorner.x;
+    GLfloat translationY
+        = 2.0f * (-imageHeight / 2.0f) / screenHeight - imageLeftCorner.y;
+    glm::mat4 translationMatrix = glm::translate(
+              glm::mat4(1.0)
+            , glm::vec3(translationX, translationY, 0));
+
+    return translationMatrix * scaleMatrix;
 }
 
 void
 VertexGenerator::scaleImage()
-{
-    glm::vec2 imageSize = getImageSize();
-
-    GLfloat scaleXCoefficient = width / imageSize.x;
-    GLfloat scaleYCoefficient = height / imageSize.y;
-
-    glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f),
-            glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
-
+{ 
+    glm::mat4 const &transformMatrix
+        = getTransformMatrix(width * 0.7, height * 0.7);
     for (glm::vec4 &vertex : vertices)
     {
-        vertex = scaleMatrix * vertex;
+        vertex = transformMatrix * vertex;
     }
-}
-
-void
-VertexGenerator::centerImage()
-{
 }
 
 glm::vec2
