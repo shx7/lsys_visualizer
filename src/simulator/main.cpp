@@ -1,6 +1,8 @@
 #include <iostream>
 #include "engine.hpp"
 #include "generator.hpp"
+#include "simulator.hpp"
+#include "glm/gtc/constants.hpp"
 
 int main()
 {
@@ -9,19 +11,64 @@ int main()
     GraphicEngine engine;
     engine.init("logfile", vertexShaderFilename, fragmentShaderFilename);
 
-    lsystem::VertexGenerator vertexGenerator;
+    // Test for lsystem::VertexGenerator
+    /*lsystem::VertexGenerator vertexGenerator;
     vertexGenerator.setDrawState(std::make_tuple(glm::vec3(0, 0, 0), 0, 3.14 / 4));
-    vertexGenerator.setCommandsString("Ff+FffFFF");
-    GraphicObjectPtr obj1 = vertexGenerator.generateGraphicObject();
+    vertexGenerator.setCommandsString("F-F+FF-F+FF-F+FF-F+F");
+    GraphicObjectPtr obj1 = vertexGenerator.generateGraphicObject(); 
+    engine.addGraphicObject(obj1);*/
+    
 
+    // Test for GraphicEngine
     /*GraphicObjectPtr obj1(new GraphicObject);
     obj1->addVertex(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     obj1->addVertex(glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     obj1->addVertex(glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    obj1->setDrawMode(GL_TRIANGLES);*/
+    obj1->setDrawMode(GL_TRIANGLES);
+    engine.addGraphicObject(obj1);*/
 
+    // Test for LSystem generator
+    /*lsystem::Simulator simulator;
+    simulator.setAxiom("F-F-F-F");
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::half_pi< GLfloat > ());
+    simulator.setStartAngle(0);
 
-    engine.addGraphicObject(obj1);
+    simulator.addProduction('F', "FF-F-F-F-F-F+F");
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
+    simulator.addProduction('f', "f");
+
+    simulator.addCommand('F', "F");
+    simulator.addCommand('+', "+");
+    simulator.addCommand('-', "-");
+    simulator.addCommand('f', "f");
+
+    simulator.setStepCount(3);
+    engine.addGraphicObject(simulator.getGraphicObject());*/
+
+    // Test for tree LSystem
+    lsystem::Simulator simulator;
+    simulator.setAxiom("F");
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.addProduction('F', "F[+F]F[-FF]F");
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
+    simulator.addProduction('[', "[");
+    simulator.addProduction(']', "]");
+
+    simulator.addCommand('F', "F");
+    simulator.addCommand('+', "+");
+    simulator.addCommand('-', "-");
+    simulator.addCommand('[', "[");
+    simulator.addCommand(']', "]");
+
+    simulator.setStepCount(4);
+    engine.addGraphicObject(simulator.getGraphicObject(400, 400));
+
 
     std::cout << "LSystem" << std::endl;
     engine.start();
