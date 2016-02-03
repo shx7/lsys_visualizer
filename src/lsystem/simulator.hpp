@@ -34,7 +34,9 @@ namespace lsystem
 
             void setStartPoint(glm::vec3 startPoint);
 
-            GraphicObjectPtr getGraphicObject();
+            GraphicObjectPtr getGraphicObject(
+                      GLfloat imageWidth
+                    , GLfloat imageHeight);
 
         private:
             void simulate(); 
@@ -45,6 +47,7 @@ namespace lsystem
             std::string processedString;
             CharacterTransitionMap productions;
             CharacterTransitionMap commands;
+
             std::size_t stepCount;
             GLfloat startAngle;
             GLfloat deltaAngle;
