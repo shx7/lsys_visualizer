@@ -47,6 +47,7 @@ int main()
     simulator.setStepCount(3);
     engine.addGraphicObject(simulator.getGraphicObject());*/
 
+    // Test for tree LSystem
     lsystem::Simulator simulator;
     simulator.setAxiom("F");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
