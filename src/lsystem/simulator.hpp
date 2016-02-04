@@ -9,7 +9,22 @@
 
 namespace lsystem
 {
-    typedef std::unordered_map< char, std::string > CharacterTransitionMap;
+    struct Production
+    {
+        char producing_character;
+        std::string production_string;
+        double probability;
+
+        Production(char producing_character
+                , std::string const &production_string
+                , double probability)
+            : producing_character(producing_character)
+            , production_string(production_string)
+            , probability(probability) {}
+    };
+
+    typedef std::unordered_map< char, Production > ProductionMap; 
+    typedef std::unordered_map< char, std::string > CharacterTransitionMap; 
 
     class Simulator
     {
@@ -18,11 +33,13 @@ namespace lsystem
 
             void setAxiom(std::string const &axiom);
 
-            void addProduction(char character, std::string const &production);
+            void addProduction(char producing_character
+                    , std::string const &production_string
+                    , double probability = 1.0);
 
             void clearProdutions();
 
-            void addCommand(char character, std::string const &command);
+            void addCommand(char producing_character, std::string const &command);
 
             void clearCommands();
 
@@ -43,9 +60,11 @@ namespace lsystem
 
             std::string mapString(CharacterTransitionMap const &map);
 
+            std::string applyProductions(ProductionMap const &map);
+
         private:
             std::string processedString;
-            CharacterTransitionMap productions;
+            ProductionMap productions;
             CharacterTransitionMap commands;
 
             std::size_t stepCount;
