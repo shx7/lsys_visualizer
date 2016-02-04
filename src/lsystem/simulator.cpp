@@ -35,7 +35,7 @@ Simulator::addProduction(char producing_character
     else
     {
         std::string error_msg = "Adding existent production for character ";
-        //error_msg += producing_character;
+        error_msg += producing_character;
         throw std::runtime_error(error_msg);
     }
 }
@@ -107,13 +107,18 @@ std::string
 Simulator::applyProductions(ProductionMap const &map)
 {
     std::string result;
-    /*for (char producing_character : processedString)
+    for (char producing_character : processedString)
     {
         auto it = map.find(producing_character);
 
         if (it != map.end())
         {
-            result.append(it->second);
+            Production const &production = it->second;
+            double random_value = randomGenerator.getNextRandom(); 
+            if (random_value < production.probability)
+            {
+                result.append(production.production_string);
+            }
         }
         else
         {
@@ -122,7 +127,7 @@ Simulator::applyProductions(ProductionMap const &map)
             error_msg += "\'";
             throw std::runtime_error(error_msg);
         }
-    }*/
+    }
     return result;
 }
 
