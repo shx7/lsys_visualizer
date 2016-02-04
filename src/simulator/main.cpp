@@ -71,14 +71,35 @@ int main()
 
     // Test for SLSystem
     lsystem::Simulator simulator;
-    simulator.setAxiom("F");
+    simulator.setAxiom("S");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
-    simulator.addProduction('F', "F[+F]F[-FF]F", 0.5);
-    simulator.addProduction('+', "+", 0.7);
-    simulator.addProduction('-', "-", 0.8);
+    simulator.addProduction('S', "SLSRS");
+    simulator.addProduction('L', "[+SLSRS]");
+    simulator.addProduction('R', "[-SLSRS]");
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
+    simulator.addProduction('[', "[");
+    simulator.addProduction(']', "]");
+
+    simulator.addCommand('S', "F");
+    simulator.addCommand('L', "[+F]");
+    simulator.addCommand('R', "[-F]");
+    simulator.addCommand('+', "+");
+    simulator.addCommand('-', "-");
+    simulator.addCommand('[', "[");
+    simulator.addCommand(']', "]");
+
+    /*simulator.setAxiom("F");
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.addProduction('F', "F[+F]F[-F]F");
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
     simulator.addProduction('[', "[");
     simulator.addProduction(']', "]");
 
@@ -86,10 +107,10 @@ int main()
     simulator.addCommand('+', "+");
     simulator.addCommand('-', "-");
     simulator.addCommand('[', "[");
-    simulator.addCommand(']', "]");
+    simulator.addCommand(']', "]");*/
 
-    simulator.setStepCount(6);
-    engine.addGraphicObject(simulator.getGraphicObject(400, 400));
+    simulator.setStepCount(4);
+    engine.addGraphicObject(simulator.getGraphicObject(100, 100));
 
 
     std::cout << "LSystem" << std::endl;
