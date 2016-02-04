@@ -31,6 +31,7 @@ Simulator::addProduction(char producing_character
             probability
             );
         productions.insert(it, std::make_pair(producing_character, production));
+        commands[producing_character] = "";
     }
     else
     {
@@ -86,15 +87,16 @@ GraphicObjectPtr
 Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
 {
     VertexGenerator generator;
-    simulate(); 
+    generateCommandsString(); 
     generator.setCommandsString(processedString);
     generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
     generator.setImageRectangle(imageWidth, imageHeight);
+    std::cout << processedString << std::endl;
     return generator.generateGraphicObject();
 }
 
 void
-Simulator::simulate()
+Simulator::generateCommandsString()
 {
     for (std::size_t i = 0; i < stepCount; i++)
     { 
@@ -115,7 +117,7 @@ Simulator::applyProductions(ProductionMap const &map)
         {
             Production const &production = it->second;
             double random_value = randomGenerator.getNextRandom(); 
-            if (random_value < production.probability)
+            if (random_value <= production.probability)
             {
                 result.append(production.production_string);
             }

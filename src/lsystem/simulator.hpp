@@ -33,6 +33,7 @@ namespace lsystem
         public:
             RandomGenerator()
                 : randomGenerator(randomDevice())
+                , distribution(0.0, 1.0)
             {
             }
 
@@ -77,7 +78,8 @@ namespace lsystem
                     , GLfloat imageHeight);
 
         private:
-            void simulate(); 
+
+            void generateCommandsString(); 
 
             std::string mapString(CharacterTransitionMap const &map);
 
