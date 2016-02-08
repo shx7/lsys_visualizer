@@ -102,8 +102,7 @@ VertexGenerator::getScreenSize()
 
 void
 VertexGenerator::initDrawCommands()
-{
-
+{ 
     drawCommands['F'] = [&] (VertexGenerator &generator)
     {
         glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
@@ -179,7 +178,7 @@ VertexGenerator::generateGraphicObject()
 
     for (glm::vec4 vertex : vertices)
     {
-        result->addVertex(glm::vec3(vertex), glm::vec3(0.0, 1.0, 0.0));
+        result->addVertex(vertex, glm::vec3(0.0, 1.0, 0.0));
     }
     result->setDrawMode(GL_LINES);
 

@@ -77,7 +77,7 @@ int main()
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
     simulator.addProduction('S', "SLSRS");
-    simulator.addProduction('L', "[+SLSRS]");
+    simulator.addProduction('L', "[+SLSRS]", 0.5);
     simulator.addProduction('R', "[-SLSRS]");
     simulator.addProduction('+', "+");
     simulator.addProduction('-', "-");
@@ -109,8 +109,8 @@ int main()
     simulator.addCommand('[', "[");
     simulator.addCommand(']', "]");*/
 
-    simulator.setStepCount(4);
-    engine.addGraphicObject(simulator.getGraphicObject(100, 100));
+    simulator.setStepCount(6);
+    engine.addGraphicObject(simulator.getGraphicObject(100, 200));
 
 
     std::cout << "LSystem" << std::endl;

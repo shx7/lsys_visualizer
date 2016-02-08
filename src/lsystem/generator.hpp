@@ -1,3 +1,13 @@
+/************************************************
+ *
+ * lsystem::VertexGenerator convertes string
+ * gained after simulation of lsystem::Simulator
+ * into vertices.
+ *
+ * Also VertexGenerator implements functions
+ * scaling and translation image to the center of
+ * OpenGL window.
+ ***********************************************/
 #ifndef LSYSTEM_VERTEX_GENERATOR
 #define LSYSTEM_VERTEX_GENERATOR
 

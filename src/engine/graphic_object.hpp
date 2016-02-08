@@ -31,11 +31,12 @@ class GraphicObject
         {
         }
 
-        void addVertex(glm::vec3 const &position, glm::vec3 const &color)
+        void addVertex(glm::vec4 const &position, glm::vec3 const &color)
         {
             vertices.push_back(position.x);
             vertices.push_back(position.y);
             vertices.push_back(position.z);
+            vertices.push_back(position.w);
             vertices.push_back(color.r);
             vertices.push_back(color.g);
             vertices.push_back(color.b);

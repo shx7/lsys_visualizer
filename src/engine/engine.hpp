@@ -1,3 +1,9 @@
+/***********************************************
+ *
+ * GraphicEngine used for representation
+ * registered list of GraphicObject's by
+ * OpenGL >= 3.0
+ ***********************************************/
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
