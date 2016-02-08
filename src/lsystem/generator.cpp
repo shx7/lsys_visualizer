@@ -59,13 +59,21 @@ VertexGenerator::getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight)
     GLfloat currentImageWidth = imageRightCorner.x - imageLeftCorner.x;
     GLfloat currentImageHeight = imageRightCorner.y - imageLeftCorner.y;
 
-    GLfloat scaleXCoefficient
-        = (2.0f * imageWidth / screenWidth) / currentImageWidth;
-    GLfloat scaleYCoefficient
-        = (2.0f * imageHeight / screenHeight) / currentImageHeight; 
+    GLfloat scaleCoefficient = 1.0f;
+    if (currentImageWidth > currentImageHeight)
+    {
+        scaleCoefficient
+            = (2.0f * imageWidth / screenWidth) / currentImageWidth;
+    }
+    else
+    {
+        scaleCoefficient
+            = (2.0f * imageHeight / screenWidth) / currentImageHeight;
+    } 
+
     glm::mat4 scaleMatrix = glm::scale(
               glm::mat4(1.0)
-            , glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
+            , glm::vec3(scaleCoefficient, scaleCoefficient, 1.0f));
 
     // Apply scale transform to image corners to preserve consistent state
     imageLeftCorner = glm::vec2(scaleMatrix * glm::vec4(imageLeftCorner, 0, 1));

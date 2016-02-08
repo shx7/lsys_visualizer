@@ -109,8 +109,8 @@ int main()
     simulator.addCommand('[', "[");
     simulator.addCommand(']', "]");*/
 
-    simulator.setStepCount(6);
-    engine.addGraphicObject(simulator.getGraphicObject(100, 200));
+    simulator.setStepCount(4);
+    engine.addGraphicObject(simulator.getGraphicObject(640 * 0.7, 480 * 0.7));
 
 
     std::cout << "LSystem" << std::endl;
