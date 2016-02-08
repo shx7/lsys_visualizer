@@ -252,10 +252,10 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
     glEnableVertexAttribArray(positionId);
     glVertexAttribPointer(
             positionId,
-            3,
+            4,
             GL_FLOAT,
             GL_FALSE,
-            6 * sizeof(GLfloat),
+            7 * sizeof(GLfloat),
             0
             );
 
@@ -265,8 +265,8 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             3,
             GL_FLOAT,
             GL_FALSE,
-            6 * sizeof(GLfloat),
-            (void *)(3 * sizeof(GLfloat))
+            7 * sizeof(GLfloat),
+            (void *)(4 * sizeof(GLfloat))
             );
     glBindVertexArray(0);
 
