@@ -1,3 +1,31 @@
+/************************************************
+ *
+ * lsystem::Simulator contains implementation
+ * of deterministic/stochastic LSystem algorithm.
+ *
+ * Simulator contains properties such as:
+ * 1) Axiom - starting string, from wich all
+ * productions runs.
+ *
+ * 2) Productions - pairs of (char, string) for
+ * replacing on every simulation round.
+ * Productions also have probabilities (for
+ * stochastic productions), by default all
+ * productions are deterministic.
+ *
+ * 3) Commands binded to every symbol of aphabet.
+ * Commands define character commands for
+ * turtle-interpretation of processed string.
+ * Supported symbols:
+ *     F draw stew
+ *     f draw space
+ *     + turn by clockwise
+ *     - turn by counter-clockwise
+ *
+ * After simulation Simulator produces
+ * GraphicObject for representing by Engine
+ ***********************************************/
+
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
 
