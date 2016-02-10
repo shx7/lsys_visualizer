@@ -71,14 +71,14 @@ int main()
 
     // Test for SLSystem
     lsystem::Simulator simulator;
-    simulator.setAxiom("S");
+    simulator.setAxiom("SS");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
-    simulator.addProduction('S', "SLSRS");
-    simulator.addProduction('L', "[+SLSRS]", 0.5);
-    simulator.addProduction('R', "[-SLSRS]");
+    simulator.addProduction('S', "SLSRS", 0.98);
+    simulator.addProduction('L', "[+SLS-SRS]", 0.75);
+    simulator.addProduction('R', "[-SLSSRS]", 0.85);
     simulator.addProduction('+', "+");
     simulator.addProduction('-', "-");
     simulator.addProduction('[', "[");
@@ -86,7 +86,7 @@ int main()
 
     simulator.addCommand('S', "F");
     simulator.addCommand('L', "[+F]");
-    simulator.addCommand('R', "[-F]");
+    simulator.addCommand('R', "[-FF]");
     simulator.addCommand('+', "+");
     simulator.addCommand('-', "-");
     simulator.addCommand('[', "[");
@@ -109,8 +109,8 @@ int main()
     simulator.addCommand('[', "[");
     simulator.addCommand(']', "]");*/
 
-    simulator.setStepCount(6);
-    engine.addGraphicObject(simulator.getGraphicObject(100, 200));
+    simulator.setStepCount(4);
+    engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
 
 
     std::cout << "LSystem" << std::endl;
