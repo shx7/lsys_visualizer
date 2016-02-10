@@ -64,11 +64,13 @@ VertexGenerator::getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight)
     {
         scaleCoefficient
             = (2.0f * imageWidth / screenWidth) / currentImageWidth;
+        imageHeight *= currentImageHeight / currentImageWidth;
     }
     else
     {
         scaleCoefficient
             = (2.0f * imageHeight / screenWidth) / currentImageHeight;
+        imageWidth *= currentImageWidth / currentImageHeight;
     } 
 
     glm::mat4 scaleMatrix = glm::scale(
