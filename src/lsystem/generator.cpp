@@ -59,13 +59,23 @@ VertexGenerator::getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight)
     GLfloat currentImageWidth = imageRightCorner.x - imageLeftCorner.x;
     GLfloat currentImageHeight = imageRightCorner.y - imageLeftCorner.y;
 
-    GLfloat scaleXCoefficient
-        = (2.0f * imageWidth / screenWidth) / currentImageWidth;
-    GLfloat scaleYCoefficient
-        = (2.0f * imageHeight / screenHeight) / currentImageHeight; 
+    GLfloat scaleCoefficient = 1.0f;
+    if (currentImageWidth > currentImageHeight)
+    {
+        scaleCoefficient
+            = (2.0f * imageWidth / screenWidth) / currentImageWidth;
+        imageHeight *= currentImageHeight / currentImageWidth;
+    }
+    else
+    {
+        scaleCoefficient
+            = (2.0f * imageHeight / screenWidth) / currentImageHeight;
+        imageWidth *= currentImageWidth / currentImageHeight;
+    } 
+
     glm::mat4 scaleMatrix = glm::scale(
               glm::mat4(1.0)
-            , glm::vec3(scaleXCoefficient, scaleYCoefficient, 1.0f));
+            , glm::vec3(scaleCoefficient, scaleCoefficient, 1.0f));
 
     // Apply scale transform to image corners to preserve consistent state
     imageLeftCorner = glm::vec2(scaleMatrix * glm::vec4(imageLeftCorner, 0, 1));
@@ -102,8 +112,7 @@ VertexGenerator::getScreenSize()
 
 void
 VertexGenerator::initDrawCommands()
-{
-
+{ 
     drawCommands['F'] = [&] (VertexGenerator &generator)
     {
         glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
@@ -170,6 +179,7 @@ GraphicObjectPtr
 VertexGenerator::generateGraphicObject()
 {
     GraphicObjectPtr result(new GraphicObject());
+    glm::vec3 vertexColor = glm::vec3(0.4396f, 0.75686f, 0.13725f);
 
     for (char ch : cmdString)
     {
@@ -179,7 +189,7 @@ VertexGenerator::generateGraphicObject()
 
     for (glm::vec4 vertex : vertices)
     {
-        result->addVertex(glm::vec3(vertex), glm::vec3(0.0, 1.0, 0.0));
+        result->addVertex(vertex, vertexColor);
     }
     result->setDrawMode(GL_LINES);
 

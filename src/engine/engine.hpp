@@ -1,3 +1,9 @@
+/***********************************************
+ *
+ * GraphicEngine used for representation
+ * registered list of GraphicObject's by
+ * OpenGL >= 3.0
+ ***********************************************/
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
@@ -14,7 +20,8 @@
 class GraphicEngine
 { 
     public:
-        GraphicEngine();
+        GraphicEngine(GLfloat viewportWidth = 640
+                    , GLfloat viewportHeight = 480);
 
         ~GraphicEngine();
 
@@ -39,8 +46,7 @@ class GraphicEngine
 
         void initShaders(
                   std::string const &vertexShaderFilename
-                , std::string const &fragmentShaderFilename
-                );
+                , std::string const &fragmentShaderFilename);
 
         GLuint loadShader(std::string const &filename, GLenum shaderType);
 
@@ -60,6 +66,8 @@ class GraphicEngine
 
         GLuint vertexShaderId, fragmentShaderId, programId;
         GLint positionId, colorId;
+
+        glm::vec4 backgroundColor;
 };
 
 #endif

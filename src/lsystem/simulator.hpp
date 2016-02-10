@@ -1,5 +1,35 @@
+/************************************************
+ *
+ * lsystem::Simulator contains implementation
+ * of deterministic/stochastic LSystem algorithm.
+ *
+ * Simulator contains properties such as:
+ * 1) Axiom - starting string, from wich all
+ * productions runs.
+ *
+ * 2) Productions - pairs of (char, string) for
+ * replacing on every simulation round.
+ * Productions also have probabilities (for
+ * stochastic productions), by default all
+ * productions are deterministic.
+ *
+ * 3) Commands binded to every symbol of aphabet.
+ * Commands define character commands for
+ * turtle-interpretation of processed string.
+ * Supported symbols:
+ *     F draw stew
+ *     f draw space
+ *     + turn by clockwise
+ *     - turn by counter-clockwise
+ *
+ * After simulation Simulator produces
+ * GraphicObject for representing by Engine
+ ***********************************************/
+
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
+
+#include <random>
 
 #include <iostream>
 #include <unordered_map>
@@ -9,7 +39,42 @@
 
 namespace lsystem
 {
-    typedef std::unordered_map< char, std::string > CharacterTransitionMap;
+    struct Production
+    {
+        char producing_character;
+        std::string production_string;
+        double probability;
+
+        Production(char producing_character
+                , std::string const &production_string
+                , double probability)
+            : producing_character(producing_character)
+            , production_string(production_string)
+            , probability(probability) {}
+    };
+
+    typedef std::unordered_map< char, Production > ProductionMap; 
+    typedef std::unordered_map< char, std::string > CharacterTransitionMap; 
+
+    class RandomGenerator
+    {
+        public:
+            RandomGenerator()
+                : randomGenerator(randomDevice())
+                , distribution(0.0, 1.0)
+            {
+            }
+
+            double getNextRandom()
+            {
+                return distribution(randomGenerator);
+            }
+
+        private:
+            std::random_device randomDevice;
+            std::mt19937 randomGenerator;
+            std::uniform_real_distribution< double > distribution;
+    };
 
     class Simulator
     {
@@ -18,11 +83,13 @@ namespace lsystem
 
             void setAxiom(std::string const &axiom);
 
-            void addProduction(char character, std::string const &production);
+            void addProduction(char producing_character
+                    , std::string const &production_string
+                    , double probability = 1.0);
 
             void clearProdutions();
 
-            void addCommand(char character, std::string const &command);
+            void addCommand(char producing_character, std::string const &command);
 
             void clearCommands();
 
@@ -39,19 +106,24 @@ namespace lsystem
                     , GLfloat imageHeight);
 
         private:
-            void simulate(); 
+
+            void generateCommandsString(); 
 
             std::string mapString(CharacterTransitionMap const &map);
 
+            std::string applyProductions(ProductionMap const &map);
+
         private:
             std::string processedString;
-            CharacterTransitionMap productions;
+            ProductionMap productions;
             CharacterTransitionMap commands;
 
             std::size_t stepCount;
             GLfloat startAngle;
             GLfloat deltaAngle;
             glm::vec3 startPoint;
+
+            RandomGenerator randomGenerator;
     };
 }
 

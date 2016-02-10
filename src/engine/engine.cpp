@@ -1,15 +1,16 @@
 #include "engine.hpp"
 
-GraphicEngine::GraphicEngine()
+GraphicEngine::GraphicEngine(GLfloat viewportWidth, GLfloat viewportHeight)
     : isGLFWInitialized(false)
     , wnd(nullptr)
-    , viewportWidth(640)
-    , viewportHeight(480)
+    , viewportWidth(viewportWidth)
+    , viewportHeight(viewportHeight)
     , vertexShaderId(0)
     , fragmentShaderId(0)
     , programId(0)
     , positionId(-1)
     , colorId(-1)
+    , backgroundColor(0.1f, 0.2f, 0.3f, 1.0f)
 {
 }
 
@@ -49,7 +50,7 @@ GraphicEngine::init(std::string const &logFilename
 
 void
 GraphicEngine::initShaders(std::string const &vertexShaderFilename
-        , std::string const &fragmentShaderFilename)
+                         , std::string const &fragmentShaderFilename)
 {
     vertexShaderId = loadShader(vertexShaderFilename, GL_VERTEX_SHADER);
     fragmentShaderId = loadShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
@@ -202,7 +203,10 @@ void
 GraphicEngine::start()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
+    glClearColor(backgroundColor.r
+               , backgroundColor.g
+               , backgroundColor.b
+               , backgroundColor.a);
     while (!glfwWindowShouldClose(wnd)
             && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     { 
@@ -252,10 +256,10 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
     glEnableVertexAttribArray(positionId);
     glVertexAttribPointer(
             positionId,
-            3,
+            4,
             GL_FLOAT,
             GL_FALSE,
-            6 * sizeof(GLfloat),
+            7 * sizeof(GLfloat),
             0
             );
 
@@ -265,8 +269,8 @@ GraphicEngine::addGraphicObject(GraphicObjectPtr const &ptr)
             3,
             GL_FLOAT,
             GL_FALSE,
-            6 * sizeof(GLfloat),
-            (void *)(3 * sizeof(GLfloat))
+            7 * sizeof(GLfloat),
+            (void *)(4 * sizeof(GLfloat))
             );
     glBindVertexArray(0);
 

@@ -48,7 +48,7 @@ int main()
     engine.addGraphicObject(simulator.getGraphicObject());*/
 
     // Test for tree LSystem
-    lsystem::Simulator simulator;
+    /*lsystem::Simulator simulator;
     simulator.setAxiom("F");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
@@ -67,7 +67,50 @@ int main()
     simulator.addCommand(']', "]");
 
     simulator.setStepCount(4);
-    engine.addGraphicObject(simulator.getGraphicObject(400, 400));
+    engine.addGraphicObject(simulator.getGraphicObject(400, 400));*/
+
+    // Test for SLSystem
+    lsystem::Simulator simulator;
+    simulator.setAxiom("SS");
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.addProduction('S', "SLSRS", 0.98);
+    simulator.addProduction('L', "[+SLS-SRS]", 0.75);
+    simulator.addProduction('R', "[-SLSSRS]", 0.85);
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
+    simulator.addProduction('[', "[");
+    simulator.addProduction(']', "]");
+
+    simulator.addCommand('S', "F");
+    simulator.addCommand('L', "[+F]");
+    simulator.addCommand('R', "[-FF]");
+    simulator.addCommand('+', "+");
+    simulator.addCommand('-', "-");
+    simulator.addCommand('[', "[");
+    simulator.addCommand(']', "]");
+
+    /*simulator.setAxiom("F");
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.addProduction('F', "F[+F]F[-F]F");
+    simulator.addProduction('+', "+");
+    simulator.addProduction('-', "-");
+    simulator.addProduction('[', "[");
+    simulator.addProduction(']', "]");
+
+    simulator.addCommand('F', "F");
+    simulator.addCommand('+', "+");
+    simulator.addCommand('-', "-");
+    simulator.addCommand('[', "[");
+    simulator.addCommand(']', "]");*/
+
+    simulator.setStepCount(4);
+    engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
 
 
     std::cout << "LSystem" << std::endl;
