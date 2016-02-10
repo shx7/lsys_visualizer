@@ -179,6 +179,7 @@ GraphicObjectPtr
 VertexGenerator::generateGraphicObject()
 {
     GraphicObjectPtr result(new GraphicObject());
+    glm::vec3 vertexColor = glm::vec3(0.4396f, 0.75686f, 0.13725f);
 
     for (char ch : cmdString)
     {
@@ -188,7 +189,7 @@ VertexGenerator::generateGraphicObject()
 
     for (glm::vec4 vertex : vertices)
     {
-        result->addVertex(vertex, glm::vec3(0.0, 1.0, 0.0));
+        result->addVertex(vertex, vertexColor);
     }
     result->setDrawMode(GL_LINES);
 
