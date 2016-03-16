@@ -38,7 +38,7 @@ namespace lsystem
 
     typedef void (*ProducingFunction)(
               Symbol const &symbol
-            , Symbols const &productionSymbols);
+            , Symbols &result);
 
     struct Production
     {
@@ -57,6 +57,13 @@ namespace lsystem
                 ProducingFunction const &function)
         {
             producingFunction = function;
+        }
+
+        void appendProduction(
+                  Symbol const &symbol
+                , Symbols &result)
+        {
+            producingFunction(symbol, result);
         }
     };
 
