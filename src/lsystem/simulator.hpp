@@ -98,6 +98,7 @@ namespace lsystem
             glm::vec3 startPoint;
 
             RandomGenerator randomGenerator;
+            // TODO: think about set for productions
             Productions productions;
             Symbols axiom; 
     };

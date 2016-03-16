@@ -84,8 +84,7 @@ Simulator::generateCommands()
 void
 Simulator::applyProductions(Symbols &symbols)
 {
-    Symbols result;
-
+    Symbols result; 
     for (Symbol const &symbol : symbols)
     {
         auto it = productions.find(symbol.name);
@@ -95,30 +94,6 @@ Simulator::applyProductions(Symbols &symbols)
         }
         it->second.appendProductionResult(symbol, result);
     }
-    /*
-     * Applying productions
-    for (char producing_character : processedString)
-    {
-        auto it = map.find(producing_character);
-
-        if (it != map.end())
-        {
-            Production const &production = it->second;
-            double random_value = randomGenerator.getNextRandom(); 
-            if (random_value <= production.probability)
-            {
-                result.append(production.production_string);
-            }
-        }
-        else
-        {
-            std::string error_msg = "Unknown command \'";
-            error_msg += producing_character;
-            error_msg += "\'";
-            throw std::runtime_error(error_msg);
-        }
-    }
-    */
     result.swap(symbols);
 }
 
@@ -126,5 +101,14 @@ CommandsPtr
 Simulator::symbolsToCommands(Symbols const &symbols)
 {
     // Translate symbols to draw commands
-    return CommandsPtr();
+    CommandsPtr result(new Commands);
+
+    for (Symbol const &symbol : symbols)
+    {
+        result->insert( 
+                result->begin(),
+                symbol.drawCommands->begin(),
+                symbol.drawCommands->end());
+    }
+    return result;
 }
