@@ -3,6 +3,10 @@
 
 namespace lsystem
 {
+    typedef char Command;
+    typedef std::vector< Command > Commands;
+    typedef std::shared_ptr< Commands > CommandsPtr;
+
     struct Parameter
     {
         std::string name = "";
@@ -18,6 +22,7 @@ namespace lsystem
     {
         std::string value;
         std::vector< Parameter > parameters;
+        CommandsPtr drawCommands;
 
         Symbol(std::string const &value)
             : value(value)
@@ -39,7 +44,6 @@ namespace lsystem
     {
         std::string symbolName;
         double probability;
-        Symbols productionSymbols;
         ProducingFunction producingFunction;
 
         Production(

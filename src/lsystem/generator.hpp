@@ -12,6 +12,8 @@
 #define LSYSTEM_VERTEX_GENERATOR
 
 #include "graphic_object.hpp"
+#include "grammar_util.hpp"
+
 #include "GL/gl.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -27,10 +29,6 @@ namespace lsystem
     typedef GLfloat Angle;
     typedef GLfloat DeltaAngle;
     typedef std::tuple< glm::vec3, Angle, DeltaAngle > DrawState;
-
-    typedef char Command; 
-    typedef std::vector< Command > Commands; 
-    typedef std::shared_ptr< Commands > CommandsPtr;
 
     class VertexGenerator
     {
