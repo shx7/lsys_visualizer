@@ -19,8 +19,8 @@ Simulator::setAxiom(Symbols const &axiom)
 void
 Simulator::addProduction(Production const &production)
 {
-    auto res
-        = productions.insert(std::make_pair(production.symbolName, production));
+    auto res = productions.insert(
+                std::make_pair(production.producingSymbol.name, production));
 
     if (!res.second)
     {

@@ -42,14 +42,14 @@ namespace lsystem
 
     struct Production
     {
-        std::string symbolName;
+        Symbol producingSymbol;
         double probability;
         ProducingFunction producingFunction;
 
         Production(
-                  std::string const &symbolName
+                  Symbol const &producingSymbol
                 , double probability)
-            : symbolName(symbolName)
+            : producingSymbol(producingSymbol)
             , probability(probability)
         {}
 
@@ -69,7 +69,7 @@ namespace lsystem
 
         bool operator<(Production const &production) const
         {
-            return symbolName < production.symbolName;
+            return producingSymbol.name < production.producingSymbol.name;
         }
     };
 
