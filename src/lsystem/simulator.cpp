@@ -19,24 +19,13 @@ Simulator::setAxiom(Symbols const &axiom)
 void
 Simulator::addProduction(Production const &production)
 {
-    /*auto it = productions.find(producing_character);
+    auto res
+        = productions.insert(std::make_pair(production.symbolName, production));
 
-    if (it == productions.end())
+    if (!res.second)
     {
-        Production production(
-            producing_character,
-            production_string,
-            probability
-            );
-        productions.insert(it, std::make_pair(producing_character, production));
-        commands[producing_character] = "";
+        throw std::runtime_error("Adding already added production");
     }
-    else
-    {
-        std::string error_msg = "Adding existent production for character ";
-        error_msg += producing_character;
-        throw std::runtime_error(error_msg);
-    }*/
 }
 
 void
@@ -96,6 +85,16 @@ void
 Simulator::applyProductions(Symbols &symbols)
 {
     Symbols result;
+
+    for (Symbol const &symbol : symbols)
+    {
+        auto it = productions.find(symbol.name);
+        if (it == productions.end())
+        {
+            throw std::runtime_error("No production for such symbol");
+        }
+        it->second.appendProductionResult(symbol, result);
+    }
     /*
      * Applying productions
     for (char producing_character : processedString)

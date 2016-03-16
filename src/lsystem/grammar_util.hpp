@@ -1,6 +1,8 @@
 #ifndef GRAMMAR_UTIL_HPP
 #define GRAMMAR_UTIL_HPP
 
+#include <map>
+
 namespace lsystem
 {
     typedef char Command;
@@ -20,12 +22,12 @@ namespace lsystem
 
     struct Symbol
     {
-        std::string value;
+        std::string name;
         std::vector< Parameter > parameters;
         CommandsPtr drawCommands;
 
-        Symbol(std::string const &value)
-            : value(value)
+        Symbol(std::string const &name)
+            : name(name)
         {}
 
         void addParameter(Parameter const &param)
@@ -36,9 +38,7 @@ namespace lsystem
 
     typedef std::vector< Symbol > Symbols; 
 
-    typedef void (*ProducingFunction)(
-              Symbol const &symbol
-            , Symbols &result);
+    typedef Symbols (*ProducingFunction)(Symbol const &symbol);
 
     struct Production
     {
@@ -59,15 +59,21 @@ namespace lsystem
             producingFunction = function;
         }
 
-        void appendProduction(
+        void appendProductionResult(
                   Symbol const &symbol
                 , Symbols &result)
         {
-            producingFunction(symbol, result);
+            auto tmp = producingFunction(symbol);
+            result.insert(result.end(), tmp.begin(), tmp.end());
+        }
+
+        bool operator<(Production const &production) const
+        {
+            return symbolName < production.symbolName;
         }
     };
 
-    typedef std::vector< Production > Productions;
+    typedef std::map< std::string, Production > Productions;
 }; // lsystem
 
 #endif
