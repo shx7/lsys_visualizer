@@ -33,12 +33,39 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 #include <tuple>
 
 #include "generator.hpp"
 
 namespace lsystem
 {
+    struct Parameter
+    {
+        std::string name = "";
+        GLfloat value = 0;
+
+        Parameter(std::string const &name, GLfloat value)
+            : name(name)
+            , value(value)
+        {}
+    };
+
+    struct Symbol
+    {
+        std::string value;
+        std::vector< Parameter > parameters;
+
+        Symbol(std::string const &value)
+            : value(value)
+        {}
+
+        void addParameter(Parameter const &param)
+        {
+            parameters.push_back(param);
+        }
+    };
+
     struct Production
     {
         char producing_character;
