@@ -43,7 +43,7 @@ namespace lsystem
 
             void setDrawState(DrawState const &state);
 
-            void setCommandsString(std::string const &commands);
+            void setCommandsString(CommandsPtr const &commandsPtr);
 
             GraphicObjectPtr generateGraphicObject();
 
@@ -65,7 +65,7 @@ namespace lsystem
         private:
             GLfloat width, height;
             std::unordered_map< char, DrawCommandFunction > drawCommands;
-            std::string cmdString;
+            CommandsPtr cmdString;
             DrawState drawState;
             glm::vec2 imageLeftCorner, imageRightCorner;
             std::vector< glm::vec4 > vertices;

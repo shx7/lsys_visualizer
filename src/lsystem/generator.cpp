@@ -170,9 +170,9 @@ VertexGenerator::setImageRectangle(GLfloat width, GLfloat height)
 }
 
 void
-VertexGenerator::setCommandsString(std::string const &commands)
+VertexGenerator::setCommandsString(CommandsPtr const &commandsPtr)
 {
-    cmdString = commands;
+    cmdString = commandsPtr;
 }
 
 GraphicObjectPtr
@@ -181,7 +181,7 @@ VertexGenerator::generateGraphicObject()
     GraphicObjectPtr result(new GraphicObject());
     glm::vec3 vertexColor = glm::vec3(0.4396f, 0.75686f, 0.13725f);
 
-    for (char ch : cmdString)
+    for (char ch : (*cmdString))
     {
         drawCommands[ch](*this);
     }

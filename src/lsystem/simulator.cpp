@@ -61,8 +61,8 @@ Simulator::setStartPoint(glm::vec3 startPoint)
 GraphicObjectPtr
 Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
 {
-    //VertexGenerator generator;
-    //generator.setCommandsString(generateCommandsString());
+    VertexGenerator generator;
+    generator.setCommandsString(generateCommands());
     //generator.setCommandsString(processedString);
     //generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
     //generator.setImageRectangle(imageWidth, imageHeight);
@@ -100,7 +100,6 @@ Simulator::applyProductions(Symbols &symbols)
 CommandsPtr
 Simulator::symbolsToCommands(Symbols const &symbols)
 {
-    // Translate symbols to draw commands
     CommandsPtr result(new Commands);
 
     for (Symbol const &symbol : symbols)
