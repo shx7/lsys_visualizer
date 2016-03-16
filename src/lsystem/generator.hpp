@@ -28,6 +28,10 @@ namespace lsystem
     typedef GLfloat DeltaAngle;
     typedef std::tuple< glm::vec3, Angle, DeltaAngle > DrawState;
 
+    typedef char Command; 
+    typedef std::vector< Command > Commands; 
+    typedef std::shared_ptr< Commands > CommandsPtr;
+
     class VertexGenerator
     {
         typedef void (*DrawCommandFunction)(VertexGenerator &);

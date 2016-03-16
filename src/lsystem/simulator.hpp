@@ -66,22 +66,34 @@ namespace lsystem
         }
     };
 
+    typedef std::vector< Symbol > Symbols; 
+
+    typedef void (*ProducingFunction)(
+              Symbol const &symbol
+            , Symbols const &productionSymbols);
+
     struct Production
     {
-        char producing_character;
-        std::string production_string;
+        std::string symbolName;
         double probability;
+        Symbols productionSymbols;
+        ProducingFunction producingFunction;
 
-        Production(char producing_character
-                , std::string const &production_string
+        Production(
+                  std::string const &symbolName
                 , double probability)
-            : producing_character(producing_character)
-            , production_string(production_string)
-            , probability(probability) {}
+            : symbolName(symbolName)
+            , probability(probability)
+        {}
+
+        void setProductionFunctoin(
+                ProducingFunction const &function)
+        {
+            producingFunction = function;
+        }
     };
 
-    typedef std::unordered_map< char, Production > ProductionMap; 
-    typedef std::unordered_map< char, std::string > CharacterTransitionMap; 
+    typedef std::vector< Production > Productions;
 
     class RandomGenerator
     {
@@ -108,17 +120,11 @@ namespace lsystem
         public:
             Simulator();
 
-            void setAxiom(std::string const &axiom);
+            void setAxiom(Symbols const &axiom);
 
-            void addProduction(char producing_character
-                    , std::string const &production_string
-                    , double probability = 1.0);
+            void addProduction(Production const &production);
 
             void clearProdutions();
-
-            void addCommand(char producing_character, std::string const &command);
-
-            void clearCommands();
 
             void setStepCount(std::size_t stepCount);
 
@@ -132,25 +138,22 @@ namespace lsystem
                       GLfloat imageWidth
                     , GLfloat imageHeight);
 
-        private:
+        private: 
+            CommandsPtr generateCommands();
 
-            void generateCommandsString(); 
+            void applyProductions(Symbols &symbols);
 
-            std::string mapString(CharacterTransitionMap const &map);
+            CommandsPtr symbolsToCommands(Symbols const &symbols);
 
-            std::string applyProductions(ProductionMap const &map);
-
-        private:
-            std::string processedString;
-            ProductionMap productions;
-            CharacterTransitionMap commands;
-
+        private: 
             std::size_t stepCount;
             GLfloat startAngle;
             GLfloat deltaAngle;
             glm::vec3 startPoint;
 
             RandomGenerator randomGenerator;
+            Productions productions;
+            Symbols axiom; 
     };
 }
 
