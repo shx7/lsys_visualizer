@@ -65,7 +65,7 @@ Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
     generator.setCommandsString(generateCommands());
     //generator.setCommandsString(processedString);
     generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
-    //generator.setImageRectangle(imageWidth, imageHeight);
+    generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
     //return GraphicObjectPtr();
 }

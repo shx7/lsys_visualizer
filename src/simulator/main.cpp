@@ -117,7 +117,8 @@ int main()
     lsystem::Symbols axiom;
     lsystem::Symbol symbolS("S");
     symbolS.addCommand('F');
-    symbolS.addCommand('f');
+    symbolS.addParameter("width", 0);
+    //symbolS.addCommand('f');
     symbolS.addCommand('+');
     axiom.push_back(symbolS);
     axiom.push_back(symbolS);
@@ -127,7 +128,10 @@ int main()
             [] (lsystem::Symbol const& s) -> lsystem::Symbols
             {
                 lsystem::Symbols result;
-                result.push_back(s);
+                lsystem::Symbol tmp(s);
+                auto& s_width = tmp["width"];
+                s_width += 1;
+                result.push_back(tmp);
                 result.push_back(s);
                 return result;
             });
@@ -136,7 +140,7 @@ int main()
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
-    simulator.setStepCount(4);
+    simulator.setStepCount(10);
     engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
 
 

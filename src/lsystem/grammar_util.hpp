@@ -2,6 +2,7 @@
 #define GRAMMAR_UTIL_HPP
 
 #include <map>
+#include <memory>
 
 namespace lsystem
 {
@@ -30,6 +31,24 @@ namespace lsystem
             : name(name)
             , drawCommands(new Commands)
         {}
+
+        Symbol(Symbol const &s)
+        {
+            name = s.name;
+            drawCommands = std::make_shared<Commands>(*s.drawCommands);
+            parameters = s.parameters;
+        }
+
+        GLfloat &operator[](std::string const &parameter_name)
+        {
+            auto it = parameters.find(parameter_name);
+            if (it == parameters.end())
+            {
+                throw std::runtime_error(
+                    "Access to non-existent parameter '" + parameter_name + "'");
+            }
+            return it->second;
+        }
 
         void addParameter(std::string const &name, GLfloat value)
         {
