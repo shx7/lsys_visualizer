@@ -128,6 +128,10 @@ int main()
     generator.addDrawingFunction(symbolS,
             [] (lsystem::VertexGenerator &g)
             {
+                g.saveDrawState();
+                g.rotateLeft();
+                g.drawLine();
+                g.restoreDrawState();
                 g.drawLine();
                 g.rotateRight();
             });
