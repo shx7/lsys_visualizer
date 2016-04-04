@@ -47,6 +47,18 @@ namespace lsystem
 
             GraphicObjectPtr generateGraphicObject();
 
+            void drawLine();
+
+            void drawSpace();
+
+            void rotateLeft();
+
+            void rotateRight();
+
+            void saveDrawState();
+
+            void restoreDrawState();
+
         private:
             void updateImageCorners();
 
@@ -57,10 +69,6 @@ namespace lsystem
             glm::vec2 getScreenSize();
 
             glm::mat4 getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight);
-
-            void saveDrawState();
-
-            void restoreDrawState();
 
         private:
             GLfloat width, height;

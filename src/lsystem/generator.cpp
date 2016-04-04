@@ -115,40 +115,22 @@ VertexGenerator::initDrawCommands()
 { 
     drawCommands['F'] = [&] (VertexGenerator &generator)
     {
-        glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
-        GLfloat currentAngle = std::get< 1 >(generator.drawState);
-
-        generator.addVertex(currentPosition); 
-        currentPosition.x += 1 * cos(currentAngle);
-        currentPosition.y += 1 * sin(currentAngle); 
-        generator.addVertex(currentPosition); 
-
-        generator.updateImageCorners();
+        generator.drawLine();
     };
 
     drawCommands['f'] = [&] (VertexGenerator &generator)
     {
-        glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
-        GLfloat currentAngle = std::get< 1 >(generator.drawState);
-
-        currentPosition.x += 1 * cos(currentAngle);
-        currentPosition.y += 1 * sin(currentAngle);
+        generator.drawSpace();
     };
 
     drawCommands['+'] = [&] (VertexGenerator &generator)
     {
-        GLfloat &currentAngle = std::get< 1 >(generator.drawState);
-        GLfloat deltaAngle = std::get< 2 >(generator.drawState);
-
-        currentAngle -= deltaAngle;
+        generator.rotateRight();
     };
 
     drawCommands['-'] = [&] (VertexGenerator &generator)
     {
-        GLfloat &currentAngle = std::get< 1 >(generator.drawState);
-        GLfloat deltaAngle = std::get< 2 >(generator.drawState);
-
-        currentAngle += deltaAngle;
+        generator.rotateLeft();
     };
 
     drawCommands['['] = [&] (VertexGenerator &generator)
@@ -160,6 +142,52 @@ VertexGenerator::initDrawCommands()
     {
         generator.restoreDrawState();
     };
+}
+
+void
+VertexGenerator::
+drawLine()
+{
+    glm::vec3& currentPosition = std::get< 0 >(drawState);
+    GLfloat currentAngle = std::get< 1 >(drawState);
+
+    addVertex(currentPosition);
+    currentPosition.x += 1 * cos(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);
+    addVertex(currentPosition);
+
+    updateImageCorners();
+}
+
+void
+VertexGenerator::
+drawSpace()
+{
+    glm::vec3& currentPosition = std::get< 0 >(drawState);
+    GLfloat currentAngle = std::get< 1 >(drawState);
+
+    currentPosition.x += 1 * cos(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);
+}
+
+void
+VertexGenerator::
+rotateRight()
+{
+    GLfloat &currentAngle = std::get< 1 >(drawState);
+    GLfloat deltaAngle = std::get< 2 >(drawState);
+
+    currentAngle -= deltaAngle;
+}
+
+void
+VertexGenerator::
+rotateLeft()
+{
+    GLfloat &currentAngle = std::get< 1 >(drawState);
+    GLfloat deltaAngle = std::get< 2 >(drawState);
+
+    currentAngle += deltaAngle;
 }
 
 void
