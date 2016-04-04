@@ -81,15 +81,14 @@ namespace lsystem
             void setStartPoint(glm::vec3 startPoint);
 
             GraphicObjectPtr getGraphicObject(
-                      GLfloat imageWidth
+                      VertexGenerator &generator
+                    , GLfloat imageWidth
                     , GLfloat imageHeight);
 
         private: 
-            CommandsPtr generateCommands();
+            SymbolsPtr generateSymbolsSequence();
 
             void applyProductions(Symbols &symbols);
-
-            CommandsPtr symbolsToCommands(Symbols const &symbols);
 
         private: 
             std::size_t stepCount;

@@ -116,13 +116,21 @@ int main()
     lsystem::Simulator simulator;
     lsystem::Symbols axiom;
     lsystem::Symbol symbolS("S");
-    symbolS.addCommand('F');
+    //symbolS.addCommand('F');
     symbolS.addParameter("width", 0);
     //symbolS.addCommand('f');
-    symbolS.addCommand('+');
+    //symbolS.addCommand('+');
     axiom.push_back(symbolS);
     axiom.push_back(symbolS);
     simulator.setAxiom(axiom);
+
+    lsystem::VertexGenerator generator;
+    generator.addDrawingFunction(symbolS,
+            [] (lsystem::VertexGenerator &g)
+            {
+                g.drawLine();
+                g.rotateRight();
+            });
 
     lsystem::Production productionS(symbolS, 0.1,
             [] (lsystem::Symbol const& s) -> lsystem::Symbols
@@ -141,7 +149,8 @@ int main()
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
     simulator.setStepCount(10);
-    engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
+    engine.addGraphicObject(
+            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
 
 
     std::cout << "LSystem" << std::endl;

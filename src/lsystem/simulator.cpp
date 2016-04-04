@@ -59,10 +59,13 @@ Simulator::setStartPoint(glm::vec3 startPoint)
 }
 
 GraphicObjectPtr
-Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
+Simulator::getGraphicObject(
+          VertexGenerator &generator
+        , GLfloat imageWidth
+        , GLfloat imageHeight)
 {
-    VertexGenerator generator;
-    generator.setCommandsString(generateCommands());
+    //VertexGenerator generator;
+    generator.setSymbols(generateSymbolsSequence());
     //generator.setCommandsString(processedString);
     generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
     generator.setImageRectangle(imageWidth, imageHeight);
@@ -70,15 +73,18 @@ Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
     //return GraphicObjectPtr();
 }
 
-CommandsPtr
-Simulator::generateCommands()
+SymbolsPtr
+Simulator::generateSymbolsSequence()
 {
+    SymbolsPtr result = std::make_shared< Symbols >();
     Symbols processedSymbolsString(axiom);
     for (std::size_t i = 0; i < stepCount; i++)
     { 
         applyProductions(processedSymbolsString);
     }
-    return symbolsToCommands(processedSymbolsString);
+    result->swap(processedSymbolsString);
+    return result;
+    //return symbolsToCommands(processedSymbolsString);
 }
 
 void
@@ -97,6 +103,7 @@ Simulator::applyProductions(Symbols &symbols)
     result.swap(symbols);
 }
 
+/*
 CommandsPtr
 Simulator::symbolsToCommands(Symbols const &symbols)
 {
@@ -111,3 +118,4 @@ Simulator::symbolsToCommands(Symbols const &symbols)
     }
     return result;
 }
+*/

@@ -25,17 +25,14 @@ namespace lsystem
     {
         std::string name;
         std::map< std::string, GLfloat > parameters;
-        CommandsPtr drawCommands;
 
         Symbol(std::string const &name)
             : name(name)
-            , drawCommands(new Commands)
         {}
 
         Symbol(Symbol const &s)
         {
             name = s.name;
-            drawCommands = std::make_shared<Commands>(*s.drawCommands);
             parameters = s.parameters;
         }
 
@@ -55,13 +52,14 @@ namespace lsystem
             parameters.insert(std::make_pair(name, value));
         }
 
-        void addCommand(Command cmd)
+        bool operator<(Symbol const &s) const
         {
-            drawCommands->push_back(cmd);
+            return name < s.name;
         }
     };
 
     typedef std::vector< Symbol > Symbols; 
+    typedef std::shared_ptr< Symbols > SymbolsPtr;
 
     //typedef Symbols (*ProducingFunction)(Symbol const &symbol);
     typedef std::function<Symbols (Symbol const &)> ProducingFunction;

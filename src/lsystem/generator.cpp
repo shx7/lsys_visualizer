@@ -113,32 +113,32 @@ VertexGenerator::getScreenSize()
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands['F'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolDrawLine] = [&] (VertexGenerator &generator)
     {
         generator.drawLine();
     };
 
-    drawCommands['f'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolDrawSpace] = [&] (VertexGenerator &generator)
     {
         generator.drawSpace();
     };
 
-    drawCommands['+'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRotateRight] = [&] (VertexGenerator &generator)
     {
         generator.rotateRight();
     };
 
-    drawCommands['-'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRotateLeft] = [&] (VertexGenerator &generator)
     {
         generator.rotateLeft();
     };
 
-    drawCommands['['] = [&] (VertexGenerator &generator)
+    drawCommands[symbolSaveState] = [&] (VertexGenerator &generator)
     {
         generator.saveDrawState();
     };
 
-    drawCommands[']'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRestoreState] = [&] (VertexGenerator &generator)
     {
         generator.restoreDrawState();
     };
@@ -198,9 +198,9 @@ VertexGenerator::setImageRectangle(GLfloat width, GLfloat height)
 }
 
 void
-VertexGenerator::setCommandsString(CommandsPtr const &commandsPtr)
+VertexGenerator::setSymbols(SymbolsPtr const &symbolsPtr)
 {
-    cmdString = commandsPtr;
+    this->symbolsPtr = symbolsPtr;
 }
 
 GraphicObjectPtr
@@ -209,9 +209,9 @@ VertexGenerator::generateGraphicObject()
     GraphicObjectPtr result(new GraphicObject());
     glm::vec3 vertexColor = glm::vec3(0.4396f, 0.75686f, 0.13725f);
 
-    for (char ch : (*cmdString))
+    for (Symbol symbol : (*symbolsPtr))
     {
-        drawCommands[ch](*this);
+        drawCommands[symbol](*this);
     }
     scaleImage();
 
@@ -240,4 +240,11 @@ VertexGenerator::restoreDrawState()
 
     drawState = drawStateStack.back();
     drawStateStack.pop_back();
+}
+
+void
+VertexGenerator::
+addDrawingFunction(Symbol const &symbol, DrawingFunction const &fn)
+{
+    drawCommands[symbol] = fn;
 }

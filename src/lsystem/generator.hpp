@@ -13,6 +13,7 @@
 
 #include "graphic_object.hpp"
 #include "grammar_util.hpp"
+#include "generator_symbol_types.hpp"
 
 #include "GL/gl.h"
 #include "glm/glm.hpp"
@@ -22,7 +23,7 @@
 
 #include <tuple>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 namespace lsystem
 {
@@ -32,9 +33,11 @@ namespace lsystem
 
     class VertexGenerator
     {
-        typedef void (*DrawCommandFunction)(VertexGenerator &);
+        //typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
+            typedef std::function<void(VertexGenerator&)> DrawingFunction;
+
             VertexGenerator(GLfloat width = 640, GLfloat height = 480);
 
             void initDrawCommands();
@@ -43,7 +46,7 @@ namespace lsystem
 
             void setDrawState(DrawState const &state);
 
-            void setCommandsString(CommandsPtr const &commandsPtr);
+            void setSymbols(SymbolsPtr const &symbolsPtr);
 
             GraphicObjectPtr generateGraphicObject();
 
@@ -59,6 +62,9 @@ namespace lsystem
 
             void restoreDrawState();
 
+            void addDrawingFunction(
+                    Symbol const &symbol, DrawingFunction const &fn);
+
         private:
             void updateImageCorners();
 
@@ -72,8 +78,8 @@ namespace lsystem
 
         private:
             GLfloat width, height;
-            std::unordered_map< char, DrawCommandFunction > drawCommands;
-            CommandsPtr cmdString;
+            std::map< Symbol, DrawingFunction > drawCommands;
+            SymbolsPtr symbolsPtr;
             DrawState drawState;
             glm::vec2 imageLeftCorner, imageRightCorner;
             std::vector< glm::vec4 > vertices;
