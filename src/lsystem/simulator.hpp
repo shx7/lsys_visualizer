@@ -99,7 +99,7 @@ namespace lsystem
 
             RandomGenerator randomGenerator;
             // TODO: think about set for productions
-            Productions productions;
+            std::map< std::string, Production >productions;
             Symbols axiom; 
     };
 }

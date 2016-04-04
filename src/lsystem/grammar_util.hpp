@@ -23,22 +23,29 @@ namespace lsystem
     struct Symbol
     {
         std::string name;
-        std::vector< Parameter > parameters;
+        std::map< std::string, GLfloat > parameters;
         CommandsPtr drawCommands;
 
         Symbol(std::string const &name)
             : name(name)
+            , drawCommands(new Commands)
         {}
 
-        void addParameter(Parameter const &param)
+        void addParameter(std::string const &name, GLfloat value)
         {
-            parameters.push_back(param);
+            parameters.insert(std::make_pair(name, value));
+        }
+
+        void addCommand(Command cmd)
+        {
+            drawCommands->push_back(cmd);
         }
     };
 
     typedef std::vector< Symbol > Symbols; 
 
-    typedef Symbols (*ProducingFunction)(Symbol const &symbol);
+    //typedef Symbols (*ProducingFunction)(Symbol const &symbol);
+    typedef std::function<Symbols (Symbol const &)> ProducingFunction;
 
     struct Production
     {
@@ -48,23 +55,19 @@ namespace lsystem
 
         Production(
                   Symbol const &producingSymbol
-                , double probability)
+                , double probability
+                , ProducingFunction const &function)
             : producingSymbol(producingSymbol)
             , probability(probability)
+            , producingFunction(function)
         {}
-
-        void setProductionFunctoin(
-                ProducingFunction const &function)
-        {
-            producingFunction = function;
-        }
 
         void appendProductionResult(
                   Symbol const &symbol
                 , Symbols &result)
         {
-            auto tmp = producingFunction(symbol);
-            result.insert(result.end(), tmp.begin(), tmp.end());
+            Symbols const &tmp = producingFunction(symbol);
+            result.insert(result.end(), tmp.cbegin(), tmp.cend());
         }
 
         bool operator<(Production const &production) const

@@ -2,6 +2,8 @@
 #include "engine.hpp"
 #include "generator.hpp"
 #include "simulator.hpp"
+#include "grammar_util.hpp"
+
 #include "glm/gtc/constants.hpp"
 
 int main()
@@ -112,13 +114,30 @@ int main()
 
     // Test for P LSystem
     lsystem::Simulator simulator;
-    /*simulator.setAxiom("SS");
+    lsystem::Symbols axiom;
+    lsystem::Symbol symbolS("S");
+    symbolS.addCommand('F');
+    symbolS.addCommand('f');
+    symbolS.addCommand('+');
+    axiom.push_back(symbolS);
+    axiom.push_back(symbolS);
+    simulator.setAxiom(axiom);
+
+    lsystem::Production productionS(symbolS, 0.1,
+            [] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+                result.push_back(s);
+                result.push_back(s);
+                return result;
+            });
+    simulator.addProduction(productionS);
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
-    simulator.setStartAngle(glm::half_pi< GLfloat >());*/
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
 
     simulator.setStepCount(4);
-    //engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
+    engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
 
 
     std::cout << "LSystem" << std::endl;

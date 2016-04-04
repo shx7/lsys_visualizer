@@ -64,10 +64,10 @@ Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
     VertexGenerator generator;
     generator.setCommandsString(generateCommands());
     //generator.setCommandsString(processedString);
-    //generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
+    generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
     //generator.setImageRectangle(imageWidth, imageHeight);
-    //return generator.generateGraphicObject();
-    return GraphicObjectPtr();
+    return generator.generateGraphicObject();
+    //return GraphicObjectPtr();
 }
 
 CommandsPtr
