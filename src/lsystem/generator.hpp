@@ -29,7 +29,12 @@ namespace lsystem
 {
     typedef GLfloat Angle;
     typedef GLfloat DeltaAngle;
-    typedef std::tuple< glm::vec3, Angle, DeltaAngle > DrawState;
+    struct DrawState
+    {
+        glm::vec3 currentPosition;
+        GLfloat currentAngle;
+        GLfloat deltaAngle;
+    };
 
     class VertexGenerator
     {

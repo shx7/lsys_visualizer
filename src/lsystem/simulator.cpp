@@ -67,7 +67,10 @@ Simulator::getGraphicObject(
     //VertexGenerator generator;
     generator.setSymbols(generateSymbolsSequence());
     //generator.setCommandsString(processedString);
-    generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
+    generator.setDrawState({
+              startPoint
+            , startAngle
+            , deltaAngle});
     generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
     //return GraphicObjectPtr();

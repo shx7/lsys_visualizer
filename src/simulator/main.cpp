@@ -116,10 +116,7 @@ int main()
     lsystem::Simulator simulator;
     lsystem::Symbols axiom;
     lsystem::Symbol symbolS("S");
-    //symbolS.addCommand('F');
     symbolS.addParameter("width", 0);
-    //symbolS.addCommand('f');
-    //symbolS.addCommand('+');
     axiom.push_back(symbolS);
     axiom.push_back(symbolS);
     simulator.setAxiom(axiom);
