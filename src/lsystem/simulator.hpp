@@ -33,29 +33,14 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 #include <tuple>
 
 #include "generator.hpp"
+#include "grammar_util.hpp"
 
 namespace lsystem
 {
-    struct Production
-    {
-        char producing_character;
-        std::string production_string;
-        double probability;
-
-        Production(char producing_character
-                , std::string const &production_string
-                , double probability)
-            : producing_character(producing_character)
-            , production_string(production_string)
-            , probability(probability) {}
-    };
-
-    typedef std::unordered_map< char, Production > ProductionMap; 
-    typedef std::unordered_map< char, std::string > CharacterTransitionMap; 
-
     class RandomGenerator
     {
         public:
@@ -81,17 +66,11 @@ namespace lsystem
         public:
             Simulator();
 
-            void setAxiom(std::string const &axiom);
+            void setAxiom(Symbols const &axiom);
 
-            void addProduction(char producing_character
-                    , std::string const &production_string
-                    , double probability = 1.0);
+            void addProduction(Production const &production);
 
             void clearProdutions();
-
-            void addCommand(char producing_character, std::string const &command);
-
-            void clearCommands();
 
             void setStepCount(std::size_t stepCount);
 
@@ -102,28 +81,25 @@ namespace lsystem
             void setStartPoint(glm::vec3 startPoint);
 
             GraphicObjectPtr getGraphicObject(
-                      GLfloat imageWidth
+                      VertexGenerator &generator
+                    , GLfloat imageWidth
                     , GLfloat imageHeight);
 
-        private:
+        private: 
+            SymbolsPtr generateSymbolsSequence();
 
-            void generateCommandsString(); 
+            void applyProductions(Symbols &symbols);
 
-            std::string mapString(CharacterTransitionMap const &map);
-
-            std::string applyProductions(ProductionMap const &map);
-
-        private:
-            std::string processedString;
-            ProductionMap productions;
-            CharacterTransitionMap commands;
-
+        private: 
             std::size_t stepCount;
             GLfloat startAngle;
             GLfloat deltaAngle;
             glm::vec3 startPoint;
 
             RandomGenerator randomGenerator;
+            // TODO: think about set for productions
+            std::map< std::string, Production >productions;
+            Symbols axiom; 
     };
 }
 

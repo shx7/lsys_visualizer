@@ -11,33 +11,20 @@ Simulator::Simulator()
 }
 
 void
-Simulator::setAxiom(std::string const &axiom)
+Simulator::setAxiom(Symbols const &axiom)
 {
-    processedString.assign(axiom);
+    this->axiom = axiom;
 }
 
 void
-Simulator::addProduction(char producing_character
-    , std::string const &production_string
-    , double probability)
+Simulator::addProduction(Production const &production)
 {
-    auto it = productions.find(producing_character);
+    auto res = productions.insert(
+                std::make_pair(production.producingSymbol.name, production));
 
-    if (it == productions.end())
+    if (!res.second)
     {
-        Production production(
-            producing_character,
-            production_string,
-            probability
-            );
-        productions.insert(it, std::make_pair(producing_character, production));
-        commands[producing_character] = "";
-    }
-    else
-    {
-        std::string error_msg = "Adding existent production for character ";
-        error_msg += producing_character;
-        throw std::runtime_error(error_msg);
+        throw std::runtime_error("Adding already added production");
     }
 }
 
@@ -45,18 +32,6 @@ void
 Simulator::clearProdutions()
 {
     productions.clear();
-}
-
-void
-Simulator::addCommand(char producing_character, std::string const &command)
-{
-    commands[producing_character] = command;
-}
-
-void
-Simulator::clearCommands()
-{
-    commands.clear();
 }
 
 void
@@ -84,73 +59,66 @@ Simulator::setStartPoint(glm::vec3 startPoint)
 }
 
 GraphicObjectPtr
-Simulator::getGraphicObject(GLfloat imageWidth, GLfloat imageHeight)
+Simulator::getGraphicObject(
+          VertexGenerator &generator
+        , GLfloat imageWidth
+        , GLfloat imageHeight)
 {
-    VertexGenerator generator;
-    generateCommandsString(); 
-    generator.setCommandsString(processedString);
-    generator.setDrawState(std::make_tuple(startPoint, startAngle, deltaAngle));
+    //VertexGenerator generator;
+    generator.setSymbols(generateSymbolsSequence());
+    //generator.setCommandsString(processedString);
+    generator.setDrawState({
+              startPoint
+            , startAngle
+            , deltaAngle});
     generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
+    //return GraphicObjectPtr();
+}
+
+SymbolsPtr
+Simulator::generateSymbolsSequence()
+{
+    SymbolsPtr result = std::make_shared< Symbols >();
+    Symbols processedSymbolsString(axiom);
+    for (std::size_t i = 0; i < stepCount; i++)
+    { 
+        applyProductions(processedSymbolsString);
+    }
+    result->swap(processedSymbolsString);
+    return result;
+    //return symbolsToCommands(processedSymbolsString);
 }
 
 void
-Simulator::generateCommandsString()
+Simulator::applyProductions(Symbols &symbols)
 {
-    for (std::size_t i = 0; i < stepCount; i++)
-    { 
-        processedString = applyProductions(productions);
+    Symbols result; 
+    for (Symbol const &symbol : symbols)
+    {
+        auto it = productions.find(symbol.name);
+        if (it == productions.end())
+        {
+            throw std::runtime_error("No production for such symbol");
+        }
+        it->second.appendProductionResult(symbol, result);
     }
-    processedString = mapString(commands);
+    result.swap(symbols);
 }
 
-std::string
-Simulator::applyProductions(ProductionMap const &map)
+/*
+CommandsPtr
+Simulator::symbolsToCommands(Symbols const &symbols)
 {
-    std::string result;
-    for (char producing_character : processedString)
-    {
-        auto it = map.find(producing_character);
+    CommandsPtr result(new Commands);
 
-        if (it != map.end())
-        {
-            Production const &production = it->second;
-            double random_value = randomGenerator.getNextRandom(); 
-            if (random_value <= production.probability)
-            {
-                result.append(production.production_string);
-            }
-        }
-        else
-        {
-            std::string error_msg = "Unknown command \'";
-            error_msg += producing_character;
-            error_msg += "\'";
-            throw std::runtime_error(error_msg);
-        }
+    for (Symbol const &symbol : symbols)
+    {
+        result->insert( 
+                result->begin(),
+                symbol.drawCommands->begin(),
+                symbol.drawCommands->end());
     }
     return result;
 }
-
-std::string
-Simulator::mapString(CharacterTransitionMap const &map)
-{
-    std::string result;
-    for (char producing_character : processedString)
-    {
-        auto it = map.find(producing_character);
-
-        if (it != map.end())
-        {
-            result.append(it->second);
-        }
-        else
-        {
-            std::string error_msg = "Unknown command \'";
-            error_msg += producing_character;
-            error_msg += "\'";
-            throw std::runtime_error(error_msg);
-        }
-    }
-    return result;
-}
+*/

@@ -12,6 +12,9 @@
 #define LSYSTEM_VERTEX_GENERATOR
 
 #include "graphic_object.hpp"
+#include "grammar_util.hpp"
+#include "generator_symbol_types.hpp"
+
 #include "GL/gl.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -20,19 +23,27 @@
 
 #include <tuple>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 namespace lsystem
 {
     typedef GLfloat Angle;
     typedef GLfloat DeltaAngle;
-    typedef std::tuple< glm::vec3, Angle, DeltaAngle > DrawState;
+    struct DrawState
+    {
+        glm::vec3 currentPosition;
+        GLfloat currentAngle;
+        GLfloat deltaAngle;
+    };
 
     class VertexGenerator
     {
-        typedef void (*DrawCommandFunction)(VertexGenerator &);
+        //typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
+            typedef std::function<void(VertexGenerator&, Symbol const &)>
+                DrawingFunction;
+
             VertexGenerator(GLfloat width = 640, GLfloat height = 480);
 
             void initDrawCommands();
@@ -41,9 +52,24 @@ namespace lsystem
 
             void setDrawState(DrawState const &state);
 
-            void setCommandsString(std::string const &commands);
+            void setSymbols(SymbolsPtr const &symbolsPtr);
 
             GraphicObjectPtr generateGraphicObject();
+
+            void drawLine();
+
+            void drawSpace();
+
+            void rotateLeft();
+
+            void rotateRight();
+
+            void saveDrawState();
+
+            void restoreDrawState();
+
+            void addDrawingFunction(
+                    Symbol const &symbol, DrawingFunction const &fn);
 
         private:
             void updateImageCorners();
@@ -56,14 +82,10 @@ namespace lsystem
 
             glm::mat4 getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight);
 
-            void saveDrawState();
-
-            void restoreDrawState();
-
         private:
             GLfloat width, height;
-            std::unordered_map< char, DrawCommandFunction > drawCommands;
-            std::string cmdString;
+            std::map< Symbol, DrawingFunction > drawCommands;
+            SymbolsPtr symbolsPtr;
             DrawState drawState;
             glm::vec2 imageLeftCorner, imageRightCorner;
             std::vector< glm::vec4 > vertices;

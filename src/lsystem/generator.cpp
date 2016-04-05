@@ -6,7 +6,10 @@ VertexGenerator(GLfloat width, GLfloat height)
     : width(width)
     , height(height)
 {
-    drawState = std::make_tuple(glm::vec3(0.0, 0.0, 0.0), 0.0f, 0.0f);
+    drawState = {
+          glm::vec3(0.0, 0.0, 0.0)
+        , 0.0f
+        , 0.0f};
     initDrawCommands();
 }
 
@@ -20,7 +23,7 @@ VertexGenerator::setDrawState(DrawState const &state)
 void
 VertexGenerator::updateImageCorners()
 {
-    glm::vec3 &currentPosition = std::get< 0 >(drawState);
+    glm::vec3 &currentPosition = drawState.currentPosition;
 
     if (currentPosition.x < imageLeftCorner.x)
     {
@@ -113,53 +116,81 @@ VertexGenerator::getScreenSize()
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands['F'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolDrawLine] = [&] (VertexGenerator &generator, Symbol const &)
     {
-        glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
-        GLfloat currentAngle = std::get< 1 >(generator.drawState);
-
-        generator.addVertex(currentPosition); 
-        currentPosition.x += 1 * cos(currentAngle);
-        currentPosition.y += 1 * sin(currentAngle); 
-        generator.addVertex(currentPosition); 
-
-        generator.updateImageCorners();
+        generator.drawLine();
     };
 
-    drawCommands['f'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolDrawSpace] = [&] (VertexGenerator &generator, Symbol const &)
     {
-        glm::vec3& currentPosition = std::get< 0 >(generator.drawState);
-        GLfloat currentAngle = std::get< 1 >(generator.drawState);
-
-        currentPosition.x += 1 * cos(currentAngle);
-        currentPosition.y += 1 * sin(currentAngle);
+        generator.drawSpace();
     };
 
-    drawCommands['+'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRotateRight] = [&] (VertexGenerator &generator, Symbol const &)
     {
-        GLfloat &currentAngle = std::get< 1 >(generator.drawState);
-        GLfloat deltaAngle = std::get< 2 >(generator.drawState);
-
-        currentAngle -= deltaAngle;
+        generator.rotateRight();
     };
 
-    drawCommands['-'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRotateLeft] = [&] (VertexGenerator &generator, Symbol const &)
     {
-        GLfloat &currentAngle = std::get< 1 >(generator.drawState);
-        GLfloat deltaAngle = std::get< 2 >(generator.drawState);
-
-        currentAngle += deltaAngle;
+        generator.rotateLeft();
     };
 
-    drawCommands['['] = [&] (VertexGenerator &generator)
+    drawCommands[symbolSaveState] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.saveDrawState();
     };
 
-    drawCommands[']'] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRestoreState] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.restoreDrawState();
     };
+}
+
+void
+VertexGenerator::
+drawLine()
+{
+    glm::vec3& currentPosition = drawState.currentPosition;
+    GLfloat currentAngle = drawState.currentAngle;
+
+    addVertex(currentPosition);
+    currentPosition.x += 1 * cos(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);
+    addVertex(currentPosition);
+
+    updateImageCorners();
+}
+
+void
+VertexGenerator::
+drawSpace()
+{
+    glm::vec3& currentPosition = drawState.currentPosition;
+    GLfloat currentAngle = drawState.currentAngle;
+
+    currentPosition.x += 1 * cos(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);
+}
+
+void
+VertexGenerator::
+rotateRight()
+{
+    GLfloat &currentAngle = drawState.currentAngle;
+    GLfloat deltaAngle = drawState.deltaAngle;
+
+    currentAngle -= deltaAngle;
+}
+
+void
+VertexGenerator::
+rotateLeft()
+{
+    GLfloat &currentAngle = drawState.currentAngle;
+    GLfloat deltaAngle = drawState.deltaAngle;
+
+    currentAngle += deltaAngle;
 }
 
 void
@@ -170,9 +201,9 @@ VertexGenerator::setImageRectangle(GLfloat width, GLfloat height)
 }
 
 void
-VertexGenerator::setCommandsString(std::string const &commands)
+VertexGenerator::setSymbols(SymbolsPtr const &symbolsPtr)
 {
-    cmdString = commands;
+    this->symbolsPtr = symbolsPtr;
 }
 
 GraphicObjectPtr
@@ -181,9 +212,9 @@ VertexGenerator::generateGraphicObject()
     GraphicObjectPtr result(new GraphicObject());
     glm::vec3 vertexColor = glm::vec3(0.4396f, 0.75686f, 0.13725f);
 
-    for (char ch : cmdString)
+    for (Symbol symbol : (*symbolsPtr))
     {
-        drawCommands[ch](*this);
+        drawCommands[symbol](*this, symbol);
     }
     scaleImage();
 
@@ -212,4 +243,11 @@ VertexGenerator::restoreDrawState()
 
     drawState = drawStateStack.back();
     drawStateStack.pop_back();
+}
+
+void
+VertexGenerator::
+addDrawingFunction(Symbol const &symbol, DrawingFunction const &fn)
+{
+    drawCommands[symbol] = fn;
 }

@@ -2,6 +2,8 @@
 #include "engine.hpp"
 #include "generator.hpp"
 #include "simulator.hpp"
+#include "grammar_util.hpp"
+
 #include "glm/gtc/constants.hpp"
 
 int main()
@@ -70,7 +72,7 @@ int main()
     engine.addGraphicObject(simulator.getGraphicObject(400, 400));*/
 
     // Test for SLSystem
-    lsystem::Simulator simulator;
+    /*lsystem::Simulator simulator;
     simulator.setAxiom("SS");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
@@ -90,7 +92,7 @@ int main()
     simulator.addCommand('+', "+");
     simulator.addCommand('-', "-");
     simulator.addCommand('[', "[");
-    simulator.addCommand(']', "]");
+    simulator.addCommand(']', "]");*/
 
     /*simulator.setAxiom("F");
     simulator.setStartPoint(glm::vec3(0, 0, 0));
@@ -109,8 +111,58 @@ int main()
     simulator.addCommand('[', "[");
     simulator.addCommand(']', "]");*/
 
+
+    // Test for P LSystem
+    lsystem::Simulator simulator;
+    lsystem::Symbols axiom;
+    lsystem::Symbol symbolS("S");
+    symbolS.addParameter("width", 1);
+    axiom.push_back(symbolS);
+    axiom.push_back(symbolS);
+    simulator.setAxiom(axiom);
+
+    lsystem::VertexGenerator generator;
+    generator.addDrawingFunction(symbolS,
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            {
+                GLfloat width = s["width"];
+                g.saveDrawState();
+                for (int i = 0; i < width; ++i)
+                {
+                    for (int j = 0; j < width; ++j)
+                    {
+                        g.drawLine();
+                    }
+                    g.rotateLeft();
+                }
+                g.restoreDrawState();
+                g.saveDrawState();
+                g.rotateLeft();
+                g.drawLine();
+                g.restoreDrawState();
+                g.drawLine();
+                g.rotateRight();
+            });
+
+    lsystem::Production productionS(symbolS, 0.1,
+            [] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+                lsystem::Symbol tmp(s);
+                auto& s_width = tmp["width"];
+                s_width += 2;
+                result.push_back(tmp);
+                result.push_back(s);
+                return result;
+            });
+    simulator.addProduction(productionS);
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
     simulator.setStepCount(4);
-    engine.addGraphicObject(simulator.getGraphicObject(640 * 0.8, 480 * 0.8));
+    engine.addGraphicObject(
+            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
 
 
     std::cout << "LSystem" << std::endl;
