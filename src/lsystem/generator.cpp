@@ -6,7 +6,10 @@ VertexGenerator(GLfloat width, GLfloat height)
     : width(width)
     , height(height)
 {
-    drawState = {glm::vec3(0.0, 0.0, 0.0), 0.0f, 0.0f};
+    drawState = {
+          glm::vec3(0.0, 0.0, 0.0)
+        , 0.0f
+        , 0.0f};
     initDrawCommands();
 }
 
@@ -113,32 +116,32 @@ VertexGenerator::getScreenSize()
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands[symbolDrawLine] = [&] (VertexGenerator &generator)
+    drawCommands[symbolDrawLine] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.drawLine();
     };
 
-    drawCommands[symbolDrawSpace] = [&] (VertexGenerator &generator)
+    drawCommands[symbolDrawSpace] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.drawSpace();
     };
 
-    drawCommands[symbolRotateRight] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRotateRight] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.rotateRight();
     };
 
-    drawCommands[symbolRotateLeft] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRotateLeft] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.rotateLeft();
     };
 
-    drawCommands[symbolSaveState] = [&] (VertexGenerator &generator)
+    drawCommands[symbolSaveState] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.saveDrawState();
     };
 
-    drawCommands[symbolRestoreState] = [&] (VertexGenerator &generator)
+    drawCommands[symbolRestoreState] = [&] (VertexGenerator &generator, Symbol const &)
     {
         generator.restoreDrawState();
     };
@@ -211,7 +214,7 @@ VertexGenerator::generateGraphicObject()
 
     for (Symbol symbol : (*symbolsPtr))
     {
-        drawCommands[symbol](*this);
+        drawCommands[symbol](*this, symbol);
     }
     scaleImage();
 

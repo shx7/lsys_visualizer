@@ -116,15 +116,26 @@ int main()
     lsystem::Simulator simulator;
     lsystem::Symbols axiom;
     lsystem::Symbol symbolS("S");
-    symbolS.addParameter("width", 0);
+    symbolS.addParameter("width", 1);
     axiom.push_back(symbolS);
     axiom.push_back(symbolS);
     simulator.setAxiom(axiom);
 
     lsystem::VertexGenerator generator;
     generator.addDrawingFunction(symbolS,
-            [] (lsystem::VertexGenerator &g)
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
             {
+                GLfloat width = s["width"];
+                g.saveDrawState();
+                for (int i = 0; i < width; ++i)
+                {
+                    for (int j = 0; j < width; ++j)
+                    {
+                        g.drawLine();
+                    }
+                    g.rotateLeft();
+                }
+                g.restoreDrawState();
                 g.saveDrawState();
                 g.rotateLeft();
                 g.drawLine();
@@ -139,7 +150,7 @@ int main()
                 lsystem::Symbols result;
                 lsystem::Symbol tmp(s);
                 auto& s_width = tmp["width"];
-                s_width += 1;
+                s_width += 2;
                 result.push_back(tmp);
                 result.push_back(s);
                 return result;
@@ -149,7 +160,7 @@ int main()
     simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
-    simulator.setStepCount(10);
+    simulator.setStepCount(4);
     engine.addGraphicObject(
             simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
 

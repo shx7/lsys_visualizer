@@ -41,7 +41,8 @@ namespace lsystem
         //typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
-            typedef std::function<void(VertexGenerator&)> DrawingFunction;
+            typedef std::function<void(VertexGenerator&, Symbol const &)>
+                DrawingFunction;
 
             VertexGenerator(GLfloat width = 640, GLfloat height = 480);
 

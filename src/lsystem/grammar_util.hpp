@@ -36,6 +36,17 @@ namespace lsystem
             parameters = s.parameters;
         }
 
+        GLfloat operator[](std::string const &parameter_name) const
+        {
+            auto it = parameters.find(parameter_name);
+            if (it == parameters.end())
+            {
+                throw std::runtime_error(
+                    "Access to non-existent parameter '" + parameter_name + "'");
+            }
+            return it->second;
+        }
+
         GLfloat &operator[](std::string const &parameter_name)
         {
             auto it = parameters.find(parameter_name);
