@@ -71,6 +71,7 @@ namespace lsystem
             void addDrawingFunction(
                     Symbol const &symbol, DrawingFunction const &fn);
 
+
         private:
             void updateImageCorners();
 

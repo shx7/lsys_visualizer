@@ -116,32 +116,44 @@ VertexGenerator::getScreenSize()
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands[symbolDrawLine] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolDrawLine] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.drawLine();
     };
 
-    drawCommands[symbolDrawSpace] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolDrawSpace] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.drawSpace();
     };
 
-    drawCommands[symbolRotateRight] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolRotateRight] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.rotateRight();
     };
 
-    drawCommands[symbolRotateLeft] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolRotateLeft] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.rotateLeft();
     };
 
-    drawCommands[symbolSaveState] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolSaveState] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.saveDrawState();
     };
 
-    drawCommands[symbolRestoreState] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolRestoreState] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.restoreDrawState();
     };

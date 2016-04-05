@@ -64,16 +64,13 @@ Simulator::getGraphicObject(
         , GLfloat imageWidth
         , GLfloat imageHeight)
 {
-    //VertexGenerator generator;
     generator.setSymbols(generateSymbolsSequence());
-    //generator.setCommandsString(processedString);
     generator.setDrawState({
               startPoint
             , startAngle
             , deltaAngle});
     generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
-    //return GraphicObjectPtr();
 }
 
 SymbolsPtr
