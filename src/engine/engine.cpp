@@ -1,5 +1,15 @@
 #include "engine.hpp"
 
+void mouseCallback(GLFWwindow*, double xpos, double ypos)
+{
+    Camera::instance()->updateMouse(xpos, ypos);
+}
+
+extern void keyboardCallback(GLFWwindow *, int key, int, int action, int)
+{
+    Camera::instance()->updateKeyboard(key, action);
+}
+
 GraphicEngine::GraphicEngine(GLfloat viewportWidth, GLfloat viewportHeight)
     : isGLFWInitialized(false)
     , wnd(nullptr)
@@ -36,6 +46,7 @@ GraphicEngine::init(std::string const &logFilename
         initLog(logFilename);
         initGLFW();
         initGLEW();
+        initCamera();
         initShaders(vertexShaderFilename, fragmentShaderFilename);
 
         log << "Graphic engine initialized" << std::endl;
@@ -69,6 +80,20 @@ GraphicEngine::getGLAttribute(std::string const &attributeName)
     if (result < 0)
     {
         throw std::runtime_error("GL attribute not found: " + attributeName);
+    }
+    return result;
+}
+
+GLint
+GraphicEngine::getGLUniformAttribute(std::string const &attributeName)
+{
+    GLint result = -1;
+
+    result = glGetUniformLocation(programId, attributeName.c_str());
+    if (result < 0)
+    {
+        throw std::runtime_error(
+                "GL uniform attribute not found: " + attributeName);
     }
     return result;
 }
@@ -200,6 +225,32 @@ GraphicEngine::initGLEW()
 }
 
 void
+GraphicEngine::initCamera()
+{
+    glfwSetCursorPosCallback(wnd, mouseCallback);
+    glfwSetKeyCallback(wnd, keyboardCallback);
+}
+
+// TODO: optimize here
+void
+GraphicEngine::updateCamera()
+{
+    GLint viewLocation = getGLUniformAttribute("view");
+    Camera *ptr = Camera::instance();
+    // TODO: insert here camera matrix
+    glUniformMatrix4fv(
+              viewLocation
+            , 1
+            , GL_FALSE
+            , glm::value_ptr(ptr->getLookAtMatrix())
+            /*, glm::value_ptr(glm::lookAt(
+                      glm::vec3(0, 1, 0)
+                    , glm::vec3(0, 1, 0) + glm::vec3(0, -0.5, 0.5)
+                    , glm::vec3(0, 1, 0)))*/
+            );
+}
+
+void
 GraphicEngine::start()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -209,8 +260,9 @@ GraphicEngine::start()
                , backgroundColor.a);
     while (!glfwWindowShouldClose(wnd)
             && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
-    { 
+    {
         glClear(GL_COLOR_BUFFER_BIT);
+        updateCamera();
 
         for (GraphicObjectPtr ptr : graphicObjects)
         {
@@ -230,11 +282,6 @@ GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
     glBindVertexArray(ptr->getVAOIdentifier());
     glDrawArrays(ptr->getDrawMode(), 0, ptr->getVertexCount() / 6);
     glBindVertexArray(0);
-}
-
-void
-GraphicEngine::processInput()
-{
 }
 
 void

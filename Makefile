@@ -1,8 +1,9 @@
 CC=g++
 SRC_DIR=src
 BUILD_DIR=build
+SHADERS_DIR=$(SRC_DIR)/shaders
 
-all:
+all: update_shaders
 	$(MAKE) -C $(SRC_DIR)
 
 collect_objs:
@@ -10,6 +11,9 @@ collect_objs:
 
 link_objs:
 	$(MAKE) -C $(BUILD_DIR)
+
+update_shaders:
+	find $(SHADERS_DIR) -name "*.*" -exec cp {} $(BUILD_DIR) \;
 
 run:
 	$(MAKE) -C $(BUILD_DIR) run

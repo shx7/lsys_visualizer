@@ -4,7 +4,9 @@ in vec3 color;
 
 out vec3 ColorT;
 
+uniform mat4 view;
+
 void main() {
-    gl_Position = position;
+    gl_Position = view * position;
     ColorT = color;
 }

@@ -10,12 +10,16 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+
 #include <iostream>
 #include <fstream>
 #include <list>
 #include <vector>
 
 #include "graphic_object.hpp"
+#include "camera.hpp"
 
 class GraphicEngine
 { 
@@ -36,8 +40,6 @@ class GraphicEngine
     private:
         void drawObject(GraphicObjectPtr const &ptr);
 
-        void processInput();
-
         void initLog(std::string const &filename);
 
         void initGLFW();
@@ -48,6 +50,8 @@ class GraphicEngine
                   std::string const &vertexShaderFilename
                 , std::string const &fragmentShaderFilename);
 
+        void initCamera();
+
         GLuint loadShader(std::string const &filename, GLenum shaderType);
 
         void compileShader(GLuint shaderId, std::string const &shaderText);
@@ -55,6 +59,10 @@ class GraphicEngine
         void linkProgram();
 
         GLint getGLAttribute(std::string const &attributeName);
+
+        GLint getGLUniformAttribute(std::string const &attributeName);
+
+        void updateCamera();
 
     private:
         bool isGLFWInitialized;
@@ -69,5 +77,14 @@ class GraphicEngine
 
         glm::vec4 backgroundColor;
 };
+
+extern void mouseCallback(GLFWwindow* wnd, double xpos, double ypos);
+
+extern void keyboardCallback(
+          GLFWwindow *wnd
+        , int key
+        , int scancode
+        , int action
+        , int mods);
 
 #endif
