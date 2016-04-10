@@ -10,6 +10,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+
 #include <iostream>
 #include <fstream>
 #include <list>
@@ -56,6 +59,10 @@ class GraphicEngine
         void linkProgram();
 
         GLint getGLAttribute(std::string const &attributeName);
+
+        GLint getGLUniformAttribute(std::string const &attributeName);
+
+        void updateCamera();
 
     private:
         bool isGLFWInitialized;

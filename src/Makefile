@@ -4,8 +4,9 @@ CFLAGS=-std=c++11 -Wall -Wextra
 ENGINE_DIR=engine
 SIMULATOR_DIR=simulator
 LSYSTEM_DIR=lsystem
+SHADERS_DIR=shaders
 
-all: engine simulator lsystem
+all: engine simulator lsystem update_shaders
 	$(MAKE) -C .. collect_objs
 	$(MAKE) -C .. link_objs
 
@@ -17,6 +18,9 @@ engine:
 
 lsystem:
 	$(MAKE) -C $(LSYSTEM_DIR)
+
+update_shaders:
+	find $(SHADERS_DIR) -name "*.*" -exec cp {} $(BUILD_DIR) \;
 
 run:
 	$(MAKE) -C .. run

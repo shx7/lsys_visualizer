@@ -84,6 +84,20 @@ GraphicEngine::getGLAttribute(std::string const &attributeName)
     return result;
 }
 
+GLint
+GraphicEngine::getGLUniformAttribute(std::string const &attributeName)
+{
+    GLint result = -1;
+
+    result = glGetUniformLocation(programId, attributeName.c_str());
+    if (result < 0)
+    {
+        throw std::runtime_error(
+                "GL uniform attribute not found: " + attributeName);
+    }
+    return result;
+}
+
 GLuint
 GraphicEngine::loadShader(std::string const &filename, GLenum shaderType)
 {
@@ -214,6 +228,26 @@ void
 GraphicEngine::initCamera()
 {
     glfwSetCursorPosCallback(wnd, mouseCallback);
+    glfwSetKeyCallback(wnd, keyboardCallback);
+}
+
+// TODO: optimize here
+void
+GraphicEngine::updateCamera()
+{
+    GLint viewLocation = getGLUniformAttribute("view");
+    Camera *ptr = Camera::instance();
+    // TODO: insert here camera matrix
+    glUniformMatrix4fv(
+              viewLocation
+            , 1
+            , GL_FALSE
+            , glm::value_ptr(ptr->getLookAtMatrix())
+            /*, glm::value_ptr(glm::lookAt(
+                      glm::vec3(0, 1, 0)
+                    , glm::vec3(0, 1, 0) + glm::vec3(0, -0.5, 0.5)
+                    , glm::vec3(0, 1, 0)))*/
+            );
 }
 
 void
@@ -228,6 +262,7 @@ GraphicEngine::start()
             && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         glClear(GL_COLOR_BUFFER_BIT);
+        updateCamera();
 
         for (GraphicObjectPtr ptr : graphicObjects)
         {

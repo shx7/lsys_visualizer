@@ -20,9 +20,10 @@ class Camera
         GLfloat yawAngle = 0;
 
         double mouseX, mouseY;
-        const double mouseSensivity = 0.05;
+        const double mouseSensivity = 0.15;
 
-        const glm::vec3 cameraSpeed = glm::vec3(0.1);
+        const GLfloat cameraSpeed = 0.005;
+        bool isMouseInitialized = false;
 
     public:
         static Camera *instance();

@@ -4,13 +4,14 @@ bool Camera::isInstantiated = false;
 Camera *Camera::ptr = nullptr;
 
 Camera::Camera()
-    : cameraPosition(glm::vec3(0, 0, 0))
-    , cameraUp(glm::vec3(0, 0, 0))
-    , cameraFront(glm::vec3(0, 0, 0))
+    : cameraPosition(glm::vec3(0, 0, -1))
+    , cameraUp(glm::vec3(0, 1, 0))
+    , cameraFront(glm::vec3(0, 0, 1))
     , pitchAngle(0)
     , yawAngle(0)
     , mouseX(0)
     , mouseY(0)
+    , isMouseInitialized(false)
 {
 }
 
@@ -52,8 +53,19 @@ Camera::getLookAtMatrix()
 void
 Camera::updateMouse(double xpos, double ypos)
 {
-    double deltaYawAngle = (mouseX - xpos) * mouseSensivity;
-    double deltaPitchAngle = (mouseY - ypos) * mouseSensivity;
+    double deltaYawAngle = 0.0;
+    double deltaPitchAngle = 0.0;
+    if (isMouseInitialized)
+    {
+        deltaYawAngle = (mouseX - xpos) * mouseSensivity;
+        deltaPitchAngle = (mouseY - ypos) * mouseSensivity;
+    }
+    else
+    {
+        isMouseInitialized = true;
+    }
+    mouseX = xpos;
+    mouseY = ypos;
     yawAngle += deltaYawAngle;
     pitchAngle += deltaPitchAngle;
 
