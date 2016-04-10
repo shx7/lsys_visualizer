@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "graphic_object.hpp"
+#include "camera.hpp"
 
 class GraphicEngine
 { 
@@ -36,8 +37,6 @@ class GraphicEngine
     private:
         void drawObject(GraphicObjectPtr const &ptr);
 
-        void processInput();
-
         void initLog(std::string const &filename);
 
         void initGLFW();
@@ -47,6 +46,8 @@ class GraphicEngine
         void initShaders(
                   std::string const &vertexShaderFilename
                 , std::string const &fragmentShaderFilename);
+
+        void initCamera();
 
         GLuint loadShader(std::string const &filename, GLenum shaderType);
 
@@ -69,5 +70,7 @@ class GraphicEngine
 
         glm::vec4 backgroundColor;
 };
+
+extern void mouseCallback(GLFWwindow* wnd, double xpos, double ypos);
 
 #endif

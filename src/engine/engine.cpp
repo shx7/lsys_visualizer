@@ -1,5 +1,10 @@
 #include "engine.hpp"
 
+void mouseCallback(GLFWwindow*, double xpos, double ypos)
+{
+    Camera::instance()->update(xpos, ypos);
+}
+
 GraphicEngine::GraphicEngine(GLfloat viewportWidth, GLfloat viewportHeight)
     : isGLFWInitialized(false)
     , wnd(nullptr)
@@ -36,6 +41,7 @@ GraphicEngine::init(std::string const &logFilename
         initLog(logFilename);
         initGLFW();
         initGLEW();
+        initCamera();
         initShaders(vertexShaderFilename, fragmentShaderFilename);
 
         log << "Graphic engine initialized" << std::endl;
@@ -200,6 +206,12 @@ GraphicEngine::initGLEW()
 }
 
 void
+GraphicEngine::initCamera()
+{
+    glfwSetCursorPosCallback(wnd, mouseCallback);
+}
+
+void
 GraphicEngine::start()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -209,7 +221,7 @@ GraphicEngine::start()
                , backgroundColor.a);
     while (!glfwWindowShouldClose(wnd)
             && glfwGetKey(wnd, GLFW_KEY_ESCAPE) != GLFW_PRESS)
-    { 
+    {
         glClear(GL_COLOR_BUFFER_BIT);
 
         for (GraphicObjectPtr ptr : graphicObjects)
@@ -230,11 +242,6 @@ GraphicEngine::drawObject(GraphicObjectPtr const &ptr)
     glBindVertexArray(ptr->getVAOIdentifier());
     glDrawArrays(ptr->getDrawMode(), 0, ptr->getVertexCount() / 6);
     glBindVertexArray(0);
-}
-
-void
-GraphicEngine::processInput()
-{
 }
 
 void
