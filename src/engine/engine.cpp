@@ -2,7 +2,12 @@
 
 void mouseCallback(GLFWwindow*, double xpos, double ypos)
 {
-    Camera::instance()->update(xpos, ypos);
+    Camera::instance()->updateMouse(xpos, ypos);
+}
+
+extern void keyboardCallback(GLFWwindow *, int key, int, int action, int)
+{
+    Camera::instance()->updateKeyboard(key, action);
 }
 
 GraphicEngine::GraphicEngine(GLfloat viewportWidth, GLfloat viewportHeight)

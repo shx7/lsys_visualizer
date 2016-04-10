@@ -73,4 +73,11 @@ class GraphicEngine
 
 extern void mouseCallback(GLFWwindow* wnd, double xpos, double ypos);
 
+extern void keyboardCallback(
+          GLFWwindow *wnd
+        , int key
+        , int scancode
+        , int action
+        , int mods);
+
 #endif
