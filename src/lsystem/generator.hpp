@@ -32,7 +32,7 @@ namespace lsystem
     struct DrawState
     {
         glm::vec3 currentPosition;
-        GLfloat currentAngle;
+        glm::vec3 up, head, left;
         GLfloat deltaAngle;
     };
 

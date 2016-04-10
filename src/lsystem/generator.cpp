@@ -8,8 +8,11 @@ VertexGenerator(GLfloat width, GLfloat height)
 {
     drawState = {
           glm::vec3(0.0, 0.0, 0.0)
+        , glm::vec3(0.0, 1.0, 0.0)
+        , glm::vec3(0.0, 0.0, -1.0)
+        , glm::vec3(-1.0, 0.0, 0.0)
         , 0.0f
-        , 0.0f};
+    };
     initDrawCommands();
 }
 
@@ -164,11 +167,12 @@ VertexGenerator::
 drawLine()
 {
     glm::vec3& currentPosition = drawState.currentPosition;
-    GLfloat currentAngle = drawState.currentAngle;
+    //GLfloat currentAngle = drawState.currentAngle;
 
     addVertex(currentPosition);
-    currentPosition.x += 1 * cos(currentAngle);
-    currentPosition.y += 1 * sin(currentAngle);
+    /*currentPosition.x += 1 * cos(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);*/
+    currentPosition += drawState.head;
     addVertex(currentPosition);
 
     updateImageCorners();
@@ -179,30 +183,43 @@ VertexGenerator::
 drawSpace()
 {
     glm::vec3& currentPosition = drawState.currentPosition;
-    GLfloat currentAngle = drawState.currentAngle;
+    currentPosition += drawState.head;
+    /*GLfloat currentAngle = drawState.currentAngle;
 
     currentPosition.x += 1 * cos(currentAngle);
-    currentPosition.y += 1 * sin(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);*/
 }
 
+// TODO: fix rotation
 void
 VertexGenerator::
 rotateRight()
 {
-    GLfloat &currentAngle = drawState.currentAngle;
+    glm::mat4 rotationMatrix
+        = rotate(glm::mat4(), drawState.deltaAngle, drawState.head);
+    drawState.head = glm::vec3(glm::vec4(drawState.head, 1) * rotationMatrix);
+    drawState.up = glm::vec3(glm::vec4(drawState.up, 1) * rotationMatrix);
+    drawState.left = glm::vec3(glm::vec4(drawState.left, 1) * rotationMatrix);
+    /*GLfloat &currentAngle = drawState.currentAngle;
     GLfloat deltaAngle = drawState.deltaAngle;
 
-    currentAngle -= deltaAngle;
+    currentAngle -= deltaAngle;*/
 }
 
+// TODO: fix rotation
 void
 VertexGenerator::
 rotateLeft()
 {
-    GLfloat &currentAngle = drawState.currentAngle;
+    glm::mat4 rotationMatrix
+        = rotate(glm::mat4(), (-1) * drawState.deltaAngle, drawState.head);
+    drawState.head = glm::vec3(glm::vec4(drawState.head, 1) * rotationMatrix);
+    drawState.up = glm::vec3(glm::vec4(drawState.up, 1) * rotationMatrix);
+    drawState.left = glm::vec3(glm::vec4(drawState.left, 1) * rotationMatrix);
+    /*GLfloat &currentAngle = drawState.currentAngle;
     GLfloat deltaAngle = drawState.deltaAngle;
 
-    currentAngle += deltaAngle;
+    currentAngle += deltaAngle;*/
 }
 
 void

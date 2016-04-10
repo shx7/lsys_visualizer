@@ -85,6 +85,12 @@ namespace lsystem
                     , GLfloat imageWidth
                     , GLfloat imageHeight);
 
+            void setUp(glm::vec3 const &up);
+
+            void setHead(glm::vec3 const &head);
+
+            void setLeft(glm::vec3 const &left);
+
         private: 
             SymbolsPtr generateSymbolsSequence();
 
@@ -95,6 +101,7 @@ namespace lsystem
             GLfloat startAngle;
             GLfloat deltaAngle;
             glm::vec3 startPoint;
+            glm::vec3 up, head, left;
 
             RandomGenerator randomGenerator;
             // TODO: think about set for productions

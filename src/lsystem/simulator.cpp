@@ -7,6 +7,9 @@ Simulator::Simulator()
     , startAngle(0.0f)
     , deltaAngle(0.0f)
     , startPoint(0.0, 0.0, 0.0)
+    , up(0.0, 1.0, 0.0)
+    , head(0.0, 0.0, -1.0)
+    , left(-1.0, 0.0, 0.0)
 {
 }
 
@@ -67,8 +70,11 @@ Simulator::getGraphicObject(
     generator.setSymbols(generateSymbolsSequence());
     generator.setDrawState({
               startPoint
-            , startAngle
-            , deltaAngle});
+            , up
+            , head
+            , left
+            , deltaAngle
+        });
     generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
 }
@@ -84,7 +90,6 @@ Simulator::generateSymbolsSequence()
     }
     result->swap(processedSymbolsString);
     return result;
-    //return symbolsToCommands(processedSymbolsString);
 }
 
 void
@@ -103,19 +108,20 @@ Simulator::applyProductions(Symbols &symbols)
     result.swap(symbols);
 }
 
-/*
-CommandsPtr
-Simulator::symbolsToCommands(Symbols const &symbols)
+void
+Simulator::setUp(glm::vec3 const &v)
 {
-    CommandsPtr result(new Commands);
-
-    for (Symbol const &symbol : symbols)
-    {
-        result->insert( 
-                result->begin(),
-                symbol.drawCommands->begin(),
-                symbol.drawCommands->end());
-    }
-    return result;
+    up = v;
 }
-*/
+
+void
+Simulator::setHead(glm::vec3 const &v)
+{
+    head = v;
+}
+
+void
+Simulator::setLeft(glm::vec3 const &v)
+{
+    left = v;
+}

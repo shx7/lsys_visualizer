@@ -120,6 +120,11 @@ int main()
     axiom.push_back(symbolS);
     axiom.push_back(symbolS);
     simulator.setAxiom(axiom);
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setHead(glm::vec3(0, 1, 0));
+    simulator.setUp(glm::vec3(0, 0, -1));
+    simulator.setLeft(glm::vec3(-1, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
 
     lsystem::VertexGenerator generator;
     generator.addDrawingFunction(symbolS,
