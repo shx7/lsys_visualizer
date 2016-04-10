@@ -196,10 +196,10 @@ VertexGenerator::
 rotateRight()
 {
     glm::mat4 rotationMatrix
-        = rotate(glm::mat4(), drawState.deltaAngle, drawState.head);
-    drawState.head = glm::vec3(glm::vec4(drawState.head, 1) * rotationMatrix);
-    drawState.up = glm::vec3(glm::vec4(drawState.up, 1) * rotationMatrix);
-    drawState.left = glm::vec3(glm::vec4(drawState.left, 1) * rotationMatrix);
+        = rotate(glm::mat4(), drawState.deltaAngle, drawState.left);
+    drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
+    drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
+    drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
     /*GLfloat &currentAngle = drawState.currentAngle;
     GLfloat deltaAngle = drawState.deltaAngle;
 
@@ -212,10 +212,10 @@ VertexGenerator::
 rotateLeft()
 {
     glm::mat4 rotationMatrix
-        = rotate(glm::mat4(), (-1) * drawState.deltaAngle, drawState.head);
-    drawState.head = glm::vec3(glm::vec4(drawState.head, 1) * rotationMatrix);
-    drawState.up = glm::vec3(glm::vec4(drawState.up, 1) * rotationMatrix);
-    drawState.left = glm::vec3(glm::vec4(drawState.left, 1) * rotationMatrix);
+        = rotate(glm::mat4(), (-1) * drawState.deltaAngle, drawState.left);
+    drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
+    drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
+    drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
     /*GLfloat &currentAngle = drawState.currentAngle;
     GLfloat deltaAngle = drawState.deltaAngle;
 
@@ -245,7 +245,7 @@ VertexGenerator::generateGraphicObject()
     {
         drawCommands[symbol](*this, symbol);
     }
-    scaleImage();
+    //scaleImage();
 
     for (glm::vec4 vertex : vertices)
     {
