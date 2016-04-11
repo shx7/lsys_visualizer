@@ -2,16 +2,231 @@
 #include "engine.hpp"
 #include "generator.hpp"
 #include "simulator.hpp"
+
 #include "grammar_util.hpp"
+#include "generator_symbol_types.hpp"
 
 #include "glm/gtc/constants.hpp"
 
-int main()
+// P-Lsystem test
+void simpleTree1()
 {
     std::string vertexShaderFilename("../src/shaders/vertex_shader.vert");
     std::string fragmentShaderFilename("../src/shaders/fragment_shader.frag");
     GraphicEngine engine;
     engine.init("logfile", vertexShaderFilename, fragmentShaderFilename);
+
+    lsystem::Simulator simulator;
+    lsystem::Symbols axiom;
+
+    // Base branch
+    lsystem::Symbol symbolBase("BaseBranch");
+    symbolBase.addParameter("width", 1);
+
+    // Lateral branch
+    lsystem::Symbol symbolLateralBranch("LateralBranch");
+
+    lsystem::Symbol symbolOffshoot("Offshoot");
+
+    axiom.push_back(symbolBase);
+    simulator.setAxiom(axiom);
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+
+    simulator.setHead(glm::vec3(0, 1, 0));
+    simulator.setUp(glm::vec3(0, 0, -1));
+    simulator.setLeft(glm::vec3(-1, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+
+    lsystem::VertexGenerator generator;
+    generator.addDrawingFunction(symbolBase,
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            {
+                GLfloat width = s["width"];
+                for (int i = 0; i < width; ++i)
+                {
+                    g.drawLine();
+                }
+            });
+
+    lsystem::Production productionS(symbolBase, 0.1,
+            [&] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+                lsystem::Symbol tmp(s);
+                auto& s_width = tmp["width"];
+                s_width += 1;
+                result.push_back(tmp);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawLeft);
+                result.push_back(s);
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(symbolLateralBranch);
+                result.push_back(lsystem::symbolRestoreState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(s);
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolPitchDown);
+                result.push_back(symbolLateralBranch);
+                result.push_back(lsystem::symbolPitchDown);
+                result.push_back(lsystem::symbolPitchDown);
+                result.push_back(s);
+                result.push_back(lsystem::symbolRestoreState);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(s);
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(symbolLateralBranch);
+                result.push_back(lsystem::symbolRestoreState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolPitchDown);
+                result.push_back(symbolLateralBranch);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolYawLeft);
+                return result;
+            });
+    simulator.addProduction(productionS);
+
+    generator.addDrawingFunction(symbolLateralBranch,
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            {
+                g.drawLine();
+            });
+
+    simulator.addProduction(
+    lsystem::Production(symbolLateralBranch, 0.1,
+            [&] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+                result.push_back(symbolBase);
+                return result;
+            })
+    );
+
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::radians(28.0));
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.setStepCount(2);
+    engine.addGraphicObject(
+            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
+
+
+    std::cout << "LSystem" << std::endl;
+    engine.start();
+}
+
+void simpleTree2()
+{
+    std::string vertexShaderFilename("../src/shaders/vertex_shader.vert");
+    std::string fragmentShaderFilename("../src/shaders/fragment_shader.frag");
+    GraphicEngine engine;
+    engine.init("logfile", vertexShaderFilename, fragmentShaderFilename);
+
+    lsystem::Simulator simulator;
+    lsystem::Symbols axiom;
+
+    // Base branch
+    lsystem::Symbol symbolBase("BaseBranch");
+    symbolBase.addParameter("width", 15);
+
+    // Lateral branch
+    lsystem::Symbol symbolLateralBranch("LateralBranch");
+
+    lsystem::Symbol symbolOffshoot("Offshoot");
+
+    axiom.push_back(symbolBase);
+    simulator.setAxiom(axiom);
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+
+    simulator.setHead(glm::vec3(0, 1, 0));
+    simulator.setUp(glm::vec3(0, 0, -1));
+    simulator.setLeft(glm::vec3(-1, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+
+    lsystem::VertexGenerator generator;
+    generator.addDrawingFunction(symbolBase,
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            {
+                GLfloat width = s["width"];
+                for (int i = 0; i < width; ++i)
+                {
+                    g.drawLine();
+                }
+                //g.drawLine();
+            });
+
+    lsystem::Production productionS(symbolBase, 0.1,
+            [=] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+                lsystem::Symbol tmp(s);
+                auto& s_width = tmp["width"];
+                if (s_width - 1 > 0)
+                {
+                    s_width -= 1;
+                }
+
+                result.push_back(symbolBase);
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawLeft);
+                result.push_back(tmp);
+                result.push_back(symbolBase);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(tmp);
+                result.push_back(lsystem::symbolRestoreState);
+
+                //result.push_back(lsystem::symbolDrawLine);
+                result.push_back(lsystem::symbolRollRight);
+                result.push_back(lsystem::symbolRollRight);
+                result.push_back(symbolBase);
+
+                return result;
+            });
+    simulator.addProduction(productionS);
+
+    generator.addDrawingFunction(symbolLateralBranch,
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            {
+                g.drawLine();
+            });
+
+    simulator.addProduction(
+    lsystem::Production(symbolLateralBranch, 0.1,
+            [&] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+
+                return result;
+            })
+    );
+
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::radians(28.0));
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    simulator.setStepCount(3);
+    engine.addGraphicObject(
+            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
+
+
+    std::cout << "LSystem" << std::endl;
+    engine.start();
+}
+
+int main()
+{
 
     // Test for lsystem::VertexGenerator
     /*lsystem::VertexGenerator vertexGenerator;
@@ -111,66 +326,6 @@ int main()
     simulator.addCommand('[', "[");
     simulator.addCommand(']', "]");*/
 
-
-    // Test for P LSystem
-    lsystem::Simulator simulator;
-    lsystem::Symbols axiom;
-    lsystem::Symbol symbolS("S");
-    symbolS.addParameter("width", 1);
-    axiom.push_back(symbolS);
-    axiom.push_back(symbolS);
-    simulator.setAxiom(axiom);
-    simulator.setStartPoint(glm::vec3(0, 0, 0));
-    simulator.setHead(glm::vec3(0, 1, 0));
-    simulator.setUp(glm::vec3(0, 0, -1));
-    simulator.setLeft(glm::vec3(-1, 0, 0));
-    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
-
-    lsystem::VertexGenerator generator;
-    generator.addDrawingFunction(symbolS,
-            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
-            {
-                GLfloat width = s["width"];
-                g.saveDrawState();
-                for (int i = 0; i < width; ++i)
-                {
-                    for (int j = 0; j < width; ++j)
-                    {
-                        g.drawLine();
-                    }
-                    g.yawLeft();
-                }
-                g.restoreDrawState();
-                g.saveDrawState();
-                g.yawLeft();
-                g.drawLine();
-                g.restoreDrawState();
-                g.drawLine();
-                g.yawRight();
-            });
-
-    lsystem::Production productionS(symbolS, 0.1,
-            [] (lsystem::Symbol const& s) -> lsystem::Symbols
-            {
-                lsystem::Symbols result;
-                lsystem::Symbol tmp(s);
-                auto& s_width = tmp["width"];
-                s_width += 2;
-                result.push_back(tmp);
-                result.push_back(s);
-                return result;
-            });
-    simulator.addProduction(productionS);
-    simulator.setStartPoint(glm::vec3(0, 0, 0));
-    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
-    simulator.setStartAngle(glm::half_pi< GLfloat >());
-
-    simulator.setStepCount(4);
-    engine.addGraphicObject(
-            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
-
-
-    std::cout << "LSystem" << std::endl;
-    engine.start();
+    simpleTree1();
     return 0;
 }

@@ -99,11 +99,14 @@ Simulator::applyProductions(Symbols &symbols)
     for (Symbol const &symbol : symbols)
     {
         auto it = productions.find(symbol.name);
-        if (it == productions.end())
+        if (it != productions.end())
         {
-            throw std::runtime_error("No production for such symbol");
+            it->second.appendProductionResult(symbol, result);
         }
-        it->second.appendProductionResult(symbol, result);
+        else
+        {
+            result.push_back(symbol);
+        }
     }
     result.swap(symbols);
 }
