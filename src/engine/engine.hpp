@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
 #include <iostream>
@@ -64,6 +65,8 @@ class GraphicEngine
 
         void updateCamera();
 
+        void initProjectionMatrix();
+
     private:
         bool isGLFWInitialized;
         std::fstream log;
@@ -76,15 +79,23 @@ class GraphicEngine
         GLint positionId, colorId;
 
         glm::vec4 backgroundColor;
+        glm::mat4x4 projectionMatrix;
+
+        const GLfloat minClippingDistance = 0.1f;
+        const GLfloat maxClippingDistance = 200.0f;
 };
 
-extern void mouseCallback(GLFWwindow* wnd, double xpos, double ypos);
+extern void mouseMovementCallback(GLFWwindow* wnd, double xpos, double ypos);
 
-extern void keyboardCallback(
+extern void mouseButtonCallback(
           GLFWwindow *wnd
-        , int key
-        , int scancode
+        , int button
         , int action
         , int mods);
+
+extern void mouseScrollCallback(
+          GLFWwindow *
+        , double xoffset
+        , double yoffset);
 
 #endif

@@ -91,6 +91,8 @@ namespace lsystem
             glm::vec2 imageLeftCorner, imageRightCorner;
             std::vector< glm::vec4 > vertices;
             std::vector< DrawState > drawStateStack;
+
+            const GLfloat limbSize = 0.05;
     };
 }
 

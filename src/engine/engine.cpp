@@ -1,13 +1,18 @@
 #include "engine.hpp"
 
-void mouseCallback(GLFWwindow*, double xpos, double ypos)
+void mouseMovementCallback(GLFWwindow*, double xpos, double ypos)
 {
-    Camera::instance()->updateMouse(xpos, ypos);
+    Camera::instance()->processMouseMovementInput(xpos, ypos);
 }
 
-extern void keyboardCallback(GLFWwindow *, int key, int, int action, int)
+void mouseScrollCallback(GLFWwindow *, double, double yoffset)
 {
-    Camera::instance()->updateKeyboard(key, action);
+    Camera::instance()->processMouseScrollInput(yoffset);
+}
+
+void keyboardCallback(GLFWwindow *, int key, int, int action, int)
+{
+    Camera::instance()->processKeyboardInput(key, action);
 }
 
 GraphicEngine::GraphicEngine(GLfloat viewportWidth, GLfloat viewportHeight)
@@ -227,8 +232,27 @@ GraphicEngine::initGLEW()
 void
 GraphicEngine::initCamera()
 {
-    glfwSetCursorPosCallback(wnd, mouseCallback);
+    glfwSetInputMode(wnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(wnd, mouseMovementCallback);
+    glfwSetScrollCallback(wnd, mouseScrollCallback);
     glfwSetKeyCallback(wnd, keyboardCallback);
+}
+
+void
+GraphicEngine::initProjectionMatrix()
+{
+    projectionMatrix = glm::perspective(
+              glm::radians(60.0f)
+            , viewportHeight / (GLfloat)viewportWidth
+            , minClippingDistance
+            , maxClippingDistance);
+
+    GLint projectionId = getGLUniformAttribute("proj");
+    glUniformMatrix4fv(
+              projectionId
+            , 1
+            , GL_FALSE
+            , glm::value_ptr(projectionMatrix));
 }
 
 // TODO: optimize here
@@ -253,6 +277,7 @@ GraphicEngine::updateCamera()
 void
 GraphicEngine::start()
 {
+    initProjectionMatrix();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glClearColor(backgroundColor.r
                , backgroundColor.g

@@ -172,7 +172,7 @@ drawLine()
     addVertex(currentPosition);
     /*currentPosition.x += 1 * cos(currentAngle);
     currentPosition.y += 1 * sin(currentAngle);*/
-    currentPosition += drawState.head;
+    currentPosition += drawState.head * limbSize;
     addVertex(currentPosition);
 
     updateImageCorners();
@@ -183,7 +183,7 @@ VertexGenerator::
 drawSpace()
 {
     glm::vec3& currentPosition = drawState.currentPosition;
-    currentPosition += drawState.head;
+    currentPosition += drawState.head * limbSize;
     /*GLfloat currentAngle = drawState.currentAngle;
 
     currentPosition.x += 1 * cos(currentAngle);

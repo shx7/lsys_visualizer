@@ -23,6 +23,7 @@ class Camera
         const double mouseSensivity = 0.15;
 
         const GLfloat cameraSpeed = 0.005;
+        const GLfloat cameraScrollSpeed = 0.1;
         bool isMouseInitialized = false;
 
     public:
@@ -36,9 +37,11 @@ class Camera
 
         glm::mat4 getLookAtMatrix();
 
-        void updateMouse(double xpos, double ypos);
+        void processMouseMovementInput(double xpos, double ypos);
 
-        void updateKeyboard(int key, int action);
+        void processKeyboardInput(int key, int action);
+
+        void processMouseScrollInput(double yoffset);
 
     private:
         Camera();

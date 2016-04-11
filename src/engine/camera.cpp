@@ -51,14 +51,14 @@ Camera::getLookAtMatrix()
 }
 
 void
-Camera::updateMouse(double xpos, double ypos)
+Camera::processMouseMovementInput(double xpos, double ypos)
 {
     double deltaYawAngle = 0.0;
     double deltaPitchAngle = 0.0;
     if (isMouseInitialized)
     {
-        deltaYawAngle = (mouseX - xpos) * mouseSensivity;
-        deltaPitchAngle = (mouseY - ypos) * mouseSensivity;
+        deltaYawAngle = (xpos - mouseX) * mouseSensivity;
+        deltaPitchAngle = (ypos - mouseY) * mouseSensivity;
     }
     else
     {
@@ -77,7 +77,13 @@ Camera::updateMouse(double xpos, double ypos)
 }
 
 void
-Camera::updateKeyboard(int key, int action)
+Camera::processMouseScrollInput(double yoffset)
+{
+    cameraPosition -= cameraFront * (GLfloat)(cameraScrollSpeed * yoffset);
+}
+
+void
+Camera::processKeyboardInput(int key, int)
 {
     switch (key)
     {
