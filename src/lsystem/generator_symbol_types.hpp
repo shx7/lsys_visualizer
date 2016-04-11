@@ -7,8 +7,12 @@ namespace lsystem
 { 
     static const Symbol symbolDrawLine("F");
     static const Symbol symbolDrawSpace("f");
-    static const Symbol symbolRotateRight("+");
-    static const Symbol symbolRotateLeft("-");
+    static const Symbol symbolYawRight("+");
+    static const Symbol symbolYawLeft("-");
+    static const Symbol symbolPitchDown("&");
+    static const Symbol symbolPitchUp("^");
+    static const Symbol symbolRollLeft("\\");
+    static const Symbol symbolRollRight("/");
     static const Symbol symbolSaveState("[");
     static const Symbol symbolRestoreState("]");
 } // lsystem

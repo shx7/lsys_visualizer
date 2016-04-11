@@ -138,15 +138,15 @@ int main()
                     {
                         g.drawLine();
                     }
-                    g.rotateLeft();
+                    g.yawLeft();
                 }
                 g.restoreDrawState();
                 g.saveDrawState();
-                g.rotateLeft();
+                g.yawLeft();
                 g.drawLine();
                 g.restoreDrawState();
                 g.drawLine();
-                g.rotateRight();
+                g.yawRight();
             });
 
     lsystem::Production productionS(symbolS, 0.1,

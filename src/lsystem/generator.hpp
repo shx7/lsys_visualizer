@@ -60,9 +60,17 @@ namespace lsystem
 
             void drawSpace();
 
-            void rotateLeft();
+            void yawLeft();
 
-            void rotateRight();
+            void yawRight();
+
+            void pitchDown();
+
+            void pitchUp();
+
+            void rollLeft();
+
+            void rollRight();
 
             void saveDrawState();
 
@@ -73,6 +81,8 @@ namespace lsystem
 
 
         private:
+            void rotateAroundAxis(glm::vec3 const &axis, GLfloat angle);
+
             void updateImageCorners();
 
             void scaleImage();

@@ -133,18 +133,46 @@ VertexGenerator::initDrawCommands()
         generator.drawSpace();
     };
 
-    drawCommands[symbolRotateRight] = [&] (
+    drawCommands[symbolPitchDown] = [&] (
               VertexGenerator &generator
             , Symbol const &)
     {
-        generator.rotateRight();
+        generator.pitchDown();
     };
 
-    drawCommands[symbolRotateLeft] = [&] (
+    drawCommands[symbolPitchUp] = [&] (
               VertexGenerator &generator
             , Symbol const &)
     {
-        generator.rotateLeft();
+        generator.pitchUp();
+    };
+
+    drawCommands[symbolYawRight] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.yawRight();
+    };
+
+    drawCommands[symbolYawLeft] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.yawLeft();
+    };
+
+    drawCommands[symbolRollLeft] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.rollLeft();
+    };
+
+    drawCommands[symbolRollRight] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.rollRight();
     };
 
     drawCommands[symbolSaveState] = [&] (
@@ -193,33 +221,56 @@ drawSpace()
 // TODO: fix rotation
 void
 VertexGenerator::
-rotateRight()
+yawLeft()
 {
-    glm::mat4 rotationMatrix
-        = rotate(glm::mat4(), drawState.deltaAngle, drawState.left);
-    drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
-    drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
-    drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
-    /*GLfloat &currentAngle = drawState.currentAngle;
-    GLfloat deltaAngle = drawState.deltaAngle;
-
-    currentAngle -= deltaAngle;*/
+    rotateAroundAxis(drawState.up, (-1) * drawState.deltaAngle);
 }
 
-// TODO: fix rotation
 void
 VertexGenerator::
-rotateLeft()
+yawRight()
+{
+    rotateAroundAxis(drawState.up, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+pitchDown()
+{
+    rotateAroundAxis(drawState.left, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+pitchUp()
+{
+    rotateAroundAxis(drawState.left, (-1) * drawState.deltaAngle);
+}
+
+
+void
+VertexGenerator::
+rollLeft()
+{
+    rotateAroundAxis(drawState.head, (-1) * drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+rollRight()
+{
+    rotateAroundAxis(drawState.head, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+rotateAroundAxis(glm::vec3 const &axis, GLfloat angle)
 {
     glm::mat4 rotationMatrix
-        = rotate(glm::mat4(), (-1) * drawState.deltaAngle, drawState.left);
+        = rotate(glm::mat4(), angle, axis);
     drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
     drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
     drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
-    /*GLfloat &currentAngle = drawState.currentAngle;
-    GLfloat deltaAngle = drawState.deltaAngle;
-
-    currentAngle += deltaAngle;*/
 }
 
 void
