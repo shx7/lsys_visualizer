@@ -4,12 +4,13 @@
 #include "simulator.hpp"
 
 #include "grammar_util.hpp"
+#include "symbol_builder.hpp"
 #include "generator_symbol_types.hpp"
 
 #include "glm/gtc/constants.hpp"
 
 // P-Lsystem test
-void simpleTree1()
+/*void simpleTree1()
 {
     std::string vertexShaderFilename("../src/shaders/vertex_shader.vert");
     std::string fragmentShaderFilename("../src/shaders/fragment_shader.frag");
@@ -371,6 +372,142 @@ void simpleTree3()
 
     std::cout << "LSystem" << std::endl;
     engine.start();
+}*/
+
+void simpleTree3b()
+{
+    std::string vertexShaderFilename("../src/shaders/vertex_shader.vert");
+    std::string fragmentShaderFilename("../src/shaders/fragment_shader.frag");
+    GraphicEngine engine;
+    engine.init("logfile", vertexShaderFilename, fragmentShaderFilename);
+
+    lsystem::Simulator simulator;
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setHead(glm::vec3(0, 1, 0));
+    simulator.setUp(glm::vec3(0, 0, -1));
+    simulator.setLeft(glm::vec3(-1, 0, 0));
+    simulator.setDeltaAngle(glm::quarter_pi< GLfloat > ());
+
+
+    simulator.setStartPoint(glm::vec3(0, 0, 0));
+    simulator.setDeltaAngle(glm::radians(37.0));
+    simulator.setStartAngle(glm::half_pi< GLfloat >());
+
+    lsystem::VertexGenerator generator;
+
+    // Lateral branch
+    lsystem::Symbol symbolLateralBranch =
+        lsystem::SymbolBuilder::getBuilder(generator, simulator)
+        .setDrawingFunction(
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &)
+            {
+                g.saveDrawState();
+                g.pitchUp();
+                g.drawLine();
+                g.restoreDrawState();
+
+                g.saveDrawState();
+                g.pitchUp();
+                g.drawLine();
+                g.restoreDrawState();
+
+                g.saveDrawState();
+                g.yawLeft();
+                g.drawLine();
+                g.restoreDrawState();
+
+                g.saveDrawState();
+                g.yawRight();
+                g.drawLine();
+                g.restoreDrawState();
+
+                g.saveDrawState();
+                g.rollLeft();
+                g.drawLine();
+                g.restoreDrawState();
+
+                g.saveDrawState();
+                g.rollRight();
+                g.drawLine();
+                g.restoreDrawState();
+            })
+        .build();
+
+    // Base branch
+    lsystem::Symbol symbolBase =
+        lsystem::SymbolBuilder::getBuilder(generator, simulator)
+        .addParameter("width", 4)
+        .setDrawingFunction(
+            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            {
+                GLfloat width = s["width"];
+                for (int i = 0; i < width; ++i)
+                {
+                    g.drawLine();
+                }
+                //g.drawLine();
+            })
+        .setProduction(
+            [=] (lsystem::Symbol const& s) -> lsystem::Symbols
+            {
+                lsystem::Symbols result;
+                lsystem::Symbol tmp(s);
+
+                auto& s_width = tmp["width"];
+                if (s_width - 1 > 0)
+                {
+                    s_width -= 1;
+                }
+
+                result.push_back(s);
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawLeft);
+                result.push_back(tmp);
+                result.push_back(symbolLateralBranch);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolYawRight);
+                result.push_back(tmp);
+                result.push_back(symbolLateralBranch);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolPitchDown);
+                result.push_back(tmp);
+                result.push_back(lsystem::symbolRestoreState);
+
+                result.push_back(lsystem::symbolSaveState);
+                result.push_back(lsystem::symbolPitchUp);
+                result.push_back(tmp);
+                result.push_back(lsystem::symbolRestoreState);
+
+                //result.push_back(lsystem::symbolRollRight);
+                //result.push_back(lsystem::symbolRollRight);
+                result.push_back(s);
+
+                return result;
+            })
+        .build();
+
+    /* 
+    // Offshoot branch
+    lsystem::Symbol symbolOffshoot =
+        lsystem::SymbolBuilder::getBuilder(generator, simulator)
+        .build();
+        */
+
+    lsystem::Symbols axiom;
+    axiom.push_back(symbolBase);
+    simulator.setAxiom(axiom);
+
+    simulator.setStepCount(3);
+    engine.addGraphicObject(
+            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
+
+
+    std::cout << "LSystem" << std::endl;
+    engine.start();
 }
 
 int main()
@@ -475,6 +612,6 @@ int main()
     simulator.addCommand(']', "]");*/
 
     //simpleTree2();
-    simpleTree3();
+    simpleTree3b();
     return 0;
 }

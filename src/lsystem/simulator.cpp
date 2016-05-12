@@ -23,7 +23,7 @@ void
 Simulator::addProduction(Production const &production)
 {
     auto res = productions.insert(
-                std::make_pair(production.producingSymbol.name, production));
+                std::make_pair(production.producingSymbol.getName(), production));
 
     if (!res.second)
     {
@@ -98,7 +98,7 @@ Simulator::applyProductions(Symbols &symbols)
     Symbols result; 
     for (Symbol const &symbol : symbols)
     {
-        auto it = productions.find(symbol.name);
+        auto it = productions.find(symbol.getName());
         if (it != productions.end())
         {
             it->second.appendProductionResult(symbol, result);
