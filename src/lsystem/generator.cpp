@@ -8,8 +8,11 @@ VertexGenerator(GLfloat width, GLfloat height)
 {
     drawState = {
           glm::vec3(0.0, 0.0, 0.0)
+        , glm::vec3(0.0, 1.0, 0.0)
+        , glm::vec3(0.0, 0.0, -1.0)
+        , glm::vec3(-1.0, 0.0, 0.0)
         , 0.0f
-        , 0.0f};
+    };
     initDrawCommands();
 }
 
@@ -116,32 +119,72 @@ VertexGenerator::getScreenSize()
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands[symbolDrawLine] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolDrawLine] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.drawLine();
     };
 
-    drawCommands[symbolDrawSpace] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolDrawSpace] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.drawSpace();
     };
 
-    drawCommands[symbolRotateRight] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolPitchDown] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
-        generator.rotateRight();
+        generator.pitchDown();
     };
 
-    drawCommands[symbolRotateLeft] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolPitchUp] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
-        generator.rotateLeft();
+        generator.pitchUp();
     };
 
-    drawCommands[symbolSaveState] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolYawRight] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.yawRight();
+    };
+
+    drawCommands[symbolYawLeft] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.yawLeft();
+    };
+
+    drawCommands[symbolRollLeft] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.rollLeft();
+    };
+
+    drawCommands[symbolRollRight] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
+    {
+        generator.rollRight();
+    };
+
+    drawCommands[symbolSaveState] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.saveDrawState();
     };
 
-    drawCommands[symbolRestoreState] = [&] (VertexGenerator &generator, Symbol const &)
+    drawCommands[symbolRestoreState] = [&] (
+              VertexGenerator &generator
+            , Symbol const &)
     {
         generator.restoreDrawState();
     };
@@ -152,11 +195,12 @@ VertexGenerator::
 drawLine()
 {
     glm::vec3& currentPosition = drawState.currentPosition;
-    GLfloat currentAngle = drawState.currentAngle;
+    //GLfloat currentAngle = drawState.currentAngle;
 
     addVertex(currentPosition);
-    currentPosition.x += 1 * cos(currentAngle);
-    currentPosition.y += 1 * sin(currentAngle);
+    /*currentPosition.x += 1 * cos(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);*/
+    currentPosition += drawState.head * limbSize;
     addVertex(currentPosition);
 
     updateImageCorners();
@@ -167,30 +211,66 @@ VertexGenerator::
 drawSpace()
 {
     glm::vec3& currentPosition = drawState.currentPosition;
-    GLfloat currentAngle = drawState.currentAngle;
+    currentPosition += drawState.head * limbSize;
+    /*GLfloat currentAngle = drawState.currentAngle;
 
     currentPosition.x += 1 * cos(currentAngle);
-    currentPosition.y += 1 * sin(currentAngle);
+    currentPosition.y += 1 * sin(currentAngle);*/
+}
+
+// TODO: fix rotation
+void
+VertexGenerator::
+yawLeft()
+{
+    rotateAroundAxis(drawState.up, (-1) * drawState.deltaAngle);
 }
 
 void
 VertexGenerator::
-rotateRight()
+yawRight()
 {
-    GLfloat &currentAngle = drawState.currentAngle;
-    GLfloat deltaAngle = drawState.deltaAngle;
-
-    currentAngle -= deltaAngle;
+    rotateAroundAxis(drawState.up, drawState.deltaAngle);
 }
 
 void
 VertexGenerator::
-rotateLeft()
+pitchDown()
 {
-    GLfloat &currentAngle = drawState.currentAngle;
-    GLfloat deltaAngle = drawState.deltaAngle;
+    rotateAroundAxis(drawState.left, drawState.deltaAngle);
+}
 
-    currentAngle += deltaAngle;
+void
+VertexGenerator::
+pitchUp()
+{
+    rotateAroundAxis(drawState.left, (-1) * drawState.deltaAngle);
+}
+
+
+void
+VertexGenerator::
+rollLeft()
+{
+    rotateAroundAxis(drawState.head, (-1) * drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+rollRight()
+{
+    rotateAroundAxis(drawState.head, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+rotateAroundAxis(glm::vec3 const &axis, GLfloat angle)
+{
+    glm::mat4 rotationMatrix
+        = rotate(glm::mat4(), angle, axis);
+    drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
+    drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
+    drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
 }
 
 void
@@ -216,7 +296,7 @@ VertexGenerator::generateGraphicObject()
     {
         drawCommands[symbol](*this, symbol);
     }
-    scaleImage();
+    //scaleImage();
 
     for (glm::vec4 vertex : vertices)
     {

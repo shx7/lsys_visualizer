@@ -32,7 +32,7 @@ namespace lsystem
     struct DrawState
     {
         glm::vec3 currentPosition;
-        GLfloat currentAngle;
+        glm::vec3 up, head, left;
         GLfloat deltaAngle;
     };
 
@@ -60,9 +60,17 @@ namespace lsystem
 
             void drawSpace();
 
-            void rotateLeft();
+            void yawLeft();
 
-            void rotateRight();
+            void yawRight();
+
+            void pitchDown();
+
+            void pitchUp();
+
+            void rollLeft();
+
+            void rollRight();
 
             void saveDrawState();
 
@@ -71,7 +79,10 @@ namespace lsystem
             void addDrawingFunction(
                     Symbol const &symbol, DrawingFunction const &fn);
 
+
         private:
+            void rotateAroundAxis(glm::vec3 const &axis, GLfloat angle);
+
             void updateImageCorners();
 
             void scaleImage();
@@ -90,6 +101,8 @@ namespace lsystem
             glm::vec2 imageLeftCorner, imageRightCorner;
             std::vector< glm::vec4 > vertices;
             std::vector< DrawState > drawStateStack;
+
+            const GLfloat limbSize = 0.05;
     };
 }
 

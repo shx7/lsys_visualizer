@@ -7,6 +7,9 @@ Simulator::Simulator()
     , startAngle(0.0f)
     , deltaAngle(0.0f)
     , startPoint(0.0, 0.0, 0.0)
+    , up(0.0, 1.0, 0.0)
+    , head(0.0, 0.0, -1.0)
+    , left(-1.0, 0.0, 0.0)
 {
 }
 
@@ -64,16 +67,16 @@ Simulator::getGraphicObject(
         , GLfloat imageWidth
         , GLfloat imageHeight)
 {
-    //VertexGenerator generator;
     generator.setSymbols(generateSymbolsSequence());
-    //generator.setCommandsString(processedString);
     generator.setDrawState({
               startPoint
-            , startAngle
-            , deltaAngle});
+            , up
+            , head
+            , left
+            , deltaAngle
+        });
     generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
-    //return GraphicObjectPtr();
 }
 
 SymbolsPtr
@@ -87,7 +90,6 @@ Simulator::generateSymbolsSequence()
     }
     result->swap(processedSymbolsString);
     return result;
-    //return symbolsToCommands(processedSymbolsString);
 }
 
 void
@@ -97,28 +99,32 @@ Simulator::applyProductions(Symbols &symbols)
     for (Symbol const &symbol : symbols)
     {
         auto it = productions.find(symbol.name);
-        if (it == productions.end())
+        if (it != productions.end())
         {
-            throw std::runtime_error("No production for such symbol");
+            it->second.appendProductionResult(symbol, result);
         }
-        it->second.appendProductionResult(symbol, result);
+        else
+        {
+            result.push_back(symbol);
+        }
     }
     result.swap(symbols);
 }
 
-/*
-CommandsPtr
-Simulator::symbolsToCommands(Symbols const &symbols)
+void
+Simulator::setUp(glm::vec3 const &v)
 {
-    CommandsPtr result(new Commands);
-
-    for (Symbol const &symbol : symbols)
-    {
-        result->insert( 
-                result->begin(),
-                symbol.drawCommands->begin(),
-                symbol.drawCommands->end());
-    }
-    return result;
+    up = v;
 }
-*/
+
+void
+Simulator::setHead(glm::vec3 const &v)
+{
+    head = v;
+}
+
+void
+Simulator::setLeft(glm::vec3 const &v)
+{
+    left = v;
+}

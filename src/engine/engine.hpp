@@ -10,12 +10,17 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+
 #include <iostream>
 #include <fstream>
 #include <list>
 #include <vector>
 
 #include "graphic_object.hpp"
+#include "camera.hpp"
 
 class GraphicEngine
 { 
@@ -36,8 +41,6 @@ class GraphicEngine
     private:
         void drawObject(GraphicObjectPtr const &ptr);
 
-        void processInput();
-
         void initLog(std::string const &filename);
 
         void initGLFW();
@@ -48,6 +51,8 @@ class GraphicEngine
                   std::string const &vertexShaderFilename
                 , std::string const &fragmentShaderFilename);
 
+        void initCamera();
+
         GLuint loadShader(std::string const &filename, GLenum shaderType);
 
         void compileShader(GLuint shaderId, std::string const &shaderText);
@@ -55,6 +60,12 @@ class GraphicEngine
         void linkProgram();
 
         GLint getGLAttribute(std::string const &attributeName);
+
+        GLint getGLUniformAttribute(std::string const &attributeName);
+
+        void updateCamera();
+
+        void initProjectionMatrix();
 
     private:
         bool isGLFWInitialized;
@@ -68,6 +79,23 @@ class GraphicEngine
         GLint positionId, colorId;
 
         glm::vec4 backgroundColor;
+        glm::mat4x4 projectionMatrix;
+
+        const GLfloat minClippingDistance = 0.1f;
+        const GLfloat maxClippingDistance = 200.0f;
 };
+
+extern void mouseMovementCallback(GLFWwindow* wnd, double xpos, double ypos);
+
+extern void mouseButtonCallback(
+          GLFWwindow *wnd
+        , int button
+        , int action
+        , int mods);
+
+extern void mouseScrollCallback(
+          GLFWwindow *
+        , double xoffset
+        , double yoffset);
 
 #endif
