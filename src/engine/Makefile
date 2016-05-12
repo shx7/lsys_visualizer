@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11 -Wall -Wextra
+CFLAGS=-std=c++11 -Wall -Wextra -ggdb
 LIBS=-lGL -lGLEW -lglfw
 ENGINE_SRC=engine.cpp
 CAMERA_SRC=camera.cpp
