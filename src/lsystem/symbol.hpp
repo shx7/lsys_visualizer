@@ -13,9 +13,9 @@ namespace lsystem
     struct Parameter
     {
         std::string name = "";
-        GLfloat value = 0;
+        double value = 0;
 
-        Parameter(std::string const &name, GLfloat value)
+        Parameter(std::string const &name, double value)
             : name(name)
             , value(value)
         {}
@@ -37,7 +37,7 @@ namespace lsystem
                 checkName();
             }
 
-            GLfloat operator[](std::string const &parameter_name) const
+            double operator[](std::string const &parameter_name) const
             {
                 auto it = parameters.find(parameter_name);
                 if (it == parameters.end())
@@ -49,7 +49,7 @@ namespace lsystem
                 return it->second;
             }
 
-            GLfloat &operator[](std::string const &parameter_name)
+            double &operator[](std::string const &parameter_name)
             {
                 auto it = parameters.find(parameter_name);
                 if (it == parameters.end())
@@ -61,7 +61,7 @@ namespace lsystem
                 return it->second;
             }
 
-            void addParameter(std::string const &name, GLfloat value)
+            void addParameter(std::string const &name, double value)
             {
                 parameters.insert(std::make_pair(name, value));
             }
@@ -87,7 +87,7 @@ namespace lsystem
 
         private:
             std::string name;
-            std::map< std::string, GLfloat > parameters; 
+            std::map< std::string, double > parameters; 
 
             friend class SymbolBuilder;
     };

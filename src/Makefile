@@ -5,6 +5,7 @@ ENGINE_DIR=engine
 SIMULATOR_DIR=simulator
 LSYSTEM_DIR=lsystem
 SHADERS_DIR=shaders
+BUILD_DIR=../build
 
 all: engine simulator lsystem update_shaders
 	$(MAKE) -C .. collect_objs

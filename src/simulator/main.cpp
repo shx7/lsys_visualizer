@@ -487,7 +487,7 @@ void simpleTree3b()
                 result.push_back(s);
 
                 return result;
-            }, 0.2)
+            }, 0.7)
         .build();
 
     /* 

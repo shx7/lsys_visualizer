@@ -1,6 +1,8 @@
 #ifndef GRAMMAR_UTIL_HPP
 #define GRAMMAR_UTIL_HPP
 
+#include <random> 
+
 #include <map>
 #include <memory>
 
@@ -8,15 +10,29 @@
 
 namespace lsystem
 {
+    class RandomGenerator
+    {
+        public:
+            RandomGenerator();
+
+            double getNextRandom();
+
+        private:
+            std::random_device randomDevice;
+            std::mt19937 randomGenerator;
+            std::uniform_real_distribution< double > distribution;
+    };
+
     typedef char Command;
     typedef std::vector< Command > Commands;
     typedef std::shared_ptr< Commands > CommandsPtr;
 
-    //typedef Symbols (*ProducingFunction)(Symbol const &symbol);
     typedef std::function<Symbols (Symbol const &)> ProducingFunction;
 
     struct Production
     {
+        static RandomGenerator randomGenerator;
+
         Symbol producingSymbol;
         double probability;
         ProducingFunction producingFunction;
@@ -24,25 +40,13 @@ namespace lsystem
         Production(
                   Symbol const &producingSymbol
                 , double probability
-                , ProducingFunction const &function)
-            : producingSymbol(producingSymbol)
-            , probability(probability)
-            , producingFunction(function)
-        {}
+                , ProducingFunction const &function);
 
         void appendProductionResult(
                   Symbol const &symbol
-                , Symbols &result)
-        {
-            Symbols const &tmp = producingFunction(symbol);
-            result.insert(result.end(), tmp.cbegin(), tmp.cend());
-        }
+                , Symbols &result);
 
-        bool operator<(Production const &production) const
-        {
-            return producingSymbol.getName()
-                < production.producingSymbol.getName();
-        }
+        bool operator<(Production const &production) const;
     };
 
     typedef std::map< std::string, Production > Productions;
