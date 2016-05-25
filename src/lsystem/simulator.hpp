@@ -29,8 +29,6 @@
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
 
-#include <random>
-
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -41,26 +39,6 @@
 
 namespace lsystem
 {
-    class RandomGenerator
-    {
-        public:
-            RandomGenerator()
-                : randomGenerator(randomDevice())
-                , distribution(0.0, 1.0)
-            {
-            }
-
-            double getNextRandom()
-            {
-                return distribution(randomGenerator);
-            }
-
-        private:
-            std::random_device randomDevice;
-            std::mt19937 randomGenerator;
-            std::uniform_real_distribution< double > distribution;
-    };
-
     class Simulator
     {
         public:
@@ -103,7 +81,6 @@ namespace lsystem
             glm::vec3 startPoint;
             glm::vec3 up, head, left;
 
-            RandomGenerator randomGenerator;
             // TODO: think about set for productions
             std::map< std::string, Production >productions;
             Symbols axiom; 

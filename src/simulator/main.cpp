@@ -487,7 +487,7 @@ void simpleTree3b()
                 result.push_back(s);
 
                 return result;
-            })
+            }, 0.7)
         .build();
 
     /* 
@@ -501,7 +501,7 @@ void simpleTree3b()
     axiom.push_back(symbolBase);
     simulator.setAxiom(axiom);
 
-    simulator.setStepCount(3);
+    simulator.setStepCount(4);
     engine.addGraphicObject(
             simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
 

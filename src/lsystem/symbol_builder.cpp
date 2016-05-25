@@ -11,11 +11,30 @@ getBuilder(VertexGenerator &generator, Simulator &simulator)
     return SymbolBuilder(getNextName(), generator, simulator);
 }
 
+SymbolBuilder
+SymbolBuilder::
+getBuilder(VertexGenerator &generator
+        , Simulator &simulator
+        , Symbol const &symbol)
+{
+    return SymbolBuilder(symbol, generator, simulator);
+}
+
 SymbolBuilder::
 SymbolBuilder(std::string const &name
         , lsystem::VertexGenerator &generator
         , lsystem::Simulator &simulator)
     : symbol(name)
+    , generator(generator)
+    , simulator(simulator)
+{
+}
+
+SymbolBuilder::
+SymbolBuilder(Symbol const &symbol
+        , lsystem::VertexGenerator &generator
+        , lsystem::Simulator &simulator)
+    : symbol(symbol)
     , generator(generator)
     , simulator(simulator)
 {
@@ -32,9 +51,9 @@ addParameter(std::string const &name, GLfloat value)
 // TODO: add stochastic fn
 SymbolBuilder &
 SymbolBuilder::
-setProduction(ProducingFunction const &fn)
+setProduction(ProducingFunction const &fn, GLfloat probability)
 {
-    Production production(symbol, 1.0, fn);
+    Production production(symbol, probability, fn);
     simulator.addProduction(production);
     return *this;
 }
