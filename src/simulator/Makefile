@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11 -Wall -Wextra
+CFLAGS=-std=c++11 -Wall -Wextra -ggdb
 
 SRC=main.cpp
 ENGINE_DIR=../engine

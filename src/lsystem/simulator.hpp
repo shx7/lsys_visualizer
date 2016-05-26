@@ -29,69 +29,26 @@
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
 
-#include <random>
-
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 #include <tuple>
 
 #include "generator.hpp"
+#include "grammar_util.hpp"
 
 namespace lsystem
 {
-    struct Production
-    {
-        char producing_character;
-        std::string production_string;
-        double probability;
-
-        Production(char producing_character
-                , std::string const &production_string
-                , double probability)
-            : producing_character(producing_character)
-            , production_string(production_string)
-            , probability(probability) {}
-    };
-
-    typedef std::unordered_map< char, Production > ProductionMap; 
-    typedef std::unordered_map< char, std::string > CharacterTransitionMap; 
-
-    class RandomGenerator
-    {
-        public:
-            RandomGenerator()
-                : randomGenerator(randomDevice())
-                , distribution(0.0, 1.0)
-            {
-            }
-
-            double getNextRandom()
-            {
-                return distribution(randomGenerator);
-            }
-
-        private:
-            std::random_device randomDevice;
-            std::mt19937 randomGenerator;
-            std::uniform_real_distribution< double > distribution;
-    };
-
     class Simulator
     {
         public:
             Simulator();
 
-            void setAxiom(std::string const &axiom);
+            void setAxiom(Symbols const &axiom);
 
-            void addProduction(char producing_character
-                    , std::string const &production_string
-                    , double probability = 1.0);
+            void addProduction(Production const &production);
 
             void clearProdutions();
-
-            void addCommand(char producing_character, std::string const &command);
-
-            void clearCommands();
 
             void setStepCount(std::size_t stepCount);
 
@@ -102,28 +59,31 @@ namespace lsystem
             void setStartPoint(glm::vec3 startPoint);
 
             GraphicObjectPtr getGraphicObject(
-                      GLfloat imageWidth
+                      VertexGenerator &generator
+                    , GLfloat imageWidth
                     , GLfloat imageHeight);
 
-        private:
+            void setUp(glm::vec3 const &up);
 
-            void generateCommandsString(); 
+            void setHead(glm::vec3 const &head);
 
-            std::string mapString(CharacterTransitionMap const &map);
+            void setLeft(glm::vec3 const &left);
 
-            std::string applyProductions(ProductionMap const &map);
+        private: 
+            SymbolsPtr generateSymbolsSequence();
 
-        private:
-            std::string processedString;
-            ProductionMap productions;
-            CharacterTransitionMap commands;
+            void applyProductions(Symbols &symbols);
 
+        private: 
             std::size_t stepCount;
             GLfloat startAngle;
             GLfloat deltaAngle;
             glm::vec3 startPoint;
+            glm::vec3 up, head, left;
 
-            RandomGenerator randomGenerator;
+            // TODO: think about set for productions
+            std::map< std::string, Production >productions;
+            Symbols axiom; 
     };
 }
 
