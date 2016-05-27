@@ -397,7 +397,7 @@ void simpleTree3b()
 
     // Lateral branch
     lsystem::Symbol symbolLateralBranch =
-        lsystem::SymbolBuilder::getBuilder(generator, simulator)
+        lsystem::SymbolBuilder::getBuilder()
         .setDrawingFunction(
             [] (lsystem::VertexGenerator &g, lsystem::Symbol const &)
             {
@@ -435,7 +435,7 @@ void simpleTree3b()
 
     // Base branch
     lsystem::Symbol symbolBase =
-        lsystem::SymbolBuilder::getBuilder(generator, simulator)
+        lsystem::SymbolBuilder::getBuilder()
         .addParameter("width", 4)
         .setDrawingFunction(
             [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)

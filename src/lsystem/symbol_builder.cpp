@@ -6,18 +6,20 @@ std::string SymbolBuilder::currentSymbolName = "a";
 
 SymbolBuilder
 SymbolBuilder::
-getBuilder(VertexGenerator &generator, Simulator &simulator)
+getBuilder()
 {
-    return SymbolBuilder(getNextName(), generator, simulator);
+    return SymbolBuilder(getNextName()
+            , VertexGenerator::getInstance()
+            , Simulator::getInstance());
 }
 
 SymbolBuilder
 SymbolBuilder::
-getBuilder(VertexGenerator &generator
-        , Simulator &simulator
-        , Symbol const &symbol)
+getBuilder(Symbol const &symbol)
 {
-    return SymbolBuilder(symbol, generator, simulator);
+    return SymbolBuilder(symbol
+            , VertexGenerator::getInstance()
+            , Simulator::getInstance());
 }
 
 SymbolBuilder::
