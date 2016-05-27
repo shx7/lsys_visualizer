@@ -399,8 +399,10 @@ void simpleTree3b()
     lsystem::Symbol symbolLateralBranch =
         lsystem::SymbolBuilder::getBuilder()
         .setDrawingFunction(
-            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &)
+            [] (lsystem::Symbol const &)
             {
+                lsystem::VertexGenerator &g
+                    = lsystem::VertexGenerator::getInstance();
                 g.saveDrawState();
                 g.pitchUp();
                 g.drawLine();
@@ -438,8 +440,10 @@ void simpleTree3b()
         lsystem::SymbolBuilder::getBuilder()
         .addParameter("width", 4)
         .setDrawingFunction(
-            [] (lsystem::VertexGenerator &g, lsystem::Symbol const &s)
+            [] (lsystem::Symbol const &s)
             {
+                lsystem::VertexGenerator &g
+                    = lsystem::VertexGenerator::getInstance();
                 GLfloat width = s["width"];
                 for (int i = 0; i < width; ++i)
                 {
@@ -487,7 +491,7 @@ void simpleTree3b()
                 result.push_back(s);
 
                 return result;
-            }, 0.7)
+            })
         .build();
 
     /* 

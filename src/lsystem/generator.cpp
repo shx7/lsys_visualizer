@@ -128,75 +128,65 @@ VertexGenerator::getScreenSize()
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands[symbolDrawLine] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.drawLine();
-    };
+    addDrawingFunction(symbolDrawLine,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().drawLine();
+            });
 
-    drawCommands[symbolDrawSpace] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.drawSpace();
-    };
+    addDrawingFunction(symbolDrawSpace,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().drawSpace();
+            });
 
-    drawCommands[symbolPitchDown] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.pitchDown();
-    };
+    addDrawingFunction(symbolPitchDown,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().pitchDown();
+            });
 
-    drawCommands[symbolPitchUp] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.pitchUp();
-    };
+    addDrawingFunction(symbolPitchUp,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().pitchUp();
+            });
 
-    drawCommands[symbolYawRight] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.yawRight();
-    };
+    addDrawingFunction(symbolYawRight,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().yawRight();
+            });
 
-    drawCommands[symbolYawLeft] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.yawLeft();
-    };
+    addDrawingFunction(symbolYawLeft,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().yawLeft();
+            });
 
-    drawCommands[symbolRollLeft] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.rollLeft();
-    };
+    addDrawingFunction(symbolRollLeft,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().rollLeft();
+            });
 
-    drawCommands[symbolRollRight] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.rollRight();
-    };
+    addDrawingFunction(symbolRollRight,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().rollRight();
+            });
 
-    drawCommands[symbolSaveState] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.saveDrawState();
-    };
+    addDrawingFunction(symbolSaveState,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().saveDrawState();
+            });
 
-    drawCommands[symbolRestoreState] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.restoreDrawState();
-    };
+    addDrawingFunction(symbolRestoreState,
+        [&] (Symbol const &)
+            {
+                getInstance().restoreDrawState();
+            });
 }
 
 void
@@ -344,7 +334,7 @@ VertexGenerator::generateGraphicObject()
 
     for (Symbol symbol : (*symbolsPtr))
     {
-        drawCommands[symbol](*this, symbol);
+        drawCommands[symbol](symbol);
     }
     //scaleImage();
 

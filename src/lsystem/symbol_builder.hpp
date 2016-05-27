@@ -24,7 +24,6 @@ namespace lsystem
 
             SymbolBuilder& addParameter(std::string const &name, GLfloat value);
 
-            // TODO: add stochastic fn
             SymbolBuilder &setProduction(ProducingFunction const &fn
                     , GLfloat probability = 1.0);
 

@@ -41,8 +41,7 @@ namespace lsystem
         //typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
-            typedef std::function<void(VertexGenerator&, Symbol const &)>
-                DrawingFunction;
+            typedef std::function<void(Symbol const &)> DrawingFunction;
 
             static VertexGenerator &getInstance();
 

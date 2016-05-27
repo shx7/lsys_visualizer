@@ -23,8 +23,10 @@ namespace lsystem
                     return res;
                 })
             .setDrawingFunction(
-                [=] (VertexGenerator &g, Symbol const &s)
+                [=] (Symbol const &s)
                 {
+                    lsystem::VertexGenerator &g
+                        = lsystem::VertexGenerator::getInstance();
                     g.yawRight(s["angle"]);
                 })
             .build();
