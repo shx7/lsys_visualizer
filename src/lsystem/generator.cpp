@@ -1,6 +1,15 @@
 #include "generator.hpp"
 using namespace lsystem;
 
+VertexGenerator VertexGenerator::instance;
+
+VertexGenerator &
+VertexGenerator::
+getInstance()
+{
+    return instance;
+}
+
 VertexGenerator::
 VertexGenerator(GLfloat width, GLfloat height)
     : width(width)

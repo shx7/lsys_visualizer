@@ -44,7 +44,7 @@ namespace lsystem
             typedef std::function<void(VertexGenerator&, Symbol const &)>
                 DrawingFunction;
 
-            VertexGenerator(GLfloat width = 640, GLfloat height = 480);
+            static VertexGenerator &getInstance();
 
             void initDrawCommands();
 
@@ -81,6 +81,8 @@ namespace lsystem
 
 
         private:
+            VertexGenerator(GLfloat width = 900, GLfloat height = 900);
+
             void rotateAroundAxis(glm::vec3 const &axis, GLfloat angle);
 
             void updateImageCorners();
@@ -103,6 +105,7 @@ namespace lsystem
             std::vector< DrawState > drawStateStack;
 
             const GLfloat limbSize = 0.05;
+            static VertexGenerator instance;
     };
 }
 

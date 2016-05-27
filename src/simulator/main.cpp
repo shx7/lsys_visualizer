@@ -393,7 +393,7 @@ void simpleTree3b()
     simulator.setDeltaAngle(glm::radians(37.0));
     simulator.setStartAngle(glm::half_pi< GLfloat >());
 
-    lsystem::VertexGenerator generator;
+    lsystem::VertexGenerator &generator = lsystem::VertexGenerator::getInstance();
 
     // Lateral branch
     lsystem::Symbol symbolLateralBranch =
