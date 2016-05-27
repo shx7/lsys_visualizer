@@ -7,6 +7,8 @@
 #include "symbol_builder.hpp"
 #include "generator_symbol_types.hpp"
 
+#include "symbol_library.hpp"
+
 #include "glm/gtc/constants.hpp"
 
 // P-Lsystem test
@@ -465,7 +467,9 @@ void simpleTree3b()
 
                 result.push_back(s);
                 result.push_back(lsystem::symbolSaveState);
-                result.push_back(lsystem::symbolYawLeft);
+                //result.push_back(lsystem::symbolYawLeft);
+                result.push_back(lsystem::getSymbolYawRight(
+                            glm::half_pi< GLfloat >(), 0.2));
                 result.push_back(tmp);
                 result.push_back(symbolLateralBranch);
                 result.push_back(lsystem::symbolRestoreState);
