@@ -381,7 +381,7 @@ void simpleTree3b()
     GraphicEngine engine;
     engine.init("logfile", vertexShaderFilename, fragmentShaderFilename);
 
-    lsystem::Simulator simulator;
+    lsystem::Simulator &simulator = lsystem::Simulator::getInstance();
     simulator.setStartPoint(glm::vec3(0, 0, 0));
     simulator.setHead(glm::vec3(0, 1, 0));
     simulator.setUp(glm::vec3(0, 0, -1));

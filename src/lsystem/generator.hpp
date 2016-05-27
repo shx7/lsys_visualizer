@@ -79,7 +79,6 @@ namespace lsystem
             void addDrawingFunction(
                     Symbol const &symbol, DrawingFunction const &fn);
 
-
         private:
             VertexGenerator(GLfloat width = 900, GLfloat height = 900);
 
