@@ -58,19 +58,35 @@ namespace lsystem
 
             void drawLine();
 
+            void drawLine(GLfloat angle);
+
             void drawSpace();
+
+            void drawSpace(GLfloat angle);
 
             void yawLeft();
 
+            void yawLeft(GLfloat angle);
+
             void yawRight();
+
+            void yawRight(GLfloat angle);
 
             void pitchDown();
 
+            void pitchDown(GLfloat angle);
+
             void pitchUp();
+
+            void pitchUp(GLfloat angle);
 
             void rollLeft();
 
+            void rollLeft(GLfloat angle);
+
             void rollRight();
+
+            void rollRight(GLfloat angle);
 
             void saveDrawState();
 

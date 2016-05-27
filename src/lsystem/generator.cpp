@@ -237,9 +237,23 @@ yawLeft()
 
 void
 VertexGenerator::
+yawLeft(GLfloat angle)
+{
+    rotateAroundAxis(drawState.up, (-1) * angle);
+}
+
+void
+VertexGenerator::
 yawRight()
 {
     rotateAroundAxis(drawState.up, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+yawRight(GLfloat angle)
+{
+    rotateAroundAxis(drawState.up, angle);
 }
 
 void
@@ -251,11 +265,24 @@ pitchDown()
 
 void
 VertexGenerator::
+pitchDown(GLfloat angle)
+{
+    rotateAroundAxis(drawState.left, angle);
+}
+
+void
+VertexGenerator::
 pitchUp()
 {
     rotateAroundAxis(drawState.left, (-1) * drawState.deltaAngle);
 }
 
+void
+VertexGenerator::
+pitchUp(GLfloat angle)
+{
+    rotateAroundAxis(drawState.left, (-1) * angle);
+}
 
 void
 VertexGenerator::
@@ -266,9 +293,23 @@ rollLeft()
 
 void
 VertexGenerator::
+rollLeft(GLfloat angle)
+{
+    rotateAroundAxis(drawState.head, (-1) * angle);
+}
+
+void
+VertexGenerator::
 rollRight()
 {
     rotateAroundAxis(drawState.head, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+rollRight(GLfloat angle)
+{
+    rotateAroundAxis(drawState.head, angle);
 }
 
 void
