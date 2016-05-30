@@ -2,6 +2,13 @@
 
 using namespace lsystem;
 
+Simulator Simulator::instance;
+
+Simulator &Simulator::getInstance()
+{
+    return instance;
+}
+
 Simulator::Simulator()
     : stepCount(0)
     , startAngle(0.0f)

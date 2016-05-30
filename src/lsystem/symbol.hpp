@@ -24,6 +24,7 @@ namespace lsystem
     class Symbol
     {
         public: 
+            // TODO: make it private
             Symbol(std::string const &name)
                 : name(name)
             {

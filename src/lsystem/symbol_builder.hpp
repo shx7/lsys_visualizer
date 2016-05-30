@@ -10,14 +10,9 @@ namespace lsystem
     class SymbolBuilder
     {
         public:
-            static SymbolBuilder getBuilder(
-                      VertexGenerator &generator
-                    , Simulator &simulator);
+            static SymbolBuilder getBuilder();
 
-            static SymbolBuilder getBuilder(
-                      VertexGenerator &generator
-                    , Simulator &simulator
-                    , Symbol const &symbol);
+            static SymbolBuilder getBuilder(Symbol const &symbol);
 
             SymbolBuilder(std::string const &name
                     , lsystem::VertexGenerator &generator
@@ -29,7 +24,6 @@ namespace lsystem
 
             SymbolBuilder& addParameter(std::string const &name, GLfloat value);
 
-            // TODO: add stochastic fn
             SymbolBuilder &setProduction(ProducingFunction const &fn
                     , GLfloat probability = 1.0);
 

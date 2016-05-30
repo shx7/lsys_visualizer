@@ -42,7 +42,7 @@ namespace lsystem
     class Simulator
     {
         public:
-            Simulator();
+            static Simulator &getInstance();
 
             void setAxiom(Symbols const &axiom);
 
@@ -70,6 +70,8 @@ namespace lsystem
             void setLeft(glm::vec3 const &left);
 
         private: 
+            Simulator();
+
             SymbolsPtr generateSymbolsSequence();
 
             void applyProductions(Symbols &symbols);
@@ -84,6 +86,8 @@ namespace lsystem
             // TODO: think about set for productions
             std::map< std::string, Production >productions;
             Symbols axiom; 
+
+            static Simulator instance;
     };
 }
 

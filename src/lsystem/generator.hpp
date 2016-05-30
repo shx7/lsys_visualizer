@@ -21,7 +21,7 @@
 
 #include <memory>
 
-#include <tuple>
+//#include <tuple>
 #include <vector>
 #include <map>
 
@@ -41,10 +41,9 @@ namespace lsystem
         //typedef void (*DrawCommandFunction)(VertexGenerator &);
 
         public:
-            typedef std::function<void(VertexGenerator&, Symbol const &)>
-                DrawingFunction;
+            typedef std::function<void(Symbol const &)> DrawingFunction;
 
-            VertexGenerator(GLfloat width = 640, GLfloat height = 480);
+            static VertexGenerator &getInstance();
 
             void initDrawCommands();
 
@@ -58,19 +57,35 @@ namespace lsystem
 
             void drawLine();
 
+            void drawLine(GLfloat angle);
+
             void drawSpace();
+
+            void drawSpace(GLfloat angle);
 
             void yawLeft();
 
+            void yawLeft(GLfloat angle);
+
             void yawRight();
+
+            void yawRight(GLfloat angle);
 
             void pitchDown();
 
+            void pitchDown(GLfloat angle);
+
             void pitchUp();
+
+            void pitchUp(GLfloat angle);
 
             void rollLeft();
 
+            void rollLeft(GLfloat angle);
+
             void rollRight();
+
+            void rollRight(GLfloat angle);
 
             void saveDrawState();
 
@@ -79,8 +94,9 @@ namespace lsystem
             void addDrawingFunction(
                     Symbol const &symbol, DrawingFunction const &fn);
 
-
         private:
+            VertexGenerator(GLfloat width = 900, GLfloat height = 900);
+
             void rotateAroundAxis(glm::vec3 const &axis, GLfloat angle);
 
             void updateImageCorners();
@@ -103,6 +119,7 @@ namespace lsystem
             std::vector< DrawState > drawStateStack;
 
             const GLfloat limbSize = 0.05;
+            static VertexGenerator instance;
     };
 }
 
