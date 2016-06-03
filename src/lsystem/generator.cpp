@@ -307,7 +307,7 @@ VertexGenerator::
 rotateAroundAxis(glm::vec3 const &axis, GLfloat angle)
 {
     glm::mat4 rotationMatrix
-        = rotate(glm::mat4(), angle, axis);
+        = glm::rotate(glm::mat4(), angle, axis);
     drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
     drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
     drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));

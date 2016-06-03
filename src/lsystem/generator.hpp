@@ -11,13 +11,17 @@
 #ifndef LSYSTEM_VERTEX_GENERATOR
 #define LSYSTEM_VERTEX_GENERATOR
 
-#include "graphic_object.hpp"
-#include "grammar_util.hpp"
-#include "generator_symbol_types.hpp"
+#define GLM_FORCE_RADIANS
 
+#include "GL/glew.h"
+#include "GL/glext.h"
 #include "GL/gl.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
+#include "graphic_object.hpp"
+#include "grammar_util.hpp"
+#include "generator_symbol_types.hpp" 
 
 #include <memory>
 
