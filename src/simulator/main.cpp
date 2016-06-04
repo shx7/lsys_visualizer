@@ -477,7 +477,7 @@ void simpleTree1b()
 
     simulator.setStepCount(4);
     engine.addGraphicObject(
-            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
+            simulator.getGraphicObject());
 
 
     std::cout << "LSystem" << std::endl;
@@ -572,7 +572,7 @@ void simpleTree2b()
 
     simulator.setStepCount(4);
     engine.addGraphicObject(
-            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
+            simulator.getGraphicObject());
 
 
     std::cout << "LSystem" << std::endl;
@@ -715,7 +715,7 @@ void simpleTree3b()
 
     simulator.setStepCount(4);
     engine.addGraphicObject(
-            simulator.getGraphicObject(generator, 640 * 0.8, 480 * 0.8));
+            simulator.getGraphicObject());
 
 
     std::cout << "LSystem" << std::endl;

@@ -69,11 +69,9 @@ Simulator::setStartPoint(glm::vec3 startPoint)
 }
 
 GraphicObjectPtr
-Simulator::getGraphicObject(
-          VertexGenerator &generator
-        , GLfloat imageWidth
-        , GLfloat imageHeight)
+Simulator::getGraphicObject()
 {
+    VertexGenerator &generator = VertexGenerator::getInstance();
     generator.setSymbols(generateSymbolsSequence());
     generator.setDrawState({
               startPoint
@@ -82,7 +80,6 @@ Simulator::getGraphicObject(
             , left
             , deltaAngle
         });
-    generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
 }
 

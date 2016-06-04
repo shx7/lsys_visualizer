@@ -51,8 +51,6 @@ namespace lsystem
 
             void initDrawCommands();
 
-            void setImageRectangle(GLfloat width, GLfloat height);
-
             void setDrawState(DrawState const &state);
 
             void setSymbols(SymbolsPtr const &symbolsPtr);
@@ -99,22 +97,13 @@ namespace lsystem
                     Symbol const &symbol, DrawingFunction const &fn);
 
         private:
-            VertexGenerator(GLfloat width = 900, GLfloat height = 900);
+            VertexGenerator();
 
             void rotateAroundAxis(glm::vec3 const &axis, GLfloat angle);
 
-            void updateImageCorners();
-
-            void scaleImage();
-
             void addVertex(glm::vec3 vertexCoord);
 
-            glm::vec2 getScreenSize();
-
-            glm::mat4 getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight);
-
         private:
-            GLfloat width, height;
             std::map< Symbol, DrawingFunction > drawCommands;
             SymbolsPtr symbolsPtr;
             DrawState drawState;
