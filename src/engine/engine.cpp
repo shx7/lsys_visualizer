@@ -260,17 +260,11 @@ void
 GraphicEngine::updateCamera()
 {
     GLint viewLocation = getGLUniformAttribute("view");
-    Camera *ptr = Camera::instance();
-    // TODO: insert here camera matrix
     glUniformMatrix4fv(
               viewLocation
             , 1
             , GL_FALSE
-            , glm::value_ptr(ptr->getLookAtMatrix())
-            /*, glm::value_ptr(glm::lookAt(
-                      glm::vec3(0, 1, 0)
-                    , glm::vec3(0, 1, 0) + glm::vec3(0, -0.5, 0.5)
-                    , glm::vec3(0, 1, 0)))*/
+            , glm::value_ptr(Camera::instance()->getLookAtMatrix())
             );
 }
 

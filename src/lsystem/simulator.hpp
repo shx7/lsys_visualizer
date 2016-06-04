@@ -58,10 +58,7 @@ namespace lsystem
 
             void setStartPoint(glm::vec3 startPoint);
 
-            GraphicObjectPtr getGraphicObject(
-                      VertexGenerator &generator
-                    , GLfloat imageWidth
-                    , GLfloat imageHeight);
+            GraphicObjectPtr getGraphicObject();
 
             void setUp(glm::vec3 const &up);
 
