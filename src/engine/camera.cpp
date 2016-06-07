@@ -1,10 +1,9 @@
 #include "camera.hpp"
 
-bool Camera::isInstantiated = false;
-Camera *Camera::ptr = nullptr;
+Camera Camera::ptr;
 
 Camera::Camera()
-    : cameraPosition(glm::vec3(0, 0, -1))
+    : cameraPosition(glm::vec3(0, 0, -2))
     , cameraUp(glm::vec3(0, 1, 0))
     , cameraFront(glm::vec3(0, 0, 1))
     , pitchAngle(0)
@@ -18,12 +17,7 @@ Camera::Camera()
 Camera *
 Camera::instance() 
 {
-    if (!isInstantiated)
-    {
-        isInstantiated = true;
-        ptr = new Camera();
-    }
-    return ptr;
+    return &ptr;
 }
 
 void

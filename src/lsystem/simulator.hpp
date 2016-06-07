@@ -1,31 +1,3 @@
-/************************************************
- *
- * lsystem::Simulator contains implementation
- * of deterministic/stochastic LSystem algorithm.
- *
- * Simulator contains properties such as:
- * 1) Axiom - starting string, from wich all
- * productions runs.
- *
- * 2) Productions - pairs of (char, string) for
- * replacing on every simulation round.
- * Productions also have probabilities (for
- * stochastic productions), by default all
- * productions are deterministic.
- *
- * 3) Commands binded to every symbol of aphabet.
- * Commands define character commands for
- * turtle-interpretation of processed string.
- * Supported symbols:
- *     F draw stew
- *     f draw space
- *     + turn by clockwise
- *     - turn by counter-clockwise
- *
- * After simulation Simulator produces
- * GraphicObject for representing by Engine
- ***********************************************/
-
 #ifndef LSYSTEM_SIMULATOR
 #define LSYSTEM_SIMULATOR
 
@@ -39,10 +11,38 @@
 
 namespace lsystem
 {
+    /**
+     *
+     *  lsystem::Simulator contains implementation
+     *  of deterministic/stochastic LSystem algorithm.
+     *
+     *  Simulator contains properties such as:
+     *  1) Axiom - starting string, from wich all
+     *  productions runs.
+     *
+     *  2) Productions - pairs of (char, string) for
+     *  replacing on every simulation round.
+     *  Productions also have probabilities (for
+     *  stochastic productions), by default all
+     *  productions are deterministic.
+     *
+     *  3) Commands binded to every symbol of aphabet.
+     *  Commands define character commands for
+     *  turtle-interpretation of processed string.
+     *  Supported symbols:
+     *     - F  draw stew
+     *     - f  draw space
+     *     - +  turn by clockwise
+     *     - -  turn by counter-clockwise
+     *
+     *  After simulation Simulator produces
+     *  GraphicObject for representing by Engine
+     */
+
     class Simulator
     {
         public:
-            Simulator();
+            static Simulator &getInstance();
 
             void setAxiom(Symbols const &axiom);
 
@@ -58,10 +58,7 @@ namespace lsystem
 
             void setStartPoint(glm::vec3 startPoint);
 
-            GraphicObjectPtr getGraphicObject(
-                      VertexGenerator &generator
-                    , GLfloat imageWidth
-                    , GLfloat imageHeight);
+            GraphicObjectPtr getGraphicObject();
 
             void setUp(glm::vec3 const &up);
 
@@ -70,6 +67,8 @@ namespace lsystem
             void setLeft(glm::vec3 const &left);
 
         private: 
+            Simulator();
+
             SymbolsPtr generateSymbolsSequence();
 
             void applyProductions(Symbols &symbols);
@@ -84,6 +83,8 @@ namespace lsystem
             // TODO: think about set for productions
             std::map< std::string, Production >productions;
             Symbols axiom; 
+
+            static Simulator instance;
     };
 }
 

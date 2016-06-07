@@ -1,6 +1,8 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
+#define GLM_FORCE_RADIANS
+
 #include "GL/gl.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -9,8 +11,7 @@
 
 class Camera
 {
-        static bool isInstantiated;
-        static Camera* ptr;
+        static Camera ptr;
 
         glm::vec3 cameraPosition;
         glm::vec3 cameraUp;

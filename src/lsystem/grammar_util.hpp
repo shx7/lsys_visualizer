@@ -10,6 +10,11 @@
 
 namespace lsystem
 {
+    /**
+     *  lsystem::RandomGenerator is responsible for generation
+     *  random numbers, that is using in making decisions in Simulator
+     *  about apllying stochastic productions.
+     */
     class RandomGenerator
     {
         public:
@@ -29,6 +34,12 @@ namespace lsystem
 
     typedef std::function<Symbols (Symbol const &)> ProducingFunction;
 
+    /**
+     *  lsystem::Production represents symbol production in system.
+     *  One Symbol can own only one Production to avoid ambiguity.
+     *  Production can be made stochastic by adding probability value into
+     *  ctor.
+     */
     struct Production
     {
         static RandomGenerator randomGenerator;

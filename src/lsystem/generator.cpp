@@ -1,10 +1,17 @@
 #include "generator.hpp"
 using namespace lsystem;
 
+VertexGenerator VertexGenerator::instance;
+
+VertexGenerator &
 VertexGenerator::
-VertexGenerator(GLfloat width, GLfloat height)
-    : width(width)
-    , height(height)
+getInstance()
+{
+    return instance;
+}
+
+VertexGenerator::
+VertexGenerator()
 {
     drawState = {
           glm::vec3(0.0, 0.0, 0.0)
@@ -20,33 +27,6 @@ void
 VertexGenerator::setDrawState(DrawState const &state)
 {
     drawState = state;
-    updateImageCorners();
-}
-
-void
-VertexGenerator::updateImageCorners()
-{
-    glm::vec3 &currentPosition = drawState.currentPosition;
-
-    if (currentPosition.x < imageLeftCorner.x)
-    {
-        imageLeftCorner.x = currentPosition.x;
-    }
-
-    if (currentPosition.y < imageLeftCorner.y)
-    {
-        imageLeftCorner.y = currentPosition.y;
-    }
-
-    if (currentPosition.x > imageRightCorner.x)
-    {
-        imageRightCorner.x = currentPosition.x;
-    }
-
-    if (currentPosition.y > imageRightCorner.y)
-    {
-        imageRightCorner.y = currentPosition.y;
-    }
 }
 
 void
@@ -55,139 +35,68 @@ VertexGenerator::addVertex(glm::vec3 vertex)
     vertices.push_back(glm::vec4(vertex, 1));
 }
 
-glm::mat4
-VertexGenerator::getTransformMatrix(GLfloat imageWidth, GLfloat imageHeight)
-{ 
-    glm::vec2 const &screenSize = getScreenSize();
-    GLfloat screenWidth = screenSize.x;
-    GLfloat screenHeight = screenSize.y;
-
-    GLfloat currentImageWidth = imageRightCorner.x - imageLeftCorner.x;
-    GLfloat currentImageHeight = imageRightCorner.y - imageLeftCorner.y;
-
-    GLfloat scaleCoefficient = 1.0f;
-    if (currentImageWidth > currentImageHeight)
-    {
-        scaleCoefficient
-            = (2.0f * imageWidth / screenWidth) / currentImageWidth;
-        imageHeight *= currentImageHeight / currentImageWidth;
-    }
-    else
-    {
-        scaleCoefficient
-            = (2.0f * imageHeight / screenWidth) / currentImageHeight;
-        imageWidth *= currentImageWidth / currentImageHeight;
-    } 
-
-    glm::mat4 scaleMatrix = glm::scale(
-              glm::mat4(1.0)
-            , glm::vec3(scaleCoefficient, scaleCoefficient, 1.0f));
-
-    // Apply scale transform to image corners to preserve consistent state
-    imageLeftCorner = glm::vec2(scaleMatrix * glm::vec4(imageLeftCorner, 0, 1));
-    imageRightCorner = glm::vec2(scaleMatrix * glm::vec4(imageRightCorner, 0, 1));
-
-    GLfloat translationX
-        = 2.0f * (-imageWidth / 2.0f) / screenWidth - imageLeftCorner.x;
-    GLfloat translationY
-        = 2.0f * (-imageHeight / 2.0f) / screenHeight - imageLeftCorner.y;
-    glm::mat4 translationMatrix = glm::translate(
-              glm::mat4(1.0)
-            , glm::vec3(translationX, translationY, 0));
-
-    return translationMatrix * scaleMatrix;
-}
-
-void
-VertexGenerator::scaleImage()
-{ 
-    glm::mat4 const &transformMatrix = getTransformMatrix(width, height);
-    for (glm::vec4 &vertex : vertices)
-    {
-        vertex = transformMatrix * vertex;
-    }
-}
-
-glm::vec2
-VertexGenerator::getScreenSize()
-{
-    GLint windowOptions[4];
-    glGetIntegerv(GL_VIEWPORT, &windowOptions[0]);
-    return glm::vec2(windowOptions[2], windowOptions[3]);
-}
-
 void
 VertexGenerator::initDrawCommands()
 { 
-    drawCommands[symbolDrawLine] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.drawLine();
-    };
+    addDrawingFunction(symbolDrawLine,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().drawLine();
+            });
 
-    drawCommands[symbolDrawSpace] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.drawSpace();
-    };
+    addDrawingFunction(symbolDrawSpace,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().drawSpace();
+            });
 
-    drawCommands[symbolPitchDown] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.pitchDown();
-    };
+    addDrawingFunction(symbolPitchDown,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().pitchDown();
+            });
 
-    drawCommands[symbolPitchUp] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.pitchUp();
-    };
+    addDrawingFunction(symbolPitchUp,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().pitchUp();
+            });
 
-    drawCommands[symbolYawRight] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.yawRight();
-    };
+    addDrawingFunction(symbolYawRight,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().yawRight();
+            });
 
-    drawCommands[symbolYawLeft] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.yawLeft();
-    };
+    addDrawingFunction(symbolYawLeft,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().yawLeft();
+            });
 
-    drawCommands[symbolRollLeft] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.rollLeft();
-    };
+    addDrawingFunction(symbolRollLeft,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().rollLeft();
+            });
 
-    drawCommands[symbolRollRight] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.rollRight();
-    };
+    addDrawingFunction(symbolRollRight,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().rollRight();
+            });
 
-    drawCommands[symbolSaveState] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.saveDrawState();
-    };
+    addDrawingFunction(symbolSaveState,
+        [&] (Symbol const &)
+            {
+                VertexGenerator::getInstance().saveDrawState();
+            });
 
-    drawCommands[symbolRestoreState] = [&] (
-              VertexGenerator &generator
-            , Symbol const &)
-    {
-        generator.restoreDrawState();
-    };
+    addDrawingFunction(symbolRestoreState,
+        [&] (Symbol const &)
+            {
+                getInstance().restoreDrawState();
+            });
 }
 
 void
@@ -202,8 +111,6 @@ drawLine()
     currentPosition.y += 1 * sin(currentAngle);*/
     currentPosition += drawState.head * limbSize;
     addVertex(currentPosition);
-
-    updateImageCorners();
 }
 
 void
@@ -228,9 +135,23 @@ yawLeft()
 
 void
 VertexGenerator::
+yawLeft(GLfloat angle)
+{
+    rotateAroundAxis(drawState.up, (-1) * angle);
+}
+
+void
+VertexGenerator::
 yawRight()
 {
     rotateAroundAxis(drawState.up, drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+yawRight(GLfloat angle)
+{
+    rotateAroundAxis(drawState.up, angle);
 }
 
 void
@@ -242,17 +163,37 @@ pitchDown()
 
 void
 VertexGenerator::
+pitchDown(GLfloat angle)
+{
+    rotateAroundAxis(drawState.left, angle);
+}
+
+void
+VertexGenerator::
 pitchUp()
 {
     rotateAroundAxis(drawState.left, (-1) * drawState.deltaAngle);
 }
 
+void
+VertexGenerator::
+pitchUp(GLfloat angle)
+{
+    rotateAroundAxis(drawState.left, (-1) * angle);
+}
 
 void
 VertexGenerator::
 rollLeft()
 {
     rotateAroundAxis(drawState.head, (-1) * drawState.deltaAngle);
+}
+
+void
+VertexGenerator::
+rollLeft(GLfloat angle)
+{
+    rotateAroundAxis(drawState.head, (-1) * angle);
 }
 
 void
@@ -264,20 +205,20 @@ rollRight()
 
 void
 VertexGenerator::
-rotateAroundAxis(glm::vec3 const &axis, GLfloat angle)
+rollRight(GLfloat angle)
 {
-    glm::mat4 rotationMatrix
-        = rotate(glm::mat4(), angle, axis);
-    drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
-    drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
-    drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
+    rotateAroundAxis(drawState.head, angle);
 }
 
 void
-VertexGenerator::setImageRectangle(GLfloat width, GLfloat height)
+VertexGenerator::
+rotateAroundAxis(glm::vec3 const &axis, GLfloat angle)
 {
-    this->width = width;
-    this->height = height;
+    glm::mat4 rotationMatrix
+        = glm::rotate(glm::mat4(), angle, axis);
+    drawState.head = glm::vec3(rotationMatrix * glm::vec4(drawState.head, 1));
+    drawState.up = glm::vec3(rotationMatrix * glm::vec4(drawState.up, 1));
+    drawState.left = glm::vec3(rotationMatrix * glm::vec4(drawState.left, 1));
 }
 
 void
@@ -294,7 +235,7 @@ VertexGenerator::generateGraphicObject()
 
     for (Symbol symbol : (*symbolsPtr))
     {
-        drawCommands[symbol](*this, symbol);
+        drawCommands[symbol](symbol);
     }
     //scaleImage();
 

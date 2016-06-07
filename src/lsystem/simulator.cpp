@@ -2,6 +2,13 @@
 
 using namespace lsystem;
 
+Simulator Simulator::instance;
+
+Simulator &Simulator::getInstance()
+{
+    return instance;
+}
+
 Simulator::Simulator()
     : stepCount(0)
     , startAngle(0.0f)
@@ -62,11 +69,9 @@ Simulator::setStartPoint(glm::vec3 startPoint)
 }
 
 GraphicObjectPtr
-Simulator::getGraphicObject(
-          VertexGenerator &generator
-        , GLfloat imageWidth
-        , GLfloat imageHeight)
+Simulator::getGraphicObject()
 {
+    VertexGenerator &generator = VertexGenerator::getInstance();
     generator.setSymbols(generateSymbolsSequence());
     generator.setDrawState({
               startPoint
@@ -75,7 +80,6 @@ Simulator::getGraphicObject(
             , left
             , deltaAngle
         });
-    generator.setImageRectangle(imageWidth, imageHeight);
     return generator.generateGraphicObject();
 }
 

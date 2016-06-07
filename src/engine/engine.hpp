@@ -7,6 +7,8 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
+#define GLM_FORCE_RADIANS
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
