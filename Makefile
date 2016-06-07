@@ -5,8 +5,10 @@ SHADERS_DIR=$(SRC_DIR)/shaders
 DOXYGEN_CONFIG=doxygen.config
 DOC_DIR=doc
 
-all: update_shaders collect_objs link_objs doc
-	$(MAKE) -C $(SRC_DIR)
+all: compile update_shaders collect_objs link_objs
+
+compile:
+	make -C $(SRC_DIR)
 
 collect_objs:
 	find $(SRC_DIR) -name "*.o" -exec mv {} $(BUILD_DIR) \; 
