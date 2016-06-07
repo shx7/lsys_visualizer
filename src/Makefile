@@ -26,6 +26,9 @@ update_shaders:
 run:
 	$(MAKE) -C .. run
 
+doc:
+	$(MAKE) -C .. doc
+
 .PHONY: engine simulator lsystem
 
 clean:

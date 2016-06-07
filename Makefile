@@ -2,8 +2,10 @@ CC=g++
 SRC_DIR=src
 BUILD_DIR=build
 SHADERS_DIR=$(SRC_DIR)/shaders
+DOXYGEN_CONFIG=doxygen.config
+DOC_DIR=doc
 
-all: update_shaders
+all: update_shaders collect_objs link_objs doc
 	$(MAKE) -C $(SRC_DIR)
 
 collect_objs:
@@ -18,6 +20,12 @@ update_shaders:
 run:
 	$(MAKE) -C $(BUILD_DIR) run
 
+doc:
+	doxygen $(DOXYGEN_CONFIG)
+
 clean:
 	find $(BUILD_DIR) -name "*.o" -exec rm {} \;
 	find $(BUILD_DIR) -name "*.elf" -exec rm {} \;
+	rm $(DOC_DIR) -rf
+
+.PHONY: doc

@@ -1,13 +1,3 @@
-/************************************************
- *
- * lsystem::VertexGenerator convertes string
- * gained after simulation of lsystem::Simulator
- * into vertices.
- *
- * Also VertexGenerator implements functions
- * scaling and translation image to the center of
- * OpenGL window.
- ***********************************************/
 #ifndef LSYSTEM_VERTEX_GENERATOR
 #define LSYSTEM_VERTEX_GENERATOR
 
@@ -33,6 +23,10 @@ namespace lsystem
 {
     typedef GLfloat Angle;
     typedef GLfloat DeltaAngle;
+
+    /**
+     *  lsystem::DrawState incapsulates state of 3D turtle interpeter.
+     */
     struct DrawState
     {
         glm::vec3 currentPosition;
@@ -40,6 +34,15 @@ namespace lsystem
         GLfloat deltaAngle;
     };
 
+    /**
+     *  lsystem::VertexGenerator convertes string
+     *  gained after simulation of lsystem::Simulator
+     *  into vertices.
+     *
+     *  Also VertexGenerator support public interface for
+     *  registering drawing user-defined callbacks for symbols.
+     *  After generation returns GraphicObject
+     */
     class VertexGenerator
     {
         //typedef void (*DrawCommandFunction)(VertexGenerator &);
@@ -111,7 +114,7 @@ namespace lsystem
             std::vector< glm::vec4 > vertices;
             std::vector< DrawState > drawStateStack;
 
-            const GLfloat limbSize = 0.05;
+            const GLfloat limbSize = 0.05; // Defines size of line
             static VertexGenerator instance;
     };
 }
