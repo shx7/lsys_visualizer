@@ -7,6 +7,69 @@
 
 namespace lsystem
 {
+    /**
+     *  lsystem::SymbolBuilder is responsible for creation, customization and
+     *  registration Symbols elements in Simulator and VertexGenerator.
+     *
+     *  After Symbol creation new object is immutable.
+     *
+     *  Example:
+     *  \code
+     * 
+     *  lsystem::Symbol symbolX =
+     *      lsystem::SymbolBuilder::getBuilder()
+     *      .setDrawingFunction(
+     *          [&] (lsystem::Symbol const &)
+     *          {
+     *              generator.drawLine();
+     *          })
+     *      .setProduction(
+     *          [=] (lsystem::Symbol const &s) -> lsystem::Symbols
+     *          {
+     *              lsystem::Symbol tmp(s);
+     *              lsystem::Symbols result;
+     *              result.push_back(symbolF);
+     *              result.push_back(lsystem::symbolSaveState);
+     *              result.push_back(lsystem::getSymbolYawLeft(
+     *                          glm::radians(20.0),
+     *                          [](double param) -> double
+     *                          {
+     *                              return param * 0.85;
+     *                          }, 0.8)
+     *                      );
+     *              result.push_back(tmp);
+     *              result.push_back(lsystem::symbolRestoreState);
+     *
+     *              result.push_back(lsystem::symbolSaveState);
+     *              result.push_back(lsystem::getSymbolPitchUp(
+     *                          glm::radians(20.0),
+     *                          [](double param) -> double
+     *                          {
+     *                              return param * 0.95;
+     *                          }, 0.8)
+     *                      );
+     *              result.push_back(tmp);
+     *              result.push_back(lsystem::symbolRestoreState);
+     *
+     *              result.push_back(symbolF);
+     *              result.push_back(lsystem::symbolSaveState);
+     *              result.push_back(
+     *                  lsystem::getSymbolYawRight(glm::radians(20.0), 0.0, 0.7));
+     *              result.push_back(tmp);
+     *              result.push_back(lsystem::symbolRestoreState);
+     *
+     *              result.push_back(lsystem::symbolSaveState);
+     *              result.push_back(lsystem::symbolPitchDown);
+     *              result.push_back(tmp);
+     *              result.push_back(lsystem::symbolRestoreState);
+     *
+     *              result.push_back(lsystem::symbolYawLeft);
+     *              result.push_back(tmp);
+     *              return result;
+     *          }, 0.95)
+     *      .build();
+     *  \endcode
+     */
     class SymbolBuilder
     {
         public:

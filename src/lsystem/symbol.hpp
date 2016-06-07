@@ -21,6 +21,14 @@ namespace lsystem
         {}
     };
 
+    /**
+     *  lsystem::Symbol incapsulates grammar units - symbols.
+     *  Symbol have a name, production (with optional probability),
+     *  parameters with values.
+     *
+     *  User defines his grammar in terms of Symbols. For creation and customizing
+     *  of Symbols there exists lsystem::SymbolBuilder class;
+     */
     class Symbol
     {
         public: 

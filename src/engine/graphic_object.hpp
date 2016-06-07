@@ -14,6 +14,14 @@ struct Vertex
     glm::vec3 color;
 };
 
+/**
+ *  GraphicObject represents serialized vector of vertices.
+ *
+ *  This representation used in Engine to perform model rendering.
+ *
+ *  Also this class can be used by user to preform 3D model transformation
+ *  or gainage of model 3D structre.
+ */
 class GraphicObject
 {
         glm::vec3 position;
@@ -50,6 +58,10 @@ class GraphicObject
             vertices.push_back(vertex.color.r);
             vertices.push_back(vertex.color.g);
             vertices.push_back(vertex.color.b);
+        }
+
+        std::vector< GLfloat > getVertices() const {
+            return vertices;
         }
 
         std::size_t getVertexCount() const
